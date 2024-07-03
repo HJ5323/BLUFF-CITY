@@ -33,6 +33,7 @@ namespace BLUFF_CITY
             LOGIN = new Button();
             SIGN_UP = new Button();
             title = new TextBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // LOGIN
@@ -69,6 +70,15 @@ namespace BLUFF_CITY
             title.TabIndex = 1;
             title.Text = "BLUFF CITY";
             // 
+            // button1
+            // 
+            button1.Location = new Point(789, 38);
+            button1.Name = "button1";
+            button1.Size = new Size(107, 89);
+            button1.TabIndex = 2;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // start
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -77,6 +87,7 @@ namespace BLUFF_CITY
             BackgroundImage = Properties.Resources.start;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(940, 551);
+            Controls.Add(button1);
             Controls.Add(title);
             Controls.Add(SIGN_UP);
             Controls.Add(LOGIN);
@@ -107,5 +118,6 @@ namespace BLUFF_CITY
 
         }
 
+        private Button button1;
     }
 }
