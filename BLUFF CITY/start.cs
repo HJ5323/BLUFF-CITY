@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace BLUFF_CITY
 {
@@ -20,6 +22,7 @@ namespace BLUFF_CITY
             loginForm.Show();
 
             this.Hide();
+
         }
 
         private void SIGN_UP_Click(object sender, EventArgs e)

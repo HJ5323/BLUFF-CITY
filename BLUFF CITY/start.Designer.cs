@@ -33,16 +33,17 @@ namespace BLUFF_CITY
             LOGIN = new Button();
             SIGN_UP = new Button();
             title = new TextBox();
+            exit = new Button();
             SuspendLayout();
             // 
             // LOGIN
             // 
             LOGIN.BackColor = Color.Gainsboro;
             LOGIN.Font = new Font("Pyunji R", 25F, FontStyle.Bold);
-            LOGIN.Location = new Point(149, 277);
+            LOGIN.Location = new Point(166, 346);
             LOGIN.Margin = new Padding(3, 2, 3, 2);
             LOGIN.Name = "LOGIN";
-            LOGIN.Size = new Size(183, 64);
+            LOGIN.Size = new Size(203, 80);
             LOGIN.TabIndex = 0;
             LOGIN.Text = "LOGIN";
             LOGIN.UseVisualStyleBackColor = false;
@@ -52,10 +53,10 @@ namespace BLUFF_CITY
             // 
             SIGN_UP.BackColor = Color.Gainsboro;
             SIGN_UP.Font = new Font("Pyunji R", 25F, FontStyle.Bold);
-            SIGN_UP.Location = new Point(511, 277);
+            SIGN_UP.Location = new Point(568, 346);
             SIGN_UP.Margin = new Padding(3, 2, 3, 2);
             SIGN_UP.Name = "SIGN_UP";
-            SIGN_UP.Size = new Size(202, 64);
+            SIGN_UP.Size = new Size(224, 80);
             SIGN_UP.TabIndex = 0;
             SIGN_UP.Text = "SIGN UP";
             SIGN_UP.UseVisualStyleBackColor = false;
@@ -65,21 +66,31 @@ namespace BLUFF_CITY
             // 
             title.BackColor = Color.Gainsboro;
             title.Font = new Font("Pyunji R", 30F, FontStyle.Bold);
-            title.Location = new Point(283, 87);
+            title.Location = new Point(314, 109);
             title.Margin = new Padding(3, 2, 3, 2);
             title.Name = "title";
-            title.Size = new Size(288, 66);
+            title.Size = new Size(320, 77);
             title.TabIndex = 1;
             title.Text = "BLUFF CITY";
             // 
+            // exit
+            // 
+            exit.Location = new Point(866, 21);
+            exit.Name = "exit";
+            exit.Size = new Size(48, 55);
+            exit.TabIndex = 2;
+            exit.Text = "button1";
+            exit.UseVisualStyleBackColor = true;
+            // 
             // start
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             BackgroundImage = Properties.Resources.start;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(846, 441);
+            ClientSize = new Size(940, 551);
+            Controls.Add(exit);
             Controls.Add(title);
             Controls.Add(SIGN_UP);
             Controls.Add(LOGIN);
@@ -110,5 +121,7 @@ namespace BLUFF_CITY
 
 
         }
+
+        private Button exit;
     }
 }
