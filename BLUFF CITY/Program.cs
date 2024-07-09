@@ -13,5 +13,6 @@ namespace BLUFF_CITY
             ApplicationConfiguration.Initialize();
             Application.Run(new start());
         }
+
     }
 }

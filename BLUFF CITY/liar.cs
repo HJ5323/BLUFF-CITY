@@ -57,8 +57,8 @@ namespace BLUFF_CITY
 
         private void exit_Click(object sender, EventArgs e)
         {
-            ChooseGame ChooseGameForm = new ChooseGame();
-            ChooseGameForm.Show();
+            //ChooseGame ChooseGameForm = new ChooseGame();
+            //ChooseGameForm.Show();
 
             // 현재 폼 숨김
             this.Hide();
