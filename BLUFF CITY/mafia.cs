@@ -248,7 +248,6 @@ namespace BLUFF_CITY
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
                 chat.Clear();
-                MessageBox.Show("메시지 전송: " + message);  // 메시지 박스 출력
             }
             catch (Exception ex)
             {

@@ -54,6 +54,44 @@ namespace server
             Console.Read();
         }
 
+        private static void ClearDB()
+        {
+            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open(); // DB 연결
+                    string query = "DROP TABLE mafia_chats;" +
+
+                    "DROP TABLE liar_chats;" +
+
+                    "CREATE TABLE `mafia_chats` (" +
+                        "`nickname` varchar(10) NOT NULL," +
+                        "`mafia_chat` text NOT NULL," +
+                        "`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                        "KEY `timestamp` (`timestamp`)," +
+                        "CONSTRAINT `mafia_chats_ibfk_1` FOREIGN KEY(`nickname`) REFERENCES `user` (`NICKNAME`) ON DELETE CASCADE ON UPDATE CASCADE" +
+                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;" +
+
+                    "CREATE TABLE `liar_chats` (" +
+                        "`nickname` varchar(10) NOT NULL," +
+                        "`liar_chat` text NOT NULL," +
+                        "`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                        "KEY `timestamp` (`timestamp`)," +
+                        "CONSTRAINT `liar_chats_ibfk_1` FOREIGN KEY(`nickname`) REFERENCES `user` (`NICKNAME`) ON DELETE CASCADE ON UPDATE CASCADE" +
+                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3";
+
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
         // gameRoom의 모든 클라인언트에게 메시지 전송
         private static void BroadcastMessage(string gameRoom, string message, TcpClient excludeClient)
         {
@@ -82,7 +120,7 @@ namespace server
             byte[] buffer = new byte[256];
             string gameRoom = null;
             bool isLoggedIn = false; // 클라이언트 로그인 여부
-            bool isJoined = false;
+            object obj = new object();
 
             try
             {
@@ -157,13 +195,18 @@ namespace server
                             if (gameRooms[gameRoom].Count < 8)
                             {
                                 gameRooms[gameRoom].Add(client);
+                                if (gameRooms[gameRoom].Count == 1)
+                                {
+                                    ClearDB();
+                                    Console.WriteLine($"ClearDB");
+
+                                }
                                 Console.WriteLine($"{playerNick}가 방에 입장했습니다: {gameRoom}");
 
                                 BroadcastMessage(gameRoom, $"{playerNick}님이 게임에 참가했습니다!", client);
 
                                 SendPlayerInfo(gameRoom); // 모든 플레이어 정보 전송
 
-                                isJoined = true;
                             }
                             else
                             {
@@ -191,54 +234,14 @@ namespace server
 
                         SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
 
-                        // 모든 저장된 메시지를 클라이언트에 전송
-                        SendAllMessagesToClient(client, gameRoom);
+                        lock(obj)
+                        {
+                            // 모든 저장된 메시지를 클라이언트에 전송
+                            SendAllMessagesToClient(client, gameRoom);
+
+                        }
                     }
                 }
-                
-                //// 메시지 처리 루프
-                //while (true)
-                //{
-                //    bytesRead = stream.Read(buffer, 0, buffer.Length);
-                //    Console.WriteLine("메세지 받음");
-
-                //    if (bytesRead == 0)
-                //    {
-                //        // 클라이언트가 연결을 끊은 경우
-                //        break;
-                //    }
-
-                //    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                //    Console.WriteLine($"수신: {message}");
-
-                //    string[] parts = message.Split(new[] { ':' }, 2);
-                //    if (parts.Length < 2)
-                //    {
-                //        Console.WriteLine("잘못된 메시지 형식");
-                //        continue;
-                //    }
-
-                //    string command = parts[0];
-                //    string content = parts[1];
-
-                //    if (command == "chat")
-                //    {
-                //        string[] chatParts = content.Split(new[] { ':' }, 2);
-                //        if (chatParts.Length < 2)
-                //        {
-                //            Console.WriteLine("잘못된 채팅 메시지 형식");
-                //            continue;
-                //        }
-
-                //        string nickname = chatParts[0];
-                //        string chatMessage = chatParts[1];
-
-                //        SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
-
-                //        // 모든 저장된 메시지를 클라이언트에 전송
-                //        SendAllMessagesToClient(client, gameRoom);
-                //    }
-                //}
             }
             catch (Exception ex)
             {

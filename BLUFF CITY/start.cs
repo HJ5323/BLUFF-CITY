@@ -7,6 +7,9 @@ using MySqlX.XDevAPI;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Google.Protobuf.WellKnownTypes;
+using Mysqlx.Crud;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BLUFF_CITY
 {
@@ -42,7 +45,7 @@ namespace BLUFF_CITY
 
         private void start_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            //Application.Exit();
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -64,22 +67,7 @@ namespace BLUFF_CITY
 
         private void exit_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // 서버 IP 주소와 포트 번호를 설정합니다.
-                IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-                int port = 5252;
-                // TCP/IP 소켓을 생성하고 서버에 연결합니다.
-                client = new TcpClient();
-                client.Connect(serverIP, port);
-                // 서버와 연결된 경우, 수신 스레드를 시작합니다.
-                //receiveThread = new Thread(new ThreadStart(Receive));
-                //receiveThread.Start();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+  
         }
     }
 }

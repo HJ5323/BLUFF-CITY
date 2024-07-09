@@ -208,7 +208,6 @@
             ma_p5_name.Name = "ma_p5_name";
             ma_p5_name.Size = new Size(172, 35);
             ma_p5_name.TabIndex = 9;
-            ma_p5_name.Text = "ma_p5_name";
             ma_p5_name.TextAlign = HorizontalAlignment.Center;
             // 
             // ma_p5

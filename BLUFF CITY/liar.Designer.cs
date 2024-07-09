@@ -64,7 +64,6 @@ namespace BLUFF_CITY
             chat.Name = "chat";
             chat.Size = new Size(500, 31);
             chat.TabIndex = 45;
-            chat.Text = "안녕";
             // 
             // players_chat
             // 
@@ -76,7 +75,6 @@ namespace BLUFF_CITY
             players_chat.ScrollBars = ScrollBars.Horizontal;
             players_chat.Size = new Size(500, 855);
             players_chat.TabIndex = 44;
-            players_chat.Text = "[player1] 안녕";
             players_chat.TextAlign = HorizontalAlignment.Center;
             // 
             // word
@@ -212,7 +210,6 @@ namespace BLUFF_CITY
             li_p5_name.Name = "li_p5_name";
             li_p5_name.Size = new Size(172, 35);
             li_p5_name.TabIndex = 32;
-            li_p5_name.Text = "li_p5_name";
             li_p5_name.TextAlign = HorizontalAlignment.Center;
             // 
             // li_p5
