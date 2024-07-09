@@ -51,7 +51,7 @@ namespace BLUFF_CITY
 
         private void LIAR_GAME_Click(object sender, EventArgs e)
         {
-            liar liarForm = new liar();
+            liar liarForm = new liar(playerID, playerNickname);
             liarForm.Show();
 
             this.Hide();
