@@ -81,6 +81,7 @@ namespace BLUFF_CITY
             exit.TabIndex = 2;
             exit.Text = "button1";
             exit.UseVisualStyleBackColor = true;
+            exit.Click += exit_Click;
             // 
             // start
             // 

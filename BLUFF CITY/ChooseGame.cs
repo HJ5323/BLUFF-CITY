@@ -13,7 +13,10 @@ namespace BLUFF_CITY
 {
     public partial class ChooseGame : Form
     {
-        public ChooseGame()
+        private string playerID;
+        private string playerNickname;
+
+        public ChooseGame(string id, string nickname)
         {
             InitializeComponent();
 
@@ -22,6 +25,9 @@ namespace BLUFF_CITY
 
             // 배경을 투명하게 설정하고 윤곽선을 숨기는 메서드 호출
             ApplyTransparentBackgroundAndHideBorder();
+
+            playerID = id;
+            playerNickname = nickname;
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -37,7 +43,7 @@ namespace BLUFF_CITY
 
         private void MAFIA_GAME_Click(object sender, EventArgs e)
         {
-            mafia mafiaForm = new mafia();
+            mafia mafiaForm = new mafia(playerID, playerNickname);
             mafiaForm.Show();
 
             this.Hide();

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Net.Sockets;
+using System.Xml.Linq;
 
 namespace BLUFF_CITY
 {
@@ -129,6 +130,10 @@ namespace BLUFF_CITY
 
         private Button[] LoginButtons;
         private TextBox[] LoginTextBox;
+
+        private const int MaxSize = 1024;
+        private static Socket clientSocket;
+        private static string loginid;
 
         private void InitializeArrays()
         {

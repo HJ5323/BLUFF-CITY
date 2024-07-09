@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using MySql.Data.MySqlClient;
 
 namespace BLUFF_CITY
 {
@@ -27,8 +28,60 @@ namespace BLUFF_CITY
 
         private void signup_ok_Click(object sender, EventArgs e)
         {
-            // 현재 폼 닫음
-            this.Hide();
+            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Check if ID exists
+                    string checkIdQuery = "SELECT * FROM user WHERE ID = @ID";
+                    MySqlCommand checkIdCmd = new MySqlCommand(checkIdQuery, conn);
+                    checkIdCmd.Parameters.AddWithValue("@ID", signup_id.Text);
+                    MySqlDataReader idReader = checkIdCmd.ExecuteReader();
+                    if (idReader.Read())
+                    {
+                        idReader.Close();
+                        MessageBox.Show("중복된 ID입니다.");
+                        return;
+                    }
+                    idReader.Close();
+
+                    // Check if Nickname exists
+                    string checkNicknameQuery = "SELECT * FROM user WHERE NICKNAME = @NICKNAME";
+                    MySqlCommand checkNicknameCmd = new MySqlCommand(checkNicknameQuery, conn);
+                    checkNicknameCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
+                    MySqlDataReader nicknameReader = checkNicknameCmd.ExecuteReader();
+                    if (nicknameReader.Read())
+                    {
+                        nicknameReader.Close();
+                        MessageBox.Show("중복된 닉네임입니다.");
+                        return;
+                    }
+                    nicknameReader.Close();
+
+                    // Insert new user
+                    string insertQuery = "INSERT INTO user (ID, PW, NICKNAME) VALUES (@ID, @PW, @NICKNAME)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@ID", signup_id.Text);
+                    insertCmd.Parameters.AddWithValue("@PW", signup_pw.Text);
+                    insertCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
+                    insertCmd.ExecuteNonQuery();
+
+                    MessageBox.Show("회원가입이 완료되었습니다.");
+                    //start startForm = new start();
+                    //startForm.Show();
+                    this.Hide();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+            //// 현재 폼 닫음
+            //this.Hide();
 
         }
 

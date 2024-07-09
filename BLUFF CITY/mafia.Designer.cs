@@ -276,12 +276,12 @@
             players_chat.BackColor = Color.Gainsboro;
             players_chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
             players_chat.Location = new Point(250, 128);
+            players_chat.MaxLength = 327674343;
             players_chat.Multiline = true;
             players_chat.Name = "players_chat";
             players_chat.ScrollBars = ScrollBars.Horizontal;
             players_chat.Size = new Size(500, 855);
             players_chat.TabIndex = 21;
-            players_chat.Text = "[player1] 안녕";
             players_chat.TextAlign = HorizontalAlignment.Center;
             // 
             // chat
@@ -292,7 +292,7 @@
             chat.Name = "chat";
             chat.Size = new Size(500, 31);
             chat.TabIndex = 22;
-            chat.Text = "안녕";
+            chat.KeyDown += chat_KeyDown;
             // 
             // exit
             // 
