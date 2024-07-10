@@ -266,7 +266,7 @@ namespace server
                 try
                 {
                     conn.Open();
-                    string query = "SELECT nickname, mafia_chat FROM mafia_chats ORDER BY timestamp";
+                    string query = "SELECT nickname, liar_chat FROM liar_chats ORDER BY timestamp";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -274,7 +274,7 @@ namespace server
                         while (reader.Read())
                         {
                             string nickname = reader.GetString("nickname");
-                            string message = reader.GetString("mafia_chat");
+                            string message = reader.GetString("liar_chat");
                             allMessages.AppendLine($"\n[{nickname}] {message}");
                         }
                         byte[] data = Encoding.UTF8.GetBytes(allMessages.ToString());
@@ -324,7 +324,7 @@ namespace server
                     lock(lockObj)
                     {
                         conn.Open();
-                        string query = "INSERT INTO mafia_chats (nickname, mafia_chat) VALUES (@nickname, @message)";
+                        string query = "INSERT INTO liar_chats (nickname, liar_chat) VALUES (@nickname, @message)";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@nickname", nickname);
                         cmd.Parameters.AddWithValue("@message", message);
@@ -352,7 +352,7 @@ namespace server
                     lock (lockObj)
                     {
                         conn.Open();
-                        string query = "SELECT nickname, mafia_chat FROM mafia_chats ORDER BY timestamp";
+                        string query = "SELECT nickname, liar_chat FROM liar_chats ORDER BY timestamp";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         int num = 0;
                         using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -360,15 +360,15 @@ namespace server
                             while (reader.Read())
                             {
                                 string nickname = reader.GetString("nickname");
-                                string message = reader.GetString("mafia_chat");
+                                string message = reader.GetString("liar_chat");
                                 num++;
                                 if (num == 1)
                                 {
-                                    BroadcastMessage("mafia_game", $"{nickname}: {message}*", null);
+                                    BroadcastMessage("liar_game", $"{nickname}: {message}*", null);
                                 }
                                 else
                                 {
-                                    BroadcastMessage("mafia_game", $"{nickname}: {message}", null);
+                                    BroadcastMessage("liar_game", $"{nickname}: {message}", null);
                                 }
                                 Console.WriteLine(num + " " + nickname + " " + message);
                             }

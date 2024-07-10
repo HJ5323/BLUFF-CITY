@@ -22,6 +22,7 @@ namespace BLUFF_CITY
         private string playerID;
         private string playerNickname;
         private List<string> playerInfo;  // 플레이어 정보를 저장할 리스트
+        private object obj = new object();
 
         public liar(string id, string nickname)
         {
@@ -155,50 +156,110 @@ namespace BLUFF_CITY
             }
         }
 
+        //// 수신된 메시지 폼에 표시
+        //private void DisplayMessage(string message)
+        //{
+        //    if (InvokeRequired)
+        //    {
+        //        // 다른 스레드에서 호출된 경우, UI 스레드에서 재귀적으로 메서드를 호출
+        //        this.Invoke(new Action<string>(DisplayMessage), new object[] { message });
+        //        return;
+        //    }
+
+        //    // 메시지에 콜론이 포함되어 있는지 확인
+        //    if (message.Contains(":"))
+        //    {
+        //        // 메시지를 콜론을 기준으로 파싱
+        //        string[] parts = message.Split(new[] { ':' }, 2);
+        //        string messageType = parts[0]; // 메시지의 유형
+        //        string chatMessage = parts[1]; // 실제 채팅 내용
+
+        //        // 플레이어 정보 메시지인 경우
+        //        if (messageType == "player_info")
+        //        {
+        //            UpdatePlayerInfo(chatMessage); // 플레이어 정보를 업데이트
+        //        }
+        //        // 마피아 게임 채팅 메시지인 경우
+        //        else if (messageType == "liar_game")
+        //        {
+        //            // 채팅 메시지를 다시 콜론을 기준으로 파싱
+        //            string[] chatParts = chatMessage.Split(new[] { ':' }, 2);
+        //            if (chatParts.Length < 2)
+        //            {
+        //                Console.WriteLine("잘못된 채팅 메시지 형식");
+        //                return;
+        //            }
+
+        //            string nickname = chatParts[0]; // 닉네임
+        //            string actualMessage = chatParts[1]; // 실제 메시지 내용
+
+        //            // UI 스레드에서 players_chat에 메시지를 추가
+        //            players_chat.Invoke(new Action(() =>
+        //            {
+        //                // 이전 내용을 모두 지우고 새로운 메시지를 추가
+        //                players_chat.Clear();
+        //                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+        //            }));
+        //        }
+        //    }
+        //}
+
         // 수신된 메시지 폼에 표시
         private void DisplayMessage(string message)
         {
+            /*
             if (InvokeRequired)
             {
-                // 다른 스레드에서 호출된 경우, UI 스레드에서 재귀적으로 메서드를 호출합니다.
+                // 다른 스레드에서 호출된 경우, UI 스레드에서 재귀적으로 메서드를 호출
                 this.Invoke(new Action<string>(DisplayMessage), new object[] { message });
                 return;
-            }
-
-            // 메시지에 콜론이 포함되어 있는지 확인합니다.
-            if (message.Contains(":"))
+            }*/
+            lock (obj)
             {
-                // 메시지를 콜론을 기준으로 파싱합니다.
-                string[] parts = message.Split(new[] { ':' }, 2);
-                string messageType = parts[0]; // 메시지의 유형
-                string chatMessage = parts[1]; // 실제 채팅 내용
-
-                // 플레이어 정보 메시지인 경우
-                if (messageType == "player_info")
+                // 메시지에 콜론이 포함되어 있는지 확인
+                if (message.Contains(":"))
                 {
-                    UpdatePlayerInfo(chatMessage); // 플레이어 정보를 업데이트합니다.
-                }
-                // 마피아 게임 채팅 메시지인 경우
-                else if (messageType == "liar_game")
-                {
-                    // 채팅 메시지를 다시 콜론을 기준으로 파싱합니다.
-                    string[] chatParts = chatMessage.Split(new[] { ':' }, 2);
-                    if (chatParts.Length < 2)
+                    // 메시지를 콜론을 기준으로 파싱
+                    // mafia_game:ME: aaa
+                    string[] parts = message.Split(':');
+                    string messageType = parts[0]; // 메시지의 유형
+                    //string chatMessage = parts[1]; // 실제 채팅 내용
+                    // 플레이어 정보 메시지인 경우
+                    //if (messageType == "player_info")
+                    //{
+                    //    UpdatePlayerInfo(chatMessage); // 플레이어 정보를 업데이트
+                    //}
+                    // 마피아 게임 채팅 메시지인 경우
+                    if (messageType == "liar_game" && parts.Length == 3)
                     {
-                        Console.WriteLine("잘못된 채팅 메시지 형식");
-                        return;
+                        // 채팅 메시지를 다시 콜론을 기준으로 파싱
+                        //string[] chatParts = chatMessage.Split(new[] { ':' }, 2);
+                        //if (chatParts.Length < 2)
+                        //{
+                        //    Console.WriteLine("잘못된 채팅 메시지 형식");
+                        //    return;
+                        //}
+
+                        string nickname = parts[1]; // 닉네임
+                        string actualMessage = parts[2]; // 실제 메시지 내용
+
+                        // UI 스레드에서 players_chat에 메시지를 추가
+                        players_chat.Invoke(new Action(() =>
+                        {
+                            // 이전 내용을 모두 지우고 새로운 메시지를 추가
+                            //players_chat.Clear();
+                            if (actualMessage[actualMessage.Length - 1] == '*')
+                            {
+                                players_chat.Clear();
+                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+                            }
+                            else
+                            {
+                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+                                //players_chat.AppendText(parts[0] + "-" + parts[1] + "-" + parts[2] + Environment.NewLine);
+                            }
+                        }));
                     }
-
-                    string nickname = chatParts[0]; // 닉네임
-                    string actualMessage = chatParts[1]; // 실제 메시지 내용
-
-                    // UI 스레드에서 players_chat에 메시지를 추가합니다.
-                    players_chat.Invoke(new Action(() =>
-                    {
-                        // 이전 내용을 모두 지우고 새로운 메시지를 추가합니다.
-                        players_chat.Clear();
-                        players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                    }));
                 }
             }
         }
@@ -235,7 +296,6 @@ namespace BLUFF_CITY
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
                 chat.Clear();
-                MessageBox.Show("메시지 전송: " + message);  // 메시지 박스 출력
             }
             catch (Exception ex)
             {
