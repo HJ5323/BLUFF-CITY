@@ -26,6 +26,7 @@ namespace BLUFF_CITY
             InitializeArrays();
 
             ApplyTransparentBackgroundAndHideBorder();
+
         }
 
         private void Login_ok_Click(object sender, EventArgs e)
@@ -45,10 +46,9 @@ namespace BLUFF_CITY
                     if (reader.Read()) // 로그인 성공 시
                     {
                         string nickname = reader["NICKNAME"].ToString();
-                        MessageBox.Show("Login successful");
 
                         // 서버에 로그인 정보 전송
-                        mafia.SendLoginInfo(login_id.Text, nickname);
+                        liar.SendLoginInfo(login_id.Text, nickname);
 
                         ChooseGame chooseGameForm = new ChooseGame(login_id.Text, nickname);
                         chooseGameForm.Show();
@@ -56,7 +56,7 @@ namespace BLUFF_CITY
                     }
                     else // 로그인 실패 시
                     {
-                        MessageBox.Show("Invalid ID or Password");
+                        CHECK.Text = "ID 또는 PW를 다시 입력해 주세요.";
                     }
                 }
                 catch (Exception ex)

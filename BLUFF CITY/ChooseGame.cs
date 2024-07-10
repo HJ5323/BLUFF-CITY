@@ -43,8 +43,8 @@ namespace BLUFF_CITY
 
         private void MAFIA_GAME_Click(object sender, EventArgs e)
         {
-            mafia mafiaForm = new mafia(playerID, playerNickname);
-            mafiaForm.Show();
+            //mafia mafiaForm = new mafia(playerID, playerNickname);
+            //mafiaForm.Show();
 
             this.Hide();
         }

@@ -16,7 +16,7 @@ namespace BLUFF_CITY
     public partial class start : Form
     {
         private Socket socket; //╪рдо
-        private TcpClient client;
+        //private TcpClient client;
         private Thread receiveThread;
 
         public start()

@@ -298,6 +298,8 @@ namespace server
                 foreach (var p in playerInfo)
                 {
                     playerListMessage += $"{p},";
+                    Console.WriteLine($"{p},");
+
                 }
             }
             playerListMessage = playerListMessage.TrimEnd(',');

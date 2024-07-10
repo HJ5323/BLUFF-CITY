@@ -47,7 +47,6 @@ namespace BLUFF_CITY
             CHECK.Name = "CHECK";
             CHECK.Size = new Size(258, 31);
             CHECK.TabIndex = 15;
-            CHECK.Text = "잘못입력";
             // 
             // PW
             // 
@@ -76,9 +75,9 @@ namespace BLUFF_CITY
             login_pw.Font = new Font("Pyunji R", 10F);
             login_pw.Location = new Point(321, 205);
             login_pw.Name = "login_pw";
+            login_pw.PasswordChar = '*';
             login_pw.Size = new Size(150, 31);
             login_pw.TabIndex = 10;
-            login_pw.Text = "비밀번호";
             // 
             // login_id
             // 
@@ -87,7 +86,6 @@ namespace BLUFF_CITY
             login_id.Name = "login_id";
             login_id.Size = new Size(150, 31);
             login_id.TabIndex = 9;
-            login_id.Text = "아이디";
             // 
             // Login_ok
             // 
@@ -132,7 +130,7 @@ namespace BLUFF_CITY
         private TextBox[] LoginTextBox;
 
         private const int MaxSize = 1024;
-        private static Socket clientSocket;
+        //private static Socket clientSocket;
         private static string loginid;
 
         private void InitializeArrays()

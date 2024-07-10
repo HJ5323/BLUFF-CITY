@@ -43,7 +43,7 @@ namespace BLUFF_CITY
                     if (idReader.Read())
                     {
                         idReader.Close();
-                        MessageBox.Show("중복된 ID입니다.");
+                        CHECK.Text = "중복된 ID입니다.";
                         return;
                     }
                     idReader.Close();
@@ -56,7 +56,7 @@ namespace BLUFF_CITY
                     if (nicknameReader.Read())
                     {
                         nicknameReader.Close();
-                        MessageBox.Show("중복된 닉네임입니다.");
+                        CHECK.Text = "중복된 닉네임입니다.";
                         return;
                     }
                     nicknameReader.Close();
@@ -69,7 +69,6 @@ namespace BLUFF_CITY
                     insertCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
                     insertCmd.ExecuteNonQuery();
 
-                    MessageBox.Show("회원가입이 완료되었습니다.");
                     //start startForm = new start();
                     //startForm.Show();
                     this.Hide();
