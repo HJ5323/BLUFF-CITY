@@ -8,6 +8,7 @@ using MySql.Data.MySqlClient;
 using ZstdSharp.Unsafe;
 using MySqlX.XDevAPI;
 using Org.BouncyCastle.Asn1.X509;
+using System.Runtime.InteropServices.ObjectiveC;
 
 namespace server
 {
@@ -15,6 +16,8 @@ namespace server
     {
         static Dictionary<string, List<TcpClient>> gameRooms = new Dictionary<string, List<TcpClient>>();
         static List<string> playerInfo = new List<string>();  // 로그인한 플레이어 정보 저장
+
+        static object lockObj = new object();
 
         static void Main(string[] args)
         {
@@ -95,20 +98,16 @@ namespace server
         // gameRoom의 모든 클라인언트에게 메시지 전송
         private static void BroadcastMessage(string gameRoom, string message, TcpClient excludeClient)
         {
-            lock (gameRooms)
+            if (gameRooms.ContainsKey(gameRoom))
             {
-                if (gameRooms.ContainsKey(gameRoom))
+                byte[] data = Encoding.UTF8.GetBytes($"{gameRoom}:{message}");
+                foreach (var client in gameRooms[gameRoom])
                 {
-                    byte[] data = Encoding.UTF8.GetBytes($"{gameRoom}:{message}");
-                    Console.WriteLine("메세지 보냄");
-
-                    foreach (var client in gameRooms[gameRoom])
+                    if (client != excludeClient)
                     {
-                        if (client != excludeClient)
-                        {
-                            NetworkStream stream = client.GetStream();
-                            stream.Write(data, 0, data.Length);
-                        }
+                        Console.WriteLine("메세지 보냄");
+                        NetworkStream stream = client.GetStream();
+                        stream.Write(data, 0, data.Length);
                     }
                 }
             }
@@ -120,7 +119,7 @@ namespace server
             byte[] buffer = new byte[256];
             string gameRoom = null;
             bool isLoggedIn = false; // 클라이언트 로그인 여부
-            object obj = new object();
+            //object obj = new object();
 
             try
             {
@@ -231,15 +230,13 @@ namespace server
 
                         string nickname = messageParts[1];
                         string chatMessage = messageParts[2];
+                        //string chat = 
+                        BroadcastMessage(gameRoom, $"{nickname} : {chatMessage}", null);
+                        // SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
 
-                        SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
+                        // 모든 저장된 메시지를 클라이언트에 전송
+                        //SendAllMessagesToClient(client, gameRoom);
 
-                        lock(obj)
-                        {
-                            // 모든 저장된 메시지를 클라이언트에 전송
-                            SendAllMessagesToClient(client, gameRoom);
-
-                        }
                     }
                 }
             }
@@ -324,12 +321,15 @@ namespace server
             {
                 try
                 {
-                    conn.Open();
-                    string query = "INSERT INTO mafia_chats (nickname, mafia_chat) VALUES (@nickname, @message)";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@nickname", nickname);
-                    cmd.Parameters.AddWithValue("@message", message);
-                    cmd.ExecuteNonQuery();
+                    lock(lockObj)
+                    {
+                        conn.Open();
+                        string query = "INSERT INTO mafia_chats (nickname, mafia_chat) VALUES (@nickname, @message)";
+                        MySqlCommand cmd = new MySqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@nickname", nickname);
+                        cmd.Parameters.AddWithValue("@message", message);
+                        cmd.ExecuteNonQuery();
+                    }
 
                     // 데이터베이스에 메시지가 저장된 후에 로드하여 클라이언트에 전송
                     LoadMessagesFromDatabase();
@@ -349,16 +349,29 @@ namespace server
             {
                 try
                 {
-                    conn.Open();
-                    string query = "SELECT nickname, mafia_chat FROM mafia_chats ORDER BY timestamp";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    lock (lockObj)
                     {
-                        while (reader.Read())
+                        conn.Open();
+                        string query = "SELECT nickname, mafia_chat FROM mafia_chats ORDER BY timestamp";
+                        MySqlCommand cmd = new MySqlCommand(query, conn);
+                        int num = 0;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            string nickname = reader.GetString("nickname");
-                            string message = reader.GetString("mafia_chat");
-                            BroadcastMessage("mafia_game", $"{nickname}: {message}", null);
+                            while (reader.Read())
+                            {
+                                string nickname = reader.GetString("nickname");
+                                string message = reader.GetString("mafia_chat");
+                                num++;
+                                if (num == 1)
+                                {
+                                    BroadcastMessage("mafia_game", $"{nickname}: {message}*", null);
+                                }
+                                else
+                                {
+                                    BroadcastMessage("mafia_game", $"{nickname}: {message}", null);
+                                }
+                                Console.WriteLine(num + " " + nickname + " " + message);
+                            }
                         }
                     }
                 }
