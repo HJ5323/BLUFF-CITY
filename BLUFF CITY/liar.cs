@@ -24,6 +24,8 @@ namespace BLUFF_CITY
         private string playerNickname;
         private List<string> playerInfo;  // 플레이어 정보를 저장할 리스트
         private object obj = new object();
+        private bool shouldStop = false;
+
 
         public liar(string id, string nickname)
         {
@@ -77,7 +79,7 @@ namespace BLUFF_CITY
 
         private void exit_Click(object sender, EventArgs e)
         {
-            //ChooseGame ChooseGameForm = new ChooseGame();
+             //ChooseGame ChooseGameForm = new ChooseGame();
             //ChooseGameForm.Show();
 
             // 현재 폼 숨김
@@ -145,13 +147,16 @@ namespace BLUFF_CITY
         {
             try
             {
-                byte[] buffer = new byte[256];
-                int bytesRead;
-
-                while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
+                while (!shouldStop)
                 {
-                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    DisplayMessage(message);
+                    byte[] buffer = new byte[256];
+                    int bytesRead;
+
+                    while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
+                    {
+                        string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        DisplayMessage(message);
+                    }
                 }
             }
             catch (Exception ex)
@@ -316,7 +321,9 @@ namespace BLUFF_CITY
             if (client != null)
             {
                 client.Close();
-                receiveThread.Abort();
+                //receiveThread.Abort();
+                shouldStop = true; // 종료 플래그 설정
+                receiveThread.Join(); // 스레드 종료까지 대기
             }
         }
         // 플레이어 목록 로드

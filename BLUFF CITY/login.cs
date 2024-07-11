@@ -14,6 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Net.Sockets;
 using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.IO;
 
 namespace BLUFF_CITY
 {
@@ -37,7 +38,9 @@ namespace BLUFF_CITY
                 try
                 {
                     conn.Open(); // DB 연결
-                    string query = "SELECT NICKNAME FROM user WHERE ID = @ID AND PW = @PW";
+
+                    // BINARY -> 대소문자 구분
+                    string query = "SELECT NICKNAME FROM user WHERE BINARY ID = @ID AND BINARY PW = @PW";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ID", login_id.Text); // ID 매개변수 설정
                     cmd.Parameters.AddWithValue("@PW", login_pw.Text); // PW 매개변수 설정

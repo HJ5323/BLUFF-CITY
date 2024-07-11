@@ -10,6 +10,7 @@ using System.Threading;
 using Google.Protobuf.WellKnownTypes;
 using Mysqlx.Crud;
 using static System.Net.Mime.MediaTypeNames;
+using System.IO;
 
 namespace BLUFF_CITY
 {
@@ -27,6 +28,8 @@ namespace BLUFF_CITY
 
             ApplyTransparentBackgroundAndHideBorder();
 
+            // 서버 연결
+            liar.ConnectToServer();
         }
 
         private void LOGIN_Click(object sender, EventArgs e)

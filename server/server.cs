@@ -16,7 +16,6 @@ namespace server
     {
         static Dictionary<string, List<TcpClient>> gameRooms = new Dictionary<string, List<TcpClient>>();
         static List<string> playerInfo = new List<string>();  // 로그인한 플레이어 정보 저장
-
         static object lockObj = new object();
 
         static void Main(string[] args)
