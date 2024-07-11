@@ -202,6 +202,20 @@ namespace BLUFF_CITY
                 MessageBox.Show(ex.Message);
             }
         }
+        // 메시지 서버로 전송
+        public void SendReady(string playerID, string playerNickname)
+        {
+            try
+            {
+                string message = $"ready:{playerID}:{playerNickname}";
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         // 소멸자
         ~Network()

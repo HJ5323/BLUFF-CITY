@@ -307,7 +307,7 @@ namespace BLUFF_CITY
             li_p2.Size = new Size(157, 139);
             li_p2.TabIndex = 25;
             li_p2.UseVisualStyleBackColor = false;
-            li_p2.Click += li_p2_Click;
+            //li_p2.Click += li_p2_Click;
             // 
             // li_p1_name
             // 
