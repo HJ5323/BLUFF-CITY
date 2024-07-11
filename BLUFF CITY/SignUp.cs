@@ -35,33 +35,33 @@ namespace BLUFF_CITY
                 {
                     conn.Open();
 
-                    // Check if ID exists
-                    string checkIdQuery = "SELECT * FROM user WHERE ID = @ID";
+                    // ID 중복 확인 (대소문자 구별)
+                    string checkIdQuery = "SELECT * FROM user WHERE BINARY ID = @ID";
                     MySqlCommand checkIdCmd = new MySqlCommand(checkIdQuery, conn);
                     checkIdCmd.Parameters.AddWithValue("@ID", signup_id.Text);
                     MySqlDataReader idReader = checkIdCmd.ExecuteReader();
                     if (idReader.Read())
                     {
                         idReader.Close();
-                        MessageBox.Show("중복된 ID입니다.");
+                        CHECK.Text = "중복된 ID입니다.";
                         return;
                     }
                     idReader.Close();
 
-                    // Check if Nickname exists
-                    string checkNicknameQuery = "SELECT * FROM user WHERE NICKNAME = @NICKNAME";
+                    // 닉네임 중복 확인 (대소문자 구별)
+                    string checkNicknameQuery = "SELECT * FROM user WHERE BINARY NICKNAME = @NICKNAME";
                     MySqlCommand checkNicknameCmd = new MySqlCommand(checkNicknameQuery, conn);
                     checkNicknameCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
                     MySqlDataReader nicknameReader = checkNicknameCmd.ExecuteReader();
                     if (nicknameReader.Read())
                     {
                         nicknameReader.Close();
-                        MessageBox.Show("중복된 닉네임입니다.");
+                        CHECK.Text = "중복된 닉네임입니다.";
                         return;
                     }
                     nicknameReader.Close();
 
-                    // Insert new user
+                    // 새로운 user 삽입
                     string insertQuery = "INSERT INTO user (ID, PW, NICKNAME) VALUES (@ID, @PW, @NICKNAME)";
                     MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
                     insertCmd.Parameters.AddWithValue("@ID", signup_id.Text);
@@ -69,7 +69,6 @@ namespace BLUFF_CITY
                     insertCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
                     insertCmd.ExecuteNonQuery();
 
-                    MessageBox.Show("회원가입이 완료되었습니다.");
                     //start startForm = new start();
                     //startForm.Show();
                     this.Hide();

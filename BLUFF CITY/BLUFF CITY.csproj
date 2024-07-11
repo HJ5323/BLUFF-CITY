@@ -10,8 +10,128 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="bear.png" />
+    <None Remove="bear_check.png" />
+    <None Remove="bear_jail.png" />
+    <None Remove="cat.png" />
+    <None Remove="cat_check.png" />
+    <None Remove="cat_jail.png" />
+    <None Remove="dog.png" />
+    <None Remove="dog_check.png" />
+    <None Remove="dog_jail.png" />
+    <None Remove="elephant.png" />
+    <None Remove="elephant_check.png" />
+    <None Remove="elephant_jail.png" />
+    <None Remove="ferret.png" />
+    <None Remove="ferret_check.png" />
+    <None Remove="ferret_jail.png" />
+    <None Remove="hamster.png" />
+    <None Remove="hamster_check.png" />
+    <None Remove="hamster_jail.png" />
+    <None Remove="killer_whale.png" />
+    <None Remove="killer_whale_check.png" />
+    <None Remove="killer_whale_jail.png" />
+    <None Remove="lion.png" />
+    <None Remove="lion_check.png" />
+    <None Remove="lion_jail.png" />
+    <None Remove="otter.png" />
+    <None Remove="otter_check.png" />
+    <None Remove="otter_jail.png" />
+    <None Remove="panda.png" />
+    <None Remove="panda_check.png" />
+    <None Remove="panda_jail.png" />
+    <None Remove="puppy.png" />
+    <None Remove="puppy_check.png" />
+    <None Remove="puppy_jail.png" />
+    <None Remove="raccoon.png" />
+    <None Remove="raccoon_check.png" />
+    <None Remove="raccoon_jail.png" />
+    <None Remove="seal.png" />
+    <None Remove="seal_check.png" />
+    <None Remove="seal_jail.png" />
+    <None Remove="tiger.png" />
+    <None Remove="tiger_check.png" />
+    <None Remove="tiger_jail.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="bear.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bear_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bear_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dog.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dog_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dog_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="elephant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="elephant_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="elephant_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ferret.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ferret_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ferret_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="killer_whale.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="killer_whale_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="killer_whale_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="otter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="otter_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="otter_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="raccoon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="raccoon_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="raccoon_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tiger.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tiger_check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tiger_jail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

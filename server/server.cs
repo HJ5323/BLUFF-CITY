@@ -16,8 +16,19 @@ namespace server
     {
         static Dictionary<string, List<TcpClient>> gameRooms = new Dictionary<string, List<TcpClient>>();
         static List<string> playerInfo = new List<string>();  // 로그인한 플레이어 정보 저장
+        static List<string> readyPlayer = new List<string>(); // ready한 플레이어 정보 저장
 
-        static object lockObj = new object();
+        static List<string> topics = new List<string> { "동물", "음식", "도시" }; // 주제 리스트
+        static Dictionary<string, List<string>> keywords = new Dictionary<string, List<string>>()
+        {
+            { "동물", new List<string> { "호랑이", "코끼리", "강아지", "고양이", "판다", "거북이", "늑대" } },
+            { "음식", new List<string> { "피자", "햄버거", "소금빵", "치킨", "돼지국밥", "떡볶이", "파스타", "샌드위치" } },
+            { "도시", new List<string> { "서울", "부산", "대구", "울산", "토론토", "라스베가스", "바르셀로나", "몬차", "모나코", "스필버그", "실버스톤" } },
+            { "과일", new List<string> { "사과", "복숭아", "골든키위", "체리", "자두", "바나나", "딸기", "자몽", "망고" } },
+            { "물건", new List<string> { "세탁기", "에어컨", "노트북", "연필", "충전기", "스마트폰", "시계", "가방", "책" } }
+        };
+
+        //static object lockObj = new object();
 
         static void Main(string[] args)
         {
@@ -238,13 +249,71 @@ namespace server
 
                         string nickname = messageParts[1];
                         string chatMessage = messageParts[2];
-                        //string chat = 
                         BroadcastMessage(gameRoom, $"{nickname} : {chatMessage}", null);
                         // SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
 
                         // 모든 저장된 메시지를 클라이언트에 전송
                         //SendAllMessagesToClient(client, gameRoom);
 
+                    }
+
+                    else if (action == "ready")
+                    {
+                        string id = messageParts[1];
+                        string nickname = messageParts[2];
+                        Console.WriteLine($"{nickname} 준비 완료");
+
+                        if (messageParts.Length != 3)
+                        {
+                            Console.WriteLine("잘못된 메시지 형식");
+                            continue;
+                        }
+
+                        lock (readyPlayer)
+                        {
+                            if (!readyPlayer.Contains($"{id}:{nickname}"))
+                            {
+                                readyPlayer.Add($"{id}:{nickname}"); // ready 플레이어 정보 저장
+                                BroadcastMessage(gameRoom, $"{nickname} : READY!", null);
+                            }
+                            if (readyPlayer.Count == playerInfo.Count && playerInfo.Count >= 3) // 최소 3명 이상이며 모두 ready했을 때 게임 진행 가능
+                            {
+                                Console.WriteLine("모든 플레이어가 준비 완료, 게임 시작");
+
+                                // 랜덤 주제와 키워드 선택
+                                Random rand = new Random();
+                                string selectedTopic = topics[rand.Next(topics.Count)];
+                                List<string> topicKeywords = keywords[selectedTopic];
+                                string selectedKeyword = topicKeywords[rand.Next(topicKeywords.Count)];
+
+                                // 라이어 선정
+                                int liarIndex = rand.Next(readyPlayer.Count);
+
+                                for (int i = 0; i < readyPlayer.Count; i++)
+                                {
+                                    TcpClient currentClient = gameRooms[gameRoom][i];
+                                    NetworkStream currentStream = currentClient.GetStream();
+
+                                    if (i == liarIndex)
+                                    {
+                                        byte[] liarData = Encoding.UTF8.GetBytes("topic_keyword:" + selectedTopic + ":Liar");
+                                        currentStream.Write(liarData, 0, liarData.Length); // 라이어에게는 키워드를 보내지 않음
+                                    }
+                                    else
+                                    {
+                                        byte[] keywordData = Encoding.UTF8.GetBytes("topic_keyword:" + selectedTopic + ":" + selectedKeyword);
+                                        currentStream.Write(keywordData, 0, keywordData.Length); // 라이어가 아닌 플레이어에게 주제와 키워드 전송
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                byte[] msg = Encoding.UTF8.GetBytes("모든 player가 ready하면 게임이 시작됩니다.");
+                                stream.Write(msg, 0, msg.Length);
+                                client.Close();
+                                return;
+                            }
+                        }
                     }
                 }
             }
@@ -254,12 +323,17 @@ namespace server
             }
             finally
             {
-                if (gameRoom != null)
+                if (isLoggedIn && gameRoom != null)
                 {
                     lock (gameRooms)
                     {
-                        gameRooms[gameRoom].Remove(client);
-                        BroadcastMessage(gameRoom, $"{gameRoom}: 플레이어가 게임에서 나갔습니다!", client);
+                        gameRooms[gameRoom].Remove(client); // 클라이언트를 방에서 제거
+
+                        // 방에 더 이상 클라이언트가 없으면 방 삭제
+                        if (gameRooms[gameRoom].Count == 0)
+                        {
+                            gameRooms.Remove(gameRoom);
+                        }
                     }
                 }
                 client.Close();
@@ -308,6 +382,8 @@ namespace server
                 foreach (var p in playerInfo)
                 {
                     playerListMessage += $"{p},";
+                    Console.WriteLine($"{p},");
+
                 }
             }
             playerListMessage = playerListMessage.TrimEnd(',');

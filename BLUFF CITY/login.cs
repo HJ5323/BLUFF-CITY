@@ -36,23 +36,6 @@ namespace BLUFF_CITY
             ApplyTransparentBackgroundAndHideBorder();
 
         }
-
-        /*
-        // 서버 연결
-        public static void ConnectToServer()
-        {
-            try
-            {
-                network.client = new TcpClient("127.0.0.1", 13000); // 서버 연결
-                stream = client.GetStream(); // 네트워크 스트림 설정
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex.Message}");
-            }
-        }
-
-        */
         private void Login_ok_Click(object sender, EventArgs e)
         {
             string nickname;

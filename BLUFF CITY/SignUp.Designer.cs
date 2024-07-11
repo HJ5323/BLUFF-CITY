@@ -61,7 +61,6 @@ namespace BLUFF_CITY
             signup_id.Name = "signup_id";
             signup_id.Size = new Size(150, 31);
             signup_id.TabIndex = 1;
-            signup_id.Text = "아이디";
             // 
             // signup_pw
             // 
@@ -70,7 +69,6 @@ namespace BLUFF_CITY
             signup_pw.Name = "signup_pw";
             signup_pw.Size = new Size(150, 31);
             signup_pw.TabIndex = 2;
-            signup_pw.Text = "비밀번호";
             // 
             // signup_name
             // 
@@ -79,7 +77,6 @@ namespace BLUFF_CITY
             signup_name.Name = "signup_name";
             signup_name.Size = new Size(150, 31);
             signup_name.TabIndex = 3;
-            signup_name.Text = "닉네임";
             // 
             // ID
             // 
@@ -122,7 +119,6 @@ namespace BLUFF_CITY
             CHECK.Name = "CHECK";
             CHECK.Size = new Size(258, 31);
             CHECK.TabIndex = 7;
-            CHECK.Text = "중복된 ID, NAME 입니다.";
             // 
             // SignUp
             // 

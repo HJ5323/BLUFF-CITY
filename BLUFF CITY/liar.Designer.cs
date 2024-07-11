@@ -1,4 +1,5 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+﻿using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BLUFF_CITY
 {
@@ -54,25 +55,24 @@ namespace BLUFF_CITY
             li_p1_name = new TextBox();
             li_p1 = new Button();
             category = new TextBox();
+            login_name = new TextBox();
             SuspendLayout();
             // 
             // chat
             // 
-            chat.BackColor = Color.Gainsboro;
-            chat.Font = new Font("휴먼편지체", 10F, FontStyle.Bold);
-            chat.Location = new Point(225, 805);
-            chat.Margin = new Padding(3, 2, 3, 2);
+            chat.BackColor = Color.FromArgb(217, 217, 217);
+            chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
+            chat.Location = new Point(250, 1006);
             chat.Name = "chat";
             chat.Size = new Size(450, 27);
             chat.TabIndex = 45;
-            chat.KeyDown += chat_KeyDown;
+            chat.Click += chat_KeyDown;
             // 
             // players_chat
             // 
-            players_chat.BackColor = Color.Gainsboro;
-            players_chat.Font = new Font("휴먼편지체", 10F, FontStyle.Bold);
-            players_chat.Location = new Point(225, 102);
-            players_chat.Margin = new Padding(3, 2, 3, 2);
+            players_chat.BackColor = Color.FromArgb(217, 217, 217);
+            players_chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
+            players_chat.Location = new Point(250, 128);
             players_chat.Multiline = true;
             players_chat.Name = "players_chat";
             players_chat.ScrollBars = ScrollBars.Horizontal;
@@ -82,7 +82,7 @@ namespace BLUFF_CITY
             // 
             // word
             // 
-            word.BackColor = Color.Gainsboro;
+            word.BackColor = Color.FromArgb(217, 217, 217);
             word.BorderStyle = BorderStyle.None;
             word.Font = new Font("휴먼편지체", 15F, FontStyle.Bold);
             word.Location = new Point(360, 14);
@@ -95,7 +95,7 @@ namespace BLUFF_CITY
             // 
             // READY
             // 
-            READY.BackColor = Color.Gainsboro;
+            READY.BackColor = Color.FromArgb(217, 217, 217);
             READY.BackgroundImageLayout = ImageLayout.None;
             READY.FlatStyle = FlatStyle.Flat;
             READY.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
@@ -107,10 +107,11 @@ namespace BLUFF_CITY
             READY.TabIndex = 42;
             READY.Text = "READY";
             READY.UseVisualStyleBackColor = false;
+            READY.Click += READY_Click;
             // 
             // exit
             // 
-            exit.BackColor = Color.Gainsboro;
+            exit.BackColor = Color.FromArgb(217, 217, 217);
             exit.BackgroundImage = Properties.Resources.icons8_출구_64;
             exit.BackgroundImageLayout = ImageLayout.Zoom;
             exit.FlatStyle = FlatStyle.Flat;
@@ -125,7 +126,7 @@ namespace BLUFF_CITY
             // 
             // time
             // 
-            time.BackColor = Color.Gainsboro;
+            time.BackColor = Color.FromArgb(217, 217, 217);
             time.BorderStyle = BorderStyle.None;
             time.Font = new Font("휴먼편지체", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
             time.Location = new Point(703, 15);
@@ -137,7 +138,7 @@ namespace BLUFF_CITY
             // 
             // LIAR_GAME
             // 
-            LIAR_GAME.BackColor = Color.Gainsboro;
+            LIAR_GAME.BackColor = Color.FromArgb(217, 217, 217);
             LIAR_GAME.BorderStyle = BorderStyle.None;
             LIAR_GAME.Font = new Font("휴먼편지체", 18F, FontStyle.Bold, GraphicsUnit.Point, 129);
             LIAR_GAME.ForeColor = SystemColors.WindowText;
@@ -168,8 +169,8 @@ namespace BLUFF_CITY
             li_p8.Name = "li_p8";
             li_p8.Size = new Size(157, 139);
             li_p8.TabIndex = 37;
-            li_p8.Text = "li_p8";
             li_p8.UseVisualStyleBackColor = false;
+            li_p8.Click += li_p8_Click;
             // 
             // li_p7_name
             // 
@@ -191,8 +192,8 @@ namespace BLUFF_CITY
             li_p7.Name = "li_p7";
             li_p7.Size = new Size(157, 139);
             li_p7.TabIndex = 35;
-            li_p7.Text = "li_p7";
             li_p7.UseVisualStyleBackColor = false;
+            li_p7.Click += li_p7_Click;
             // 
             // li_p6_name
             // 
@@ -214,8 +215,8 @@ namespace BLUFF_CITY
             li_p6.Name = "li_p6";
             li_p6.Size = new Size(157, 139);
             li_p6.TabIndex = 33;
-            li_p6.Text = "li_p6";
             li_p6.UseVisualStyleBackColor = false;
+            li_p6.Click += li_p6_Click;
             // 
             // li_p5_name
             // 
@@ -236,8 +237,8 @@ namespace BLUFF_CITY
             li_p5.Name = "li_p5";
             li_p5.Size = new Size(157, 139);
             li_p5.TabIndex = 31;
-            li_p5.Text = "li_p5";
             li_p5.UseVisualStyleBackColor = false;
+            li_p5.Click += li_p5_Click;
             // 
             // li_p4_name
             // 
@@ -259,8 +260,8 @@ namespace BLUFF_CITY
             li_p4.Name = "li_p4";
             li_p4.Size = new Size(157, 139);
             li_p4.TabIndex = 29;
-            li_p4.Text = "li_p4";
             li_p4.UseVisualStyleBackColor = false;
+            li_p4.Click += li_p4_Click;
             // 
             // li_p3_name
             // 
@@ -282,8 +283,8 @@ namespace BLUFF_CITY
             li_p3.Name = "li_p3";
             li_p3.Size = new Size(157, 139);
             li_p3.TabIndex = 27;
-            li_p3.Text = "li_p3";
             li_p3.UseVisualStyleBackColor = false;
+            li_p3.Click += li_p3_Click;
             // 
             // li_p2_name
             // 
@@ -305,8 +306,8 @@ namespace BLUFF_CITY
             li_p2.Name = "li_p2";
             li_p2.Size = new Size(157, 139);
             li_p2.TabIndex = 25;
-            li_p2.Text = "li_p2";
             li_p2.UseVisualStyleBackColor = false;
+            li_p2.Click += li_p2_Click;
             // 
             // li_p1_name
             // 
@@ -328,12 +329,12 @@ namespace BLUFF_CITY
             li_p1.Name = "li_p1";
             li_p1.Size = new Size(157, 139);
             li_p1.TabIndex = 23;
-            li_p1.Text = "li_p1";
             li_p1.UseVisualStyleBackColor = false;
+            li_p1.Click += li_p1_Click;
             // 
             // category
             // 
-            category.BackColor = Color.Gainsboro;
+            category.BackColor = Color.FromArgb(217, 217, 217);
             category.BorderStyle = BorderStyle.None;
             category.Font = new Font("휴먼편지체", 15F, FontStyle.Bold);
             category.Location = new Point(199, 14);
@@ -344,12 +345,24 @@ namespace BLUFF_CITY
             category.Text = "과일";
             category.TextAlign = HorizontalAlignment.Center;
             // 
+            // login_name
+            // 
+            login_name.BackColor = Color.FromArgb(217, 217, 217);
+            login_name.BorderStyle = BorderStyle.None;
+            login_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            login_name.Location = new Point(765, 79);
+            login_name.Name = "login_name";
+            login_name.Size = new Size(219, 28);
+            login_name.TabIndex = 47;
+            // 
             // liar
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(217, 217, 217);
             BackgroundImage = Properties.Resources.game_background;
-            ClientSize = new Size(896, 844);
+            ClientSize = new Size(996, 1119);
+            Controls.Add(login_name);
             Controls.Add(category);
             Controls.Add(chat);
             Controls.Add(players_chat);
@@ -412,6 +425,33 @@ namespace BLUFF_CITY
         private TextBox[] LiarNames; // li_p1_name부터 li_p18_name까지 텍스트 박스 배열
         private Button[] LiarOtherButtons; // READY, exit 버튼 배열
         private TextBox[] LiarOtherTextBox; // time, MAFIA_GAME, roll, players_chat, chat 텍스트 박스　배열
+        private PictureBox[] Liar_player_images = new PictureBox[8]; // li_p1_image부터 li_p8_image까지 픽처박스 배열
+
+        // 생성자나 초기화 메서드에서 호출하여 PictureBox 초기화
+        private void InitializePictureBoxes()
+        {
+            string[] animals = { "otter", "bear", "dog", "elephant", "ferret", "killer_whale", "raccoon", "tiger" };
+            int startX = 61;
+            int startY = 128;
+            int spacingY = 216;
+            int columnX1 = startX;
+            int columnX2 = 765;
+
+            for (int i = 0; i < Liar_player_images.Length; i++)
+            {
+                Liar_player_images[i] = new PictureBox();
+                Liar_player_images[i].BackColor = Color.Transparent;
+                Liar_player_images[i].BackgroundImage = Properties.Resources.ResourceManager.GetObject(animals[i]) as Image;
+                Liar_player_images[i].BackgroundImageLayout = ImageLayout.Center;
+                Liar_player_images[i].ForeColor = Color.Black;
+                Liar_player_images[i].Location = new Point(i < 4 ? columnX1 : columnX2, startY + (i % 4) * spacingY);
+                Liar_player_images[i].Name = $"li_p{i + 1}_image";
+                Liar_player_images[i].Size = new Size(174, 174);
+                Liar_player_images[i].TabIndex = 47;
+
+                this.Controls.Add(Liar_player_images[i]);
+            }
+        }
 
         private void InitializeArrays()
         {
@@ -428,5 +468,7 @@ namespace BLUFF_CITY
             // LiarOtherTextBox 배열 초기화
             LiarOtherTextBox = new TextBox[] { time, LIAR_GAME, word, category, players_chat, chat };
         }
+
+        private TextBox login_name;
     }
 }
