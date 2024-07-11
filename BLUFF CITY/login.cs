@@ -14,12 +14,19 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Net.Sockets;
 using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MySqlX.XDevAPI;
 using System.IO;
 
 namespace BLUFF_CITY
 {
+
     public partial class login : Form
     {
+        //private static TcpClient client; // 서버와 TCP 연결을 나타내는 TcpCient 객체
+        //private static NetworkStream stream; // 네트워크 스트림
+
+        Network network = new Network(0);
+
         public login()
         {
             InitializeComponent();
@@ -29,45 +36,23 @@ namespace BLUFF_CITY
             ApplyTransparentBackgroundAndHideBorder();
 
         }
-
         private void Login_ok_Click(object sender, EventArgs e)
         {
-            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            string nickname;
+            MessageBox.Show("Login successful");
+
+            while(true)
             {
-                try
-                {
-                    conn.Open(); // DB 연결
-
-                    // BINARY -> 대소문자 구분
-                    string query = "SELECT NICKNAME FROM user WHERE BINARY ID = @ID AND BINARY PW = @PW";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@ID", login_id.Text); // ID 매개변수 설정
-                    cmd.Parameters.AddWithValue("@PW", login_pw.Text); // PW 매개변수 설정
-                    MySqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read()) // 로그인 성공 시
-                    {
-                        string nickname = reader["NICKNAME"].ToString();
-
-                        // 서버에 로그인 정보 전송
-                        liar.SendLoginInfo(login_id.Text, nickname);
-
-                        ChooseGame chooseGameForm = new ChooseGame(login_id.Text, nickname);
-                        chooseGameForm.Show();
-                        this.Hide();
-                    }
-                    else // 로그인 실패 시
-                    {
-                        CHECK.Text = "ID 또는 PW를 다시 입력해 주세요.";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                // 서버에 로그인 정보 전송
+                network.SendLoginInfo(login_id.Text, login_pw.Text);
+                nickname = network.ReceiveNickname();
+                if (nickname != null) { break; }
             }
+            ChooseGame chooseGameForm = new ChooseGame(login_id.Text, nickname);
+            chooseGameForm.Show();
+            this.Hide();
         }
+
 
         private void login_FormClosed(object sender, FormClosedEventArgs e)
         {
