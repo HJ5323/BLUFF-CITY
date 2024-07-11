@@ -99,88 +99,61 @@ namespace BLUFF_CITY
                     // mafia_game:ME: aaa
                     string[] parts = message.Split(':');
                     string messageType = parts[0]; // 메시지의 유형
-                    // 마피아 게임 채팅 메시지인 경우
-                    if (messageType == "liar_game" && parts.Length == 3)
+
+                    // 플레이어 정보 메시지인 경우
+                    if (messageType == "player_info")
                     {
-                        if (messageType == "player_info")
-                        {
-                            // parts 배열에서 parts[0]을 제외한 나머지 부분들을 추출
-                            string playersMessage = string.Join(":", parts.Skip(1));
-                            UpdatePlayerInfo(playersMessage); // 플레이어 정보를 업데이트
-                        }
-
-                        string nickname = parts[1]; // 닉네임
-                        string actualMessage = parts[2]; // 실제 메시지 내용
-
-                        // UI 스레드에서 players_chat에 메시지를 추가
-                        players_chat.Invoke(new Action(() =>
-                        {
-                            // 이전 내용을 모두 지우고 새로운 메시지를 추가
-                            //players_chat.Clear();
-                            if (actualMessage[actualMessage.Length - 1] == '*')
-                            {
-                                players_chat.Clear();
-                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                            }
-                            else
-                            {
-                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                            }
-                        }));
-                        //string chatMessage = parts[1]; // 실제 채팅 내용
-                        // 플레이어 정보 메시지인 경우
-                        if (messageType == "player_info")
-                        {
-                            // parts 배열에서 parts[0]을 제외한 나머지 부분들을 추출
-                            string playersMessage = string.Join(":", parts.Skip(1));
-                            UpdatePlayerInfo(playersMessage); // 플레이어 정보를 업데이트
-                        }
-                        //// liar_game 채팅 메시지인 경우
-                        //if (messageType == "liar_game" && parts.Length == 3)
-                        //{
-                        // 채팅 메시지를 다시 콜론을 기준으로 파싱
-                        //string[] chatParts = chatMessage.Split(new[] { ':' }, 2);
-                        //if (chatParts.Length < 2)
-                        //{
-                        //    Console.WriteLine("잘못된 채팅 메시지 형식");
-                        //    return;
-                        //}
-
-                        else if (messageType == "topic_keyword")
-                        {
-                            string topic = parts[1]; // 주제
-                            string keyword = parts[2]; // 키워드
-
-                            // UI 스레드에서 텍스트 박스에 주제와 키워드를 표시
-                            category.Invoke(new Action(() =>
-                            {
-                                category.Text = topic;
-                            }));
-                            word.Invoke(new Action(() =>
-                            {
-                                word.Text = keyword;
-                            }));
-                            return;
-                        }
-
-                        nickname = parts[1]; // 닉네임
-                        actualMessage = parts[2]; // 실제 메시지 내용
-                                                  // UI 스레드에서 players_chat에 메시지를 추가
-                        players_chat.Invoke(new Action(() =>
-                        {
-                            // 이전 내용을 모두 지우고 새로운 메시지를 추가
-                            //players_chat.Clear();
-                            if (actualMessage[actualMessage.Length - 1] == '*')
-                            {
-                                players_chat.Clear();
-                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                            }
-                            else
-                            {
-                                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                            }
-                        }));
+                        // parts 배열에서 parts[0]을 제외한 나머지 부분들을 추출
+                        string playersMessage = string.Join(":", parts.Skip(1));
+                        UpdatePlayerInfo(playersMessage); // 플레이어 정보를 업데이트
                     }
+                    //// liar_game 채팅 메시지인 경우
+                    //if (messageType == "liar_game" && parts.Length == 3)
+                    //{
+                    // 채팅 메시지를 다시 콜론을 기준으로 파싱
+                    //string[] chatParts = chatMessage.Split(new[] { ':' }, 2);
+                    //if (chatParts.Length < 2)
+                    //{
+                    //    Console.WriteLine("잘못된 채팅 메시지 형식");
+                    //    return;
+                    //}
+
+                    else if (messageType == "topic_keyword")
+                    {
+                        string topic = parts[1]; // 주제
+                        string keyword = parts[2]; // 키워드
+
+                        // UI 스레드에서 텍스트 박스에 주제와 키워드를 표시
+                        category.Invoke(new Action(() =>
+                        {
+                            category.Text = topic;
+                        }));
+                        word.Invoke(new Action(() =>
+                        {
+                            word.Text = keyword;
+                        }));
+                        return;
+                    }
+
+
+                    string nickname = parts[1]; // 닉네임
+                    string actualMessage = parts[2]; // 실제 메시지 내용
+
+                    // UI 스레드에서 players_chat에 메시지를 추가
+                    players_chat.Invoke(new Action(() =>
+                    {
+                        // 이전 내용을 모두 지우고 새로운 메시지를 추가
+                        //players_chat.Clear();
+                        if (actualMessage[actualMessage.Length - 1] == '*')
+                        {
+                            players_chat.Clear();
+                            players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+                        }
+                        else
+                        {
+                            players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+                        }
+                    }));
                 }
             }
         }
@@ -319,11 +292,7 @@ namespace BLUFF_CITY
             }
         }
 
-        private void chat_KeyDown(object sender, EventArgs e)
-        {
-
-        }
     }
-    
+
 }
 

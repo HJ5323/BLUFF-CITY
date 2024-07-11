@@ -49,8 +49,28 @@ namespace BLUFF_CITY
         }
 
 
+        //// 서버에 로그인 정보 전송
+        //public void SendLoginInfo(string id, string nickname)
+        //{
+        //    try
+        //    {
+        //        if (client == null || !client.Connected)
+        //        {
+        //            ConnectToServer();
+        //        }
+
+        //        string message = $"login:{id}:{nickname}";
+        //        byte[] data = Encoding.UTF8.GetBytes(message);
+        //        stream.Write(data, 0, data.Length);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Exception: {ex.Message}");
+        //    }
+        //}
+
         // 서버에 로그인 정보 전송
-        public void SendLoginInfo(string id, string nickname)
+        public void SendLoginInfo(string id, string pw)
         {
             try
             {
@@ -59,7 +79,7 @@ namespace BLUFF_CITY
                     ConnectToServer();
                 }
 
-                string message = $"login:{id}:{nickname}";
+                string message = $"login:{id}:{pw}";
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
             }

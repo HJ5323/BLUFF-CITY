@@ -39,7 +39,6 @@ namespace BLUFF_CITY
         private void Login_ok_Click(object sender, EventArgs e)
         {
             string nickname;
-            MessageBox.Show("Login successful");
 
             while(true)
             {

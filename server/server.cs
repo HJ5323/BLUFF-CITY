@@ -138,16 +138,13 @@ namespace server
             byte[] buffer = new byte[256];
             string gameRoom = null;
             bool isLoggedIn = false; // 클라이언트 로그인 여부
-            //object obj = new object();
-
+                                     //object obj = new object();
             try
             {
                 string action = null;
                 string playerID = null;
                 string playerPW = null;
                 string playerNick = null;
-
-
                 // 클라이언트가 join 메시지를 보낼 때까지 대기
                 while (true)
                 {
@@ -155,7 +152,6 @@ namespace server
                     int bytesRead = stream.Read(buffer, 0, buffer.Length);
                     string initialMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
                     Console.WriteLine($"수신된 초기 메시지: {initialMessage}");
-
                     string[] messageParts = initialMessage.Split(':');
                     if (messageParts.Length < 3)
                     {
@@ -163,20 +159,15 @@ namespace server
                         client.Close();
                         return;
                     }
-
                     action = messageParts[0];
-
                     if (action == "login")
                     {
                         playerID = messageParts[1];
                         playerPW = messageParts[2];
                         gameRoom = messageParts.Length > 3 ? messageParts[3] : null;
                         playerNick = login(playerID, playerPW);
-
                         SendNicknametoClient(playerNick, client);
-
                         playerInfo.Add($"{playerID}:{playerNick}"); // 플레이어 정보 저장
-
                         Console.WriteLine($"플레이어 로그인 - ID: {playerID}, 닉네임: {playerNick}");
                         isLoggedIn = true; // 로그인
                     }
@@ -186,6 +177,7 @@ namespace server
                         client.Close();
                         return;
                     }
+
                     /*
                     bytesRead = stream.Read(buffer, 0, buffer.Length);
                     if (bytesRead == 0)
@@ -193,14 +185,12 @@ namespace server
                         // 클라이언트가 연결을 끊은 경우
                         break;
                     }
-
                     initialMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
                     messageParts = initialMessage.Split(':');
                     action = messageParts[0];
                     */
                     if (action == "join")
                     {
-
                         playerID = messageParts[1];
                         playerNick = messageParts[2];
                         gameRoom = messageParts[3];
@@ -220,14 +210,10 @@ namespace server
                                 {
                                     ClearDB();
                                     Console.WriteLine($"ClearDB");
-
                                 }
                                 Console.WriteLine($"{playerNick}가 방에 입장했습니다: {gameRoom}");
-
                                 BroadcastMessage(gameRoom, $"{playerNick}님이 게임에 참가했습니다!", client);
-
-                                //SendPlayerInfo(gameRoom); // 모든 플레이어 정보 전송
-
+                                SendPlayerInfo(gameRoom); // 모든 플레이어 정보 전송
                             }
                             else
                             {
@@ -238,7 +224,6 @@ namespace server
                             }
                         }
                     }
-
                     else if (action == "chat")
                     {
                         if (messageParts.Length != 3)
@@ -246,29 +231,23 @@ namespace server
                             Console.WriteLine("잘못된 채팅 메시지 형식");
                             continue;
                         }
-
                         string nickname = messageParts[1];
                         string chatMessage = messageParts[2];
                         BroadcastMessage(gameRoom, $"{nickname} : {chatMessage}", null);
                         // SaveMessageToDatabase(nickname, chatMessage); // 데이터베이스에 메시지 저장
-
                         // 모든 저장된 메시지를 클라이언트에 전송
                         //SendAllMessagesToClient(client, gameRoom);
-
                     }
-
                     else if (action == "ready")
                     {
                         string id = messageParts[1];
                         string nickname = messageParts[2];
                         Console.WriteLine($"{nickname} 준비 완료");
-
                         if (messageParts.Length != 3)
                         {
                             Console.WriteLine("잘못된 메시지 형식");
                             continue;
                         }
-
                         lock (readyPlayer)
                         {
                             if (!readyPlayer.Contains($"{id}:{nickname}"))
@@ -279,21 +258,17 @@ namespace server
                             if (readyPlayer.Count == playerInfo.Count && playerInfo.Count >= 3) // 최소 3명 이상이며 모두 ready했을 때 게임 진행 가능
                             {
                                 Console.WriteLine("모든 플레이어가 준비 완료, 게임 시작");
-
                                 // 랜덤 주제와 키워드 선택
                                 Random rand = new Random();
                                 string selectedTopic = topics[rand.Next(topics.Count)];
                                 List<string> topicKeywords = keywords[selectedTopic];
                                 string selectedKeyword = topicKeywords[rand.Next(topicKeywords.Count)];
-
                                 // 라이어 선정
                                 int liarIndex = rand.Next(readyPlayer.Count);
-
                                 for (int i = 0; i < readyPlayer.Count; i++)
                                 {
                                     TcpClient currentClient = gameRooms[gameRoom][i];
                                     NetworkStream currentStream = currentClient.GetStream();
-
                                     if (i == liarIndex)
                                     {
                                         byte[] liarData = Encoding.UTF8.GetBytes("topic_keyword:" + selectedTopic + ":Liar");
@@ -328,8 +303,7 @@ namespace server
                     lock (gameRooms)
                     {
                         gameRooms[gameRoom].Remove(client); // 클라이언트를 방에서 제거
-
-                        // 방에 더 이상 클라이언트가 없으면 방 삭제
+                                                            // 방에 더 이상 클라이언트가 없으면 방 삭제
                         if (gameRooms[gameRoom].Count == 0)
                         {
                             gameRooms.Remove(gameRoom);
@@ -348,7 +322,7 @@ namespace server
                 try
                 {
                     conn.Open(); // DB 연결
-                    string query = "SELECT NICKNAME FROM user WHERE ID = @ID AND PW = @PW";
+                    string query = "SELECT NICKNAME FROM user WHERE BINARY ID = @ID AND BINARY PW = @PW";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ID", ID); // ID 매개변수 설정
                     cmd.Parameters.AddWithValue("@PW", PW); // PW 매개변수 설정
@@ -362,6 +336,7 @@ namespace server
                     else // 로그인 실패 시
                     {
                         Console.WriteLine("로그인 실패");
+                        //CHECK.Text = "ID 또는 PW를 다시 입력해 주세요.";
                         return nickname;
                     }
                 }
@@ -372,7 +347,7 @@ namespace server
                 }
             }
         }
-        /*
+        
         // gameRoom의 모든 클라이언트에게 플레이어 정보 전송
         private static void SendPlayerInfo(string gameRoom)
         {
@@ -398,6 +373,6 @@ namespace server
                 }
             }
         }
-        */
+        
     }
 }

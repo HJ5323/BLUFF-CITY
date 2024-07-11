@@ -29,7 +29,7 @@ namespace BLUFF_CITY
             ApplyTransparentBackgroundAndHideBorder();
 
             // 서버 연결
-            liar.ConnectToServer();
+            //liar.ConnectToServer();
         }
 
         private void LOGIN_Click(object sender, EventArgs e)
