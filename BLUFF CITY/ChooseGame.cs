@@ -16,6 +16,8 @@ namespace BLUFF_CITY
         private string playerID;
         private string playerNickname;
 
+        liar liarForm;
+
         public ChooseGame(string id, string nickname)
         {
             InitializeComponent();
@@ -43,15 +45,15 @@ namespace BLUFF_CITY
 
         private void MAFIA_GAME_Click(object sender, EventArgs e)
         {
-            mafia mafiaForm = new mafia(playerID, playerNickname);
-            mafiaForm.Show();
+            //mafia mafiaForm = new mafia(playerID, playerNickname);
+            //mafiaForm.Show();
 
             this.Hide();
         }
 
         private void LIAR_GAME_Click(object sender, EventArgs e)
         {
-            liar liarForm = new liar(playerID, playerNickname);
+            liarForm = new liar(playerID, playerNickname);
             liarForm.Show();
 
             this.Hide();

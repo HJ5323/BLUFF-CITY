@@ -95,8 +95,16 @@ namespace server
             }
         }
 
+        private static void SendNicknametoClient(string nickname, TcpClient client)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(nickname);
+            //Console.WriteLine("메세지 보냄");
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
+        }
+
         // gameRoom의 모든 클라인언트에게 메시지 전송
-        private static void BroadcastMessage(string gameRoom, string message, TcpClient excludeClient)
+        private static void BroadcastMessage( string gameRoom, string message, TcpClient excludeClient)
         {
             if (gameRooms.ContainsKey(gameRoom))
             {
@@ -125,45 +133,49 @@ namespace server
             {
                 string action = null;
                 string playerID = null;
+                string playerPW = null;
                 string playerNick = null;
 
-                // 초기 메시지 읽기
-                int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                string initialMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                Console.WriteLine($"수신된 초기 메시지: {initialMessage}");
-
-                string[] messageParts = initialMessage.Split(':');
-                if (messageParts.Length < 3)
-                {
-                    Console.WriteLine("잘못된 메시지 형식");
-                    client.Close();
-                    return;
-                }
-
-                action = messageParts[0];
-                playerID = messageParts[1];
-                playerNick = messageParts[2];
-                gameRoom = messageParts.Length > 3 ? messageParts[3] : null;
-
-                if (action == "login")
-                {
-                    lock (playerInfo)
-                    {
-                        playerInfo.Add($"{playerID}:{playerNick}"); // 플레이어 정보 저장
-                    }
-                    Console.WriteLine($"플레이어 로그인 - ID: {playerID}, 닉네임: {playerNick}");
-                    isLoggedIn = true; // 로그인
-                }
-                else
-                {
-                    Console.WriteLine("처음에 로그인 메시지가 와야합니다");
-                    client.Close();
-                    return;
-                }
 
                 // 클라이언트가 join 메시지를 보낼 때까지 대기
-                while (isLoggedIn)
+                while (true)
                 {
+                    // 초기 메시지 읽기
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    string initialMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                    Console.WriteLine($"수신된 초기 메시지: {initialMessage}");
+
+                    string[] messageParts = initialMessage.Split(':');
+                    if (messageParts.Length < 3)
+                    {
+                        Console.WriteLine("잘못된 메시지 형식");
+                        client.Close();
+                        return;
+                    }
+
+                    action = messageParts[0];
+
+                    if (action == "login")
+                    {
+                        playerID = messageParts[1];
+                        playerPW = messageParts[2];
+                        gameRoom = messageParts.Length > 3 ? messageParts[3] : null;
+                        playerNick = login(playerID, playerPW);
+
+                        SendNicknametoClient(playerNick, client);
+
+                        playerInfo.Add($"{playerID}:{playerNick}"); // 플레이어 정보 저장
+
+                        Console.WriteLine($"플레이어 로그인 - ID: {playerID}, 닉네임: {playerNick}");
+                        isLoggedIn = true; // 로그인
+                    }
+                    else if (action != "chat" && action != "join")
+                    {
+                        Console.WriteLine("처음에 로그인 메시지가 와야합니다");
+                        client.Close();
+                        return;
+                    }
+                    /*
                     bytesRead = stream.Read(buffer, 0, buffer.Length);
                     if (bytesRead == 0)
                     {
@@ -174,14 +186,13 @@ namespace server
                     initialMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
                     messageParts = initialMessage.Split(':');
                     action = messageParts[0];
-
+                    */
                     if (action == "join")
                     {
 
                         playerID = messageParts[1];
                         playerNick = messageParts[2];
                         gameRoom = messageParts[3];
-
                         Console.WriteLine($"플레이어 게임 입장 - ID: {playerID}, 닉네임: {playerNick}, 게임: {gameRoom}");
 
                         lock (gameRooms)
@@ -204,7 +215,7 @@ namespace server
 
                                 BroadcastMessage(gameRoom, $"{playerNick}님이 게임에 참가했습니다!", client);
 
-                                SendPlayerInfo(gameRoom); // 모든 플레이어 정보 전송
+                                //SendPlayerInfo(gameRoom); // 모든 플레이어 정보 전송
 
                             }
                             else
@@ -219,9 +230,6 @@ namespace server
 
                     else if (action == "chat")
                     {
-                        Console.WriteLine(messageParts[1]);
-                        Console.WriteLine(messageParts[2]);
-
                         if (messageParts.Length != 3)
                         {
                             Console.WriteLine("잘못된 채팅 메시지 형식");
@@ -257,38 +265,40 @@ namespace server
                 client.Close();
             }
         }
-
-        private static void SendAllMessagesToClient(TcpClient client, string gameRoom)
+        public static string login(string ID, string PW)
         {
             string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
+            string nickname = null;
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
-                    conn.Open();
-                    string query = "SELECT nickname, liar_chat FROM liar_chats ORDER BY timestamp";
+                    conn.Open(); // DB 연결
+                    string query = "SELECT NICKNAME FROM user WHERE ID = @ID AND PW = @PW";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    cmd.Parameters.AddWithValue("@ID", ID); // ID 매개변수 설정
+                    cmd.Parameters.AddWithValue("@PW", PW); // PW 매개변수 설정
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read()) // 로그인 성공 시
                     {
-                        StringBuilder allMessages = new StringBuilder();
-                        while (reader.Read())
-                        {
-                            string nickname = reader.GetString("nickname");
-                            string message = reader.GetString("liar_chat");
-                            allMessages.AppendLine($"\n[{nickname}] {message}");
-                        }
-                        byte[] data = Encoding.UTF8.GetBytes(allMessages.ToString());
-                        NetworkStream stream = client.GetStream();
-                        stream.Write(data, 0, data.Length);
+                        nickname = reader["NICKNAME"].ToString();
+                        return nickname;
+                    }
+                    else // 로그인 실패 시
+                    {
+                        Console.WriteLine("로그인 실패");
+                        return nickname;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Database Error: " + ex.Message);
+                    Console.WriteLine(ex);
+                    return nickname;
                 }
             }
         }
-
+        /*
         // gameRoom의 모든 클라이언트에게 플레이어 정보 전송
         private static void SendPlayerInfo(string gameRoom)
         {
@@ -312,75 +322,6 @@ namespace server
                 }
             }
         }
-
-        // 메시지 데이터베이스에 저장
-        private static void SaveMessageToDatabase(string nickname, string message)
-        {
-            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    lock(lockObj)
-                    {
-                        conn.Open();
-                        string query = "INSERT INTO liar_chats (nickname, liar_chat) VALUES (@nickname, @message)";
-                        MySqlCommand cmd = new MySqlCommand(query, conn);
-                        cmd.Parameters.AddWithValue("@nickname", nickname);
-                        cmd.Parameters.AddWithValue("@message", message);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    // 데이터베이스에 메시지가 저장된 후에 로드하여 클라이언트에 전송
-                    LoadMessagesFromDatabase();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Database Error: " + ex.Message);
-                }
-            }
-        }
-
-        // 데이터베이스에서 메시지를 로드하여 모든 클라이언트에게 브로드캐스트
-        private static void LoadMessagesFromDatabase()
-        {
-            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    lock (lockObj)
-                    {
-                        conn.Open();
-                        string query = "SELECT nickname, liar_chat FROM liar_chats ORDER BY timestamp";
-                        MySqlCommand cmd = new MySqlCommand(query, conn);
-                        int num = 0;
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string nickname = reader.GetString("nickname");
-                                string message = reader.GetString("liar_chat");
-                                num++;
-                                if (num == 1)
-                                {
-                                    BroadcastMessage("liar_game", $"{nickname}: {message}*", null);
-                                }
-                                else
-                                {
-                                    BroadcastMessage("liar_game", $"{nickname}: {message}", null);
-                                }
-                                Console.WriteLine(num + " " + nickname + " " + message);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Database Error: " + ex.Message);
-                }
-            }
-        }
-
+        */
     }
 }
