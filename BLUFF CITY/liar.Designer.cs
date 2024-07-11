@@ -55,21 +55,22 @@ namespace BLUFF_CITY
             li_p1_name = new TextBox();
             li_p1 = new Button();
             category = new TextBox();
-
+            login_name = new TextBox();
             SuspendLayout();
             // 
             // chat
             // 
-            chat.BackColor = Color.Gainsboro;
+            chat.BackColor = Color.FromArgb(217, 217, 217);
             chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
             chat.Location = new Point(250, 1006);
             chat.Name = "chat";
             chat.Size = new Size(500, 31);
             chat.TabIndex = 45;
+            chat.Click += chat_KeyDown;
             // 
             // players_chat
             // 
-            players_chat.BackColor = Color.Gainsboro;
+            players_chat.BackColor = Color.FromArgb(217, 217, 217);
             players_chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
             players_chat.Location = new Point(250, 128);
             players_chat.Multiline = true;
@@ -81,7 +82,7 @@ namespace BLUFF_CITY
             // 
             // word
             // 
-            word.BackColor = Color.Gainsboro;
+            word.BackColor = Color.FromArgb(217, 217, 217);
             word.BorderStyle = BorderStyle.None;
             word.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
             word.Location = new Point(400, 18);
@@ -93,7 +94,7 @@ namespace BLUFF_CITY
             // 
             // READY
             // 
-            READY.BackColor = Color.Gainsboro;
+            READY.BackColor = Color.FromArgb(217, 217, 217);
             READY.BackgroundImageLayout = ImageLayout.None;
             READY.FlatStyle = FlatStyle.Flat;
             READY.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
@@ -104,10 +105,11 @@ namespace BLUFF_CITY
             READY.TabIndex = 42;
             READY.Text = "READY";
             READY.UseVisualStyleBackColor = false;
+            READY.Click += READY_Click;
             // 
             // exit
             // 
-            exit.BackColor = Color.Gainsboro;
+            exit.BackColor = Color.FromArgb(217, 217, 217);
             exit.BackgroundImage = Properties.Resources.icons8_출구_64;
             exit.BackgroundImageLayout = ImageLayout.Zoom;
             exit.FlatStyle = FlatStyle.Flat;
@@ -121,7 +123,7 @@ namespace BLUFF_CITY
             // 
             // time
             // 
-            time.BackColor = Color.Gainsboro;
+            time.BackColor = Color.FromArgb(217, 217, 217);
             time.BorderStyle = BorderStyle.None;
             time.Font = new Font("Pyunji R", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
             time.Location = new Point(781, 19);
@@ -132,7 +134,7 @@ namespace BLUFF_CITY
             // 
             // LIAR_GAME
             // 
-            LIAR_GAME.BackColor = Color.Gainsboro;
+            LIAR_GAME.BackColor = Color.FromArgb(217, 217, 217);
             LIAR_GAME.BorderStyle = BorderStyle.None;
             LIAR_GAME.Font = new Font("Pyunji R", 18F, FontStyle.Bold, GraphicsUnit.Point, 129);
             LIAR_GAME.ForeColor = SystemColors.WindowText;
@@ -308,10 +310,10 @@ namespace BLUFF_CITY
             li_p1.TabIndex = 23;
             li_p1.UseVisualStyleBackColor = false;
             li_p1.Click += li_p1_Click;
-            //
+            // 
             // category
             // 
-            category.BackColor = Color.Gainsboro;
+            category.BackColor = Color.FromArgb(217, 217, 217);
             category.BorderStyle = BorderStyle.None;
             category.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
             category.Location = new Point(221, 17);
@@ -321,12 +323,24 @@ namespace BLUFF_CITY
             category.Text = "과일";
             category.TextAlign = HorizontalAlignment.Center;
             // 
+            // login_name
+            // 
+            login_name.BackColor = Color.FromArgb(217, 217, 217);
+            login_name.BorderStyle = BorderStyle.None;
+            login_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            login_name.Location = new Point(765, 79);
+            login_name.Name = "login_name";
+            login_name.Size = new Size(219, 28);
+            login_name.TabIndex = 47;
+            // 
             // liar
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(217, 217, 217);
             BackgroundImage = Properties.Resources.game_background;
             ClientSize = new Size(996, 1119);
+            Controls.Add(login_name);
             Controls.Add(category);
             Controls.Add(chat);
             Controls.Add(players_chat);
@@ -432,5 +446,6 @@ namespace BLUFF_CITY
             LiarOtherTextBox = new TextBox[] { time, LIAR_GAME, word, category, players_chat, chat };
         }
 
+        private TextBox login_name;
     }
 }
