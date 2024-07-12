@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace BLUFF_CITY
 {
-    partial class login
+    partial class Login
     {
         /// <summary>
         /// Required designer variable.

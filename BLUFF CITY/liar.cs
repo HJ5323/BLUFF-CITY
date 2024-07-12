@@ -1,33 +1,15 @@
-﻿using Microsoft.VisualBasic.Devices;
-using MySqlX.XDevAPI;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
-    public partial class liar : Form
+    public partial class Liar : Form
     {
-        Network network = new Network(1);
+        //Network network = new Network(1);
+        private Network network;
         private string playerID;
         private string playerNickname;
         private List<string> playerInfo;  // 플레이어 정보를 저장할 리스트
         private object obj = new object();
-        private bool shouldStop = false;
 
-
-        public liar(string id, string nickname)
+        public Liar(string id, string nickname)
         {
             InitializeComponent();
 
@@ -43,6 +25,9 @@ namespace BLUFF_CITY
             playerInfo = new List<string>(); // 플레이어 정보 리스트 초기화
             playerID = id;
             playerNickname = nickname;
+            login_name.Text = playerNickname;
+            network = Network.Instance;
+
             network.Join(playerID, playerNickname);
 
             network.MessageReceived += DisplayMessage;
@@ -90,6 +75,7 @@ namespace BLUFF_CITY
         // 수신된 메시지 폼에 표시
         public void DisplayMessage(string message)
         {
+            Console.WriteLine($"{playerNickname}메시지 받음{message}");
             lock (obj)
             {
                 // 메시지에 콜론이 포함되어 있는지 확인
@@ -103,6 +89,8 @@ namespace BLUFF_CITY
                     // 플레이어 정보 메시지인 경우
                     if (messageType == "player_info")
                     {
+                        Console.WriteLine($"{playerNickname}player_info 받음");
+
                         // parts 배열에서 parts[0]을 제외한 나머지 부분들을 추출
                         string playersMessage = string.Join(":", parts.Skip(1));
                         UpdatePlayerInfo(playersMessage); // 플레이어 정보를 업데이트
@@ -122,6 +110,8 @@ namespace BLUFF_CITY
                     {
                         string topic = parts[1]; // 주제
                         string keyword = parts[2]; // 키워드
+                        Console.WriteLine($"{playerNickname}{topic} 받음");
+                        Console.WriteLine($"{playerNickname}{keyword} 받음");
 
                         // UI 스레드에서 텍스트 박스에 주제와 키워드를 표시
                         category.Invoke(new Action(() =>
@@ -135,25 +125,34 @@ namespace BLUFF_CITY
                         return;
                     }
 
-
-                    string nickname = parts[1]; // 닉네임
-                    string actualMessage = parts[2]; // 실제 메시지 내용
-
-                    // UI 스레드에서 players_chat에 메시지를 추가
-                    players_chat.Invoke(new Action(() =>
+                    else if (messageType == "chat")
                     {
-                        // 이전 내용을 모두 지우고 새로운 메시지를 추가
-                        //players_chat.Clear();
-                        if (actualMessage[actualMessage.Length - 1] == '*')
+                        Console.WriteLine($"{playerNickname}chat 받음");
+
+                        string nickname = parts[1]; // 닉네임
+                        string actualMessage = parts[2]; // 실제 메시지 내용
+
+                        // UI 스레드에서 players_chat에 메시지를 추가
+                        players_chat.Invoke(new Action(() =>
                         {
-                            players_chat.Clear();
                             players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                        }
-                        else
+
+                        }));
+                    }
+
+                    else if (messageType == "ready")
+                    {
+                        Console.WriteLine($"{playerNickname}ready 받음");
+
+                        string id = parts[1]; // 닉네임
+                        string nickname = parts[2]; // 실제 메시지 내용
+
+                        // UI 스레드에서 players_chat에 메시지를 추가
+                        players_chat.Invoke(new Action(() =>
                         {
-                            players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                        }
-                    }));
+                            players_chat.AppendText($"\n{nickname} : Ready" + Environment.NewLine);
+                        }));
+                    }
                 }
             }
         }
@@ -176,6 +175,7 @@ namespace BLUFF_CITY
             if (e.KeyCode == Keys.Enter)
             {
                 network.SendMessage(playerNickname, chat.Text);
+                Console.WriteLine($"{playerNickname}ENTER 채팅 보냄");
                 e.SuppressKeyPress = true;
                 chat.Clear();
             }

@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
-    partial class liar
+    partial class Liar
     {
         /// <summary>
         /// Required designer variable.
@@ -92,7 +89,6 @@ namespace BLUFF_CITY
             word.Name = "word";
             word.Size = new Size(196, 35);
             word.TabIndex = 43;
-            word.Text = "레몬";
             word.TextAlign = HorizontalAlignment.Center;
             // 
             // READY
@@ -343,7 +339,6 @@ namespace BLUFF_CITY
             category.Name = "category";
             category.Size = new Size(128, 35);
             category.TabIndex = 46;
-            category.Text = "과일";
             category.TextAlign = HorizontalAlignment.Center;
             // 
             // login_name
@@ -356,8 +351,9 @@ namespace BLUFF_CITY
             login_name.Name = "login_name";
             login_name.Size = new Size(243, 28);
             login_name.TabIndex = 47;
+            login_name.TextAlign = HorizontalAlignment.Center;
             // 
-            // liar
+            // Liar
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -392,7 +388,7 @@ namespace BLUFF_CITY
             Controls.Add(li_p1);
             DoubleBuffered = true;
             Margin = new Padding(3, 2, 3, 2);
-            Name = "liar";
+            Name = "Liar";
             Text = "liar";
             ResumeLayout(false);
             PerformLayout();

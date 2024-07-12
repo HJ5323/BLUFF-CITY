@@ -2,7 +2,7 @@
 
 namespace BLUFF_CITY
 {
-    partial class start
+    partial class Start
     {
         /// <summary>
         ///  Required designer variable.

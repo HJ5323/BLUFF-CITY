@@ -1,33 +1,13 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MySql.Data;
-using MySql.Data.MySqlClient;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
-using System.Net.Sockets;
-using System.Net;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using MySqlX.XDevAPI;
-using System.IO;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
 
-    public partial class login : Form
+    public partial class Login : Form
     {
-        //private static TcpClient client; // 서버와 TCP 연결을 나타내는 TcpCient 객체
-        //private static NetworkStream stream; // 네트워크 스트림
 
-        Network network = new Network(0);
-
-        public login()
+        private Network network;
+        private bool loginSuccessful = false;
+        private string receivedNickname;
+        public Login()
         {
             InitializeComponent();
 
@@ -35,21 +15,43 @@ namespace BLUFF_CITY
 
             ApplyTransparentBackgroundAndHideBorder();
 
-        }
-        private void Login_ok_Click(object sender, EventArgs e)
-        {
-            string nickname;
+            network = Network.Instance;
 
-            while(true)
+            network.MessageReceived += OnMessageReceived;
+        }
+
+        private void OnMessageReceived(string message)
+        {
+            if (message.StartsWith("login_success"))
             {
-                // 서버에 로그인 정보 전송
-                network.SendLoginInfo(login_id.Text, login_pw.Text);
-                nickname = network.ReceiveNickname();
-                if (nickname != null) { break; }
+                receivedNickname = message.Split(':')[1];
+                loginSuccessful = true;
             }
-            ChooseGame chooseGameForm = new ChooseGame(login_id.Text, nickname);
-            chooseGameForm.Show();
-            this.Hide();
+            else if (message.StartsWith("login_failure"))
+            {
+                CHECK.Text = "ID와 PW를 확인해 주세요.";
+            }
+        }
+
+        private async void Login_ok_Click(object sender, EventArgs e)
+        {
+            network.SendLoginInfo(login_id.Text, login_pw.Text);
+            await WaitForLoginResponse();
+        }
+
+        private async Task WaitForLoginResponse()
+        {
+            while (!loginSuccessful)
+            {
+                await Task.Delay(100);
+            }
+
+            if (loginSuccessful)
+            {
+                ChooseGame chooseGameForm = new ChooseGame(login_id.Text, receivedNickname);
+                chooseGameForm.Show();
+                this.Hide();
+            }
         }
 
 

@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
     public partial class ChooseGame : Form
     {
         private string playerID;
         private string playerNickname;
 
-        liar liarForm;
+        Liar liarForm;
 
         public ChooseGame(string id, string nickname)
         {
@@ -53,7 +42,7 @@ namespace BLUFF_CITY
 
         private void LIAR_GAME_Click(object sender, EventArgs e)
         {
-            liarForm = new liar(playerID, playerNickname);
+            liarForm = new Liar(playerID, playerNickname);
             liarForm.Show();
 
             this.Hide();
@@ -61,7 +50,7 @@ namespace BLUFF_CITY
 
         private void LogOut_Click(object sender, EventArgs e)
         {
-            start startForm = new start();
+            Start startForm = new Start();
             startForm.Show();
 
             this.Hide();
