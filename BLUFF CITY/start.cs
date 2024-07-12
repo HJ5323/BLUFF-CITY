@@ -1,26 +1,14 @@
-using System;
 using System.Net.Sockets;
-using System.Windows.Forms;
-using MySql.Data;
-using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
-using System.Net;
-using System.Text;
-using System.Threading;
-using Google.Protobuf.WellKnownTypes;
-using Mysqlx.Crud;
-using static System.Net.Mime.MediaTypeNames;
-using System.IO;
 
 namespace BLUFF_CITY
 {
-    public partial class start : Form
+    public partial class Start : Form
     {
         private Socket socket; //╪рдо
         //private TcpClient client;
         private Thread receiveThread;
 
-        public start()
+        public Start()
         {
             InitializeComponent();
 
@@ -34,7 +22,7 @@ namespace BLUFF_CITY
 
         private void LOGIN_Click(object sender, EventArgs e)
         {
-            login loginForm = new login();
+            Login loginForm = new Login();
             loginForm.Show();
 
             this.Hide();
