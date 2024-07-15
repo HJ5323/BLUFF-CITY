@@ -69,7 +69,7 @@
 
         private void button9_Click(object sender, EventArgs e)
         {
-
+            CheckLiarGuess(button9.Text);
         }
     }
 }

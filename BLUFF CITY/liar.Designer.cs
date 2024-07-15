@@ -74,6 +74,7 @@
             players_chat.Margin = new Padding(3, 4, 3, 4);
             players_chat.Multiline = true;
             players_chat.Name = "players_chat";
+            players_chat.ReadOnly = true;
             players_chat.ScrollBars = ScrollBars.Horizontal;
             players_chat.Size = new Size(500, 855);
             players_chat.TabIndex = 44;

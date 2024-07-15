@@ -182,6 +182,20 @@ namespace server
                         playerID = messageParts[1];
                         string playerPW = messageParts[2];
                         playerNick = login(playerID, playerPW);
+
+                        for (int i = 0; i < playerInfo.Count; i++)
+                        {
+                            Console.WriteLine(playerInfo[i][2]);
+                            if (playerNick != null)
+                            {
+                                if (playerInfo[i][2].ToString() == playerNick)
+                                {
+                                    Console.WriteLine("중복 로그인");
+                                    playerNick = null;
+                                }
+                            }
+                        }
+
                         SendNicknametoClient(playerNick, client);
                         if (!string.IsNullOrEmpty(playerNick))
                         {

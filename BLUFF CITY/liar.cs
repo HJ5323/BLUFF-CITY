@@ -64,7 +64,7 @@ namespace BLUFF_CITY
             // LiarOtherLabel 배열에 대해 배경을 투명하게 설정하고 윤곽선을 숨김
             foreach (var label in LiarOtherLabel)
             {
-                label.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
+                label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
             }
 
             // LiarOtherTextBox 대해 배경을 투명하게 설정
@@ -208,8 +208,8 @@ namespace BLUFF_CITY
             // UI 스레드에서 players_chat에 메시지를 추가
             players_chat.Invoke(new Action(() =>
             {
-                //players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                players_chat.Text += $"\n[{nickname}] {actualMessage}" + Environment.NewLine;
+                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
+                //players_chat.Text += $"\n[{nickname}] {actualMessage}" + Environment.NewLine;
 
             }));
         }
@@ -226,16 +226,16 @@ namespace BLUFF_CITY
                 // UI 스레드에서 players_chat에 메시지를 추가
                 players_chat.Invoke(new Action(() =>
                 {
-                    //players_chat.AppendText($"\n{nickname} : Ready" + Environment.NewLine);
-                    players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
+                    players_chat.AppendText($"\n{nickname} : Ready" + Environment.NewLine);
+                    //players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
                 }));
             }
             else if (parts[0] == "cancel_ready")
             {                // UI 스레드에서 players_chat에 메시지를 추가
                 players_chat.Invoke(new Action(() =>
                 {
-                    //players_chat.AppendText($"\n{nickname} : cancel_ready" + Environment.NewLine);
-                    players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
+                    players_chat.AppendText($"\n{nickname} : cancel_ready" + Environment.NewLine);
+                    //players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
                 }));
             }
         }
@@ -257,16 +257,12 @@ namespace BLUFF_CITY
         {
             Console.WriteLine($"{playerNickname}채팅 활성화 받음");
 
-            //string targetPlayerNick = parts[1];
-            //if (playerNickname == targetPlayerNick)
-            //{
-                chat.Invoke(new Action(() =>
-                {
-                    chat.Enabled = true;
-                    chat.KeyDown += chat_KeyDown; // 채팅 입력 이벤트 설정
-                    Console.WriteLine($"{playerNickname}채팅 활성화 되었습니다.");
-                }));
-            //}
+            chat.Invoke(new Action(() =>
+            {
+                chat.Enabled = true;
+                chat.KeyDown += chat_KeyDown; // 채팅 입력 이벤트 설정
+                Console.WriteLine($"{playerNickname}채팅 활성화 되었습니다.");
+            }));
         }
 
         // 타이머 메시지 처리 메서드
@@ -332,8 +328,8 @@ namespace BLUFF_CITY
             string server = parts[1]; // server
             string message = parts[2]; // 실제 메시지 내용
 
-            //players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
-            players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
+            players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
+            //players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
 
             if (category.Text == "동물")
             {
@@ -363,8 +359,8 @@ namespace BLUFF_CITY
             string server = parts[1]; // server
             string message = parts[2]; // 실제 메시지 내용
 
-            //players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
-            players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
+            players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
+            //players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
         }
 
         private void LoadPlayerBtnImage()

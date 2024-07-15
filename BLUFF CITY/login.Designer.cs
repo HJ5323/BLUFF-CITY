@@ -1,7 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Xml.Linq;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
     partial class Login
     {
@@ -42,19 +39,19 @@ namespace BLUFF_CITY
             // CHECK
             // 
             CHECK.BackColor = Color.Gainsboro;
-            CHECK.Font = new Font("휴먼편지체", 10F);
-            CHECK.Location = new Point(192, 266);
+            CHECK.Font = new Font("Pyunji R", 10F);
+            CHECK.Location = new Point(213, 332);
             CHECK.Margin = new Padding(3, 2, 3, 2);
             CHECK.Name = "CHECK";
-            CHECK.Size = new Size(233, 27);
+            CHECK.Size = new Size(258, 31);
             CHECK.TabIndex = 15;
             CHECK.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // PW
             // 
             PW.BackColor = Color.Gainsboro;
-            PW.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            PW.Location = new Point(188, 164);
+            PW.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            PW.Location = new Point(209, 205);
             PW.Margin = new Padding(3, 2, 3, 2);
             PW.Name = "PW";
             PW.Size = new Size(78, 35);
@@ -65,8 +62,8 @@ namespace BLUFF_CITY
             // ID
             // 
             ID.BackColor = Color.Gainsboro;
-            ID.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            ID.Location = new Point(188, 110);
+            ID.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            ID.Location = new Point(209, 138);
             ID.Margin = new Padding(3, 2, 3, 2);
             ID.Name = "ID";
             ID.Size = new Size(78, 35);
@@ -76,32 +73,32 @@ namespace BLUFF_CITY
             // 
             // login_pw
             // 
-            login_pw.Font = new Font("휴먼편지체", 10F);
-            login_pw.Location = new Point(289, 164);
+            login_pw.Font = new Font("Pyunji R", 10F);
+            login_pw.Location = new Point(321, 205);
             login_pw.Margin = new Padding(3, 2, 3, 2);
             login_pw.Name = "login_pw";
             login_pw.PasswordChar = '*';
-            login_pw.Size = new Size(135, 27);
+            login_pw.Size = new Size(150, 31);
             login_pw.TabIndex = 10;
             login_pw.KeyDown += loginPW_KeyDown;
             // 
             // login_id
             // 
-            login_id.Font = new Font("휴먼편지체", 10F, FontStyle.Regular, GraphicsUnit.Point, 129);
-            login_id.Location = new Point(289, 110);
+            login_id.Font = new Font("Pyunji R", 10F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            login_id.Location = new Point(321, 138);
             login_id.Margin = new Padding(3, 2, 3, 2);
             login_id.Name = "login_id";
-            login_id.Size = new Size(135, 27);
+            login_id.Size = new Size(150, 31);
             login_id.TabIndex = 9;
             // 
             // Login_ok
             // 
             Login_ok.BackColor = Color.Transparent;
-            Login_ok.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            Login_ok.Location = new Point(446, 259);
+            Login_ok.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            Login_ok.Location = new Point(495, 324);
             Login_ok.Margin = new Padding(3, 2, 3, 2);
             Login_ok.Name = "Login_ok";
-            Login_ok.Size = new Size(132, 34);
+            Login_ok.Size = new Size(147, 42);
             Login_ok.TabIndex = 8;
             Login_ok.Text = "Login";
             Login_ok.UseVisualStyleBackColor = false;
@@ -109,10 +106,10 @@ namespace BLUFF_CITY
             // 
             // Login
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gainsboro;
-            ClientSize = new Size(720, 360);
+            ClientSize = new Size(800, 450);
             Controls.Add(CHECK);
             Controls.Add(PW);
             Controls.Add(ID);
