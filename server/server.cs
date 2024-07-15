@@ -98,6 +98,14 @@ namespace server
                 }
             }
         }
+        private static void SendSignUpModetoClient(string mode, TcpClient client)
+        {
+            Console.WriteLine(mode);
+            byte[] data = Encoding.UTF8.GetBytes(mode);
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
+            Console.WriteLine("모드 보냄");
+        }
 
         private static void SendNicknametoClient(string nickname, TcpClient client)
         {
@@ -165,6 +173,7 @@ namespace server
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
                     string[] messageParts = message.Split(':');
                     string action = messageParts[0];
+                    string mode_signup = null;
 
                     if (action == "login" && messageParts.Length == 3)
                     {
@@ -181,6 +190,15 @@ namespace server
                                 isLoggedIn = true;
                             }
                         }
+                    }else if (action == "signup")
+                    {
+                        Console.WriteLine("회원가입 모드");
+                        playerID=messageParts[1];
+                        string playerPW = messageParts[2];
+                        playerNick = messageParts[3];
+                        Console.WriteLine(playerID + " " + playerPW + " " + playerNick);
+                        mode_signup = Signup(playerID, playerPW, playerNick);
+                        SendSignUpModetoClient(mode_signup, client);
                     }
 
                     if (isLoggedIn)
@@ -296,6 +314,7 @@ namespace server
 
         private static void StartGame(string gameRoom)
         {
+            readyPlayer.Clear();
             Console.WriteLine("모든 플레이어가 준비 완료, 게임 시작");
             Random rand = new Random();
             string selectedTopic = topics[rand.Next(topics.Count)];
@@ -335,6 +354,67 @@ namespace server
             }
             Console.WriteLine("540,CLOSE");
             client.Close();
+        }
+
+        public static string Signup(string ID, string PW, string Nickname)
+        {
+            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
+            string mode_signup = null; // 0 : 회원가입 성공  1 : 회원가입 실패(중복된 ID) 2 : 회원가입 실패(중복된 닉네임)
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open(); // DB 연결
+
+                    // ID 중복 확인 (대소문자 구별)
+                    string checkIdQuery = "SELECT * FROM user WHERE BINARY ID = @ID";
+                    MySqlCommand checkIdCmd = new MySqlCommand(checkIdQuery, conn);
+                    checkIdCmd.Parameters.AddWithValue("@ID", ID);
+                    MySqlDataReader idReader = checkIdCmd.ExecuteReader();
+                    if (idReader.Read())
+                    {
+                        idReader.Close();
+                        Console.WriteLine("중복된 아이디입니다.");
+                        mode_signup = "1";
+                        return mode_signup;
+                    }
+                    idReader.Close();
+
+                    // 닉네임 중복 확인 (대소문자 구별)
+                    string checkNicknameQuery = "SELECT * FROM user WHERE BINARY NICKNAME = @NICKNAME";
+                    MySqlCommand checkNicknameCmd = new MySqlCommand(checkNicknameQuery, conn);
+                    checkNicknameCmd.Parameters.AddWithValue("@NICKNAME", Nickname);
+                    MySqlDataReader nicknameReader = checkNicknameCmd.ExecuteReader();
+                    if (nicknameReader.Read())
+                    {
+                        nicknameReader.Close();
+                        Console.WriteLine("중복된 닉네임입니다.");
+                        mode_signup = "2";
+                        return mode_signup;
+                    }
+                    nicknameReader.Close();
+
+                    // 새로운 user 삽입
+                    string insertQuery = "INSERT INTO user (ID, PW, NICKNAME) VALUES (@ID, @PW, @NICKNAME)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@ID", ID);
+                    insertCmd.Parameters.AddWithValue("@PW", PW);
+                    insertCmd.Parameters.AddWithValue("@NICKNAME", Nickname);
+                    insertCmd.ExecuteNonQuery();
+
+                    Console.WriteLine("회원가입성공");
+                    mode_signup = "0";
+                    return mode_signup;
+                    //start startForm = new start();
+                    //startForm.Show();
+                    //this.Hide();
+                }
+                catch { }
+
+            }
+
+            return mode_signup;
         }
 
         public static string login(string ID, string PW)

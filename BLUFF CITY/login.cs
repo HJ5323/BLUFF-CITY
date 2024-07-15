@@ -1,4 +1,6 @@
-﻿namespace BLUFF_CITY
+﻿using System;
+
+namespace BLUFF_CITY
 {
 
     public partial class Login : Form
@@ -7,6 +9,7 @@
         private Network network;
         private bool loginSuccessful = false;
         private string receivedNickname;
+        private ChooseGame chooseGameForm = null;
         public Login()
         {
             InitializeComponent();
@@ -35,7 +38,10 @@
 
         private async void Login_ok_Click(object sender, EventArgs e)
         {
+            loginSuccessful = false;
             network.SendLoginInfo(login_id.Text, login_pw.Text);
+            login_id.Text = "";
+            login_pw.Text = "";
             await WaitForLoginResponse();
         }
 
@@ -43,20 +49,42 @@
         {
             while (!loginSuccessful)
             {
+
                 await Task.Delay(100);
             }
 
             if (loginSuccessful)
             {
-                ChooseGame chooseGameForm = new ChooseGame(login_id.Text, receivedNickname);
-                chooseGameForm.Show();
-                this.Hide();
+                // ChooseGame 폼이 이미 열려 있는지 확인
+                if (chooseGameForm == null || chooseGameForm.IsDisposed)
+                {
+                    chooseGameForm = new ChooseGame(login_id.Text, receivedNickname);
+                    chooseGameForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    // 폼이 이미 열려 있는 경우 포커스를 맞춤
+                    chooseGameForm.Focus();
+                }
             }
         }
 
+        // chat 텍스트 박스 입력 메시지 전송
+        private async void loginPW_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                loginSuccessful = false;
+                network.SendLoginInfo(login_id.Text, login_pw.Text);
+                await WaitForLoginResponse();
+            }
+
+        }
 
         private void login_FormClosed(object sender, FormClosedEventArgs e)
         {
+            network.MessageReceived -= OnMessageReceived;
             Application.Exit();
         }
 

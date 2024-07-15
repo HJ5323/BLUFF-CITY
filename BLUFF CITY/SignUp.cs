@@ -1,9 +1,14 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.VisualBasic.Devices;
+using MySql.Data.MySqlClient;
 
 namespace BLUFF_CITY
 {
     public partial class SignUp : Form
     {
+        private Network network;
+        private bool signupSuccessful = false;
+        private string receivedSignupMode;
+        private ChooseGame chooseGameForm = null;
         public SignUp()
         {
             InitializeComponent();
@@ -13,68 +18,84 @@ namespace BLUFF_CITY
 
             // 배경을 투명하게 설정하고 윤곽선을 숨기는 메서드 호출
             ApplyTransparentBackgroundAndHideBorder();
+            network = Network.Instance;
+            network.MessageReceived += OnMessageReceived;
         }
 
-        private void signup_ok_Click(object sender, EventArgs e)
+        private async void signup_ok_Click(object sender, EventArgs e)
         {
-            string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            signupSuccessful = false;
+
+            network.SendSignupInfo(signup_id.Text, signup_pw.Text, signup_name.Text);
+            signup_id.Text = "";
+            signup_pw.Text = "";
+            signup_name.Text = "";
+            await WaitForSignupResponse();
+
+        }
+
+        private async Task WaitForSignupResponse()
+        {
+            while (!signupSuccessful)
             {
-                try
-                {
-                    conn.Open();
-
-                    // ID 중복 확인 (대소문자 구별)
-                    string checkIdQuery = "SELECT * FROM user WHERE BINARY ID = @ID";
-                    MySqlCommand checkIdCmd = new MySqlCommand(checkIdQuery, conn);
-                    checkIdCmd.Parameters.AddWithValue("@ID", signup_id.Text);
-                    MySqlDataReader idReader = checkIdCmd.ExecuteReader();
-                    if (idReader.Read())
-                    {
-                        idReader.Close();
-                        CHECK.Text = "중복된 ID입니다.";
-                        return;
-                    }
-                    idReader.Close();
-
-                    // 닉네임 중복 확인 (대소문자 구별)
-                    string checkNicknameQuery = "SELECT * FROM user WHERE BINARY NICKNAME = @NICKNAME";
-                    MySqlCommand checkNicknameCmd = new MySqlCommand(checkNicknameQuery, conn);
-                    checkNicknameCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
-                    MySqlDataReader nicknameReader = checkNicknameCmd.ExecuteReader();
-                    if (nicknameReader.Read())
-                    {
-                        nicknameReader.Close();
-                        CHECK.Text = "중복된 닉네임입니다.";
-                        return;
-                    }
-                    nicknameReader.Close();
-
-                    // 새로운 user 삽입
-                    string insertQuery = "INSERT INTO user (ID, PW, NICKNAME) VALUES (@ID, @PW, @NICKNAME)";
-                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
-                    insertCmd.Parameters.AddWithValue("@ID", signup_id.Text);
-                    insertCmd.Parameters.AddWithValue("@PW", signup_pw.Text);
-                    insertCmd.Parameters.AddWithValue("@NICKNAME", signup_name.Text);
-                    insertCmd.ExecuteNonQuery();
-
-                    //start startForm = new start();
-                    //startForm.Show();
-                    this.Hide();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                await Task.Delay(100);
             }
 
-            //// 현재 폼 닫음
-            //this.Hide();
+            if (signupSuccessful)
+            {
+                // ChooseGame 폼이 이미 열려 있는지 확인
+                if (chooseGameForm == null || chooseGameForm.IsDisposed)
+                {
+                    chooseGameForm = new ChooseGame(signup_id.Text, signup_name.Text);
+                    chooseGameForm.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    // 폼이 이미 열려 있는 경우 포커스를 맞춤
+                    chooseGameForm.Focus();
+                }
+            }
+        }
+
+
+        // chat 텍스트 박스 입력 메시지 전송
+        private async void signupName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                signupSuccessful = false;
+
+                network.SendSignupInfo(signup_id.Text, signup_pw.Text, signup_name.Text);
+                await WaitForSignupResponse();
+            }
 
         }
+
+        private void OnMessageReceived(string message)
+        {
+            Console.WriteLine(message);
+            if (message == "0")
+            {
+                CHECK.Text = "회원가입을 성공하였습니다.";
+                signupSuccessful = true;
+            }
+            else if (message == "1")
+            {
+                CHECK.Text = "중복된 아이디입니다.";
+            }
+            else if (message == "2")
+            {
+                CHECK.Text = "중복된 닉네임입니다.";
+            }
+
+        }
+
+
 
         private void SignUp_FormClosed(object sender, FormClosedEventArgs e)
         {
+            network.MessageReceived -= OnMessageReceived;
             Application.Exit();
         }
 
