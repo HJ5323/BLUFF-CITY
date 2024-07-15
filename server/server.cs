@@ -108,9 +108,9 @@ namespace server
             Console.WriteLine("모드 보냄");
         }
 
-        private static void SendNicknametoClient(string nickname, TcpClient client)
+        private static void SendNicknametoClient(string ID, string nickname, TcpClient client)
         {
-            string response = string.IsNullOrEmpty(nickname) ? "login_failure" : $"login_success:{nickname}";
+            string response = string.IsNullOrEmpty(nickname) ? "login_failure" : $"login_success:{ID}:{nickname}";
             byte[] data = Encoding.UTF8.GetBytes(response);
             //Console.WriteLine("메세지 보냄");
             NetworkStream stream = client.GetStream();
@@ -195,7 +195,7 @@ namespace server
                             }
                         }
 
-                        SendNicknametoClient(playerNick, client);
+                        SendNicknametoClient(playerID, playerNick, client);
                         if (!string.IsNullOrEmpty(playerNick))
                         {
                             lock (playerInfo)

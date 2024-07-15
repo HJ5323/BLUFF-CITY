@@ -8,6 +8,7 @@ namespace BLUFF_CITY
 
         private Network network;
         private bool loginSuccessful = false;
+        private string receivedID;
         private string receivedNickname;
         private ChooseGame chooseGameForm = null;
         public Login()
@@ -29,7 +30,8 @@ namespace BLUFF_CITY
         {
             if (message.StartsWith("login_success"))
             {
-                receivedNickname = message.Split(':')[1];
+                receivedID = message.Split(':')[1];
+                receivedNickname = message.Split(':')[2];
                 loginSuccessful = true;
             }
             else if (message.StartsWith("login_failure"))
@@ -60,7 +62,7 @@ namespace BLUFF_CITY
                 // ChooseGame 폼이 이미 열려 있는지 확인
                 if (chooseGameForm == null || chooseGameForm.IsDisposed)
                 {
-                    chooseGameForm = new ChooseGame(login_id.Text, receivedNickname);
+                    chooseGameForm = new ChooseGame(receivedID, receivedNickname);
                     chooseGameForm.Show();
                     this.Hide();
                 }
