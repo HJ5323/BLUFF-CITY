@@ -18,7 +18,9 @@ namespace BLUFF_CITY
 
             ApplyTransparentBackgroundAndHideBorder();
 
-            network = Network.Instance;
+            Network.b_newInstance = true;
+            network = Network.Instance;//.Instance;
+            Network.b_newInstance = false;
 
             network.MessageReceived += OnMessageReceived;
         }

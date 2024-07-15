@@ -173,22 +173,21 @@ namespace server
                         break;
 
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                    Console.WriteLine(message);
                     string[] messageParts = message.Split(':');
                     string action = messageParts[0];
                     string mode_signup = null;
-
                     if (action == "login" && messageParts.Length == 3)
                     {
                         playerID = messageParts[1];
                         string playerPW = messageParts[2];
                         playerNick = login(playerID, playerPW);
-
                         for (int i = 0; i < playerInfo.Count; i++)
                         {
-                            Console.WriteLine(playerInfo[i][2]);
+                            string[] infoParts = playerInfo[i].Split(':');
                             if (playerNick != null)
                             {
-                                if (playerInfo[i][2].ToString() == playerNick)
+                                if (infoParts[1] == playerNick)
                                 {
                                     Console.WriteLine("중복 로그인");
                                     playerNick = null;
