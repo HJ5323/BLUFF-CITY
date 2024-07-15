@@ -30,29 +30,29 @@
         {
             chat = new TextBox();
             players_chat = new TextBox();
-            word = new TextBox();
+            word = new Label();
             READY = new Button();
             exit = new Button();
-            time = new TextBox();
-            LIAR_GAME = new TextBox();
-            li_p8_name = new TextBox();
+            timer = new Label();
+            LIAR_GAME = new Label();
+            li_p8_name = new Label();
             li_p8 = new Button();
-            li_p7_name = new TextBox();
+            li_p7_name = new Label();
             li_p7 = new Button();
-            li_p6_name = new TextBox();
+            li_p6_name = new Label();
             li_p6 = new Button();
-            li_p5_name = new TextBox();
+            li_p5_name = new Label();
             li_p5 = new Button();
-            li_p4_name = new TextBox();
+            li_p4_name = new Label();
             li_p4 = new Button();
-            li_p3_name = new TextBox();
+            li_p3_name = new Label();
             li_p3 = new Button();
-            li_p2_name = new TextBox();
+            li_p2_name = new Label();
             li_p2 = new Button();
-            li_p1_name = new TextBox();
+            li_p1_name = new Label();
             li_p1 = new Button();
-            category = new TextBox();
-            login_name = new TextBox();
+            category = new Label();
+            login_name = new Label();
             SuspendLayout();
             // 
             // chat
@@ -82,14 +82,13 @@
             // word
             // 
             word.BackColor = Color.FromArgb(217, 217, 217);
-            word.BorderStyle = BorderStyle.None;
             word.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
-            word.Location = new Point(400, 18);
+            word.Location = new Point(400, 16);
             word.Margin = new Padding(3, 2, 3, 2);
             word.Name = "word";
             word.Size = new Size(196, 35);
             word.TabIndex = 43;
-            word.TextAlign = HorizontalAlignment.Center;
+            word.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // READY
             // 
@@ -122,40 +121,38 @@
             exit.UseVisualStyleBackColor = false;
             exit.Click += exit_Click;
             // 
-            // time
+            // timer
             // 
-            time.BackColor = Color.FromArgb(217, 217, 217);
-            time.BorderStyle = BorderStyle.None;
-            time.Font = new Font("Pyunji R", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
-            time.Location = new Point(781, 19);
-            time.Margin = new Padding(3, 2, 3, 2);
-            time.Name = "time";
-            time.Size = new Size(67, 33);
-            time.TabIndex = 40;
-            time.Text = "60 S";
+            timer.BackColor = Color.FromArgb(217, 217, 217);
+            timer.Font = new Font("Pyunji R", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            timer.Location = new Point(781, 17);
+            timer.Margin = new Padding(3, 2, 3, 2);
+            timer.Name = "timer";
+            timer.Size = new Size(67, 33);
+            timer.TabIndex = 40;
             // 
             // LIAR_GAME
             // 
             LIAR_GAME.BackColor = Color.FromArgb(217, 217, 217);
-            LIAR_GAME.BorderStyle = BorderStyle.None;
             LIAR_GAME.Font = new Font("Pyunji R", 18F, FontStyle.Bold, GraphicsUnit.Point, 129);
             LIAR_GAME.ForeColor = SystemColors.WindowText;
-            LIAR_GAME.Location = new Point(21, 14);
+            LIAR_GAME.Location = new Point(12, 14);
             LIAR_GAME.Margin = new Padding(3, 2, 3, 2);
             LIAR_GAME.Name = "LIAR_GAME";
-            LIAR_GAME.Size = new Size(194, 42);
+            LIAR_GAME.Size = new Size(203, 42);
             LIAR_GAME.TabIndex = 39;
             LIAR_GAME.Text = "LIAR GAME";
             // 
             // li_p8_name
             // 
+            li_p8_name.BackColor = Color.White;
             li_p8_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p8_name.Location = new Point(766, 954);
             li_p8_name.Margin = new Padding(3, 2, 3, 2);
             li_p8_name.Name = "li_p8_name";
             li_p8_name.Size = new Size(172, 35);
             li_p8_name.TabIndex = 38;
-            li_p8_name.TextAlign = HorizontalAlignment.Center;
+            li_p8_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p8
             // 
@@ -172,13 +169,14 @@
             // 
             // li_p7_name
             // 
+            li_p7_name.BackColor = Color.White;
             li_p7_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p7_name.Location = new Point(766, 738);
             li_p7_name.Margin = new Padding(3, 2, 3, 2);
             li_p7_name.Name = "li_p7_name";
             li_p7_name.Size = new Size(172, 35);
             li_p7_name.TabIndex = 36;
-            li_p7_name.TextAlign = HorizontalAlignment.Center;
+            li_p7_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p7
             // 
@@ -195,13 +193,14 @@
             // 
             // li_p6_name
             // 
+            li_p6_name.BackColor = Color.White;
             li_p6_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p6_name.Location = new Point(766, 522);
             li_p6_name.Margin = new Padding(3, 2, 3, 2);
             li_p6_name.Name = "li_p6_name";
             li_p6_name.Size = new Size(172, 35);
             li_p6_name.TabIndex = 34;
-            li_p6_name.TextAlign = HorizontalAlignment.Center;
+            li_p6_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p6
             // 
@@ -218,13 +217,14 @@
             // 
             // li_p5_name
             // 
+            li_p5_name.BackColor = Color.White;
             li_p5_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p5_name.Location = new Point(766, 306);
             li_p5_name.Margin = new Padding(3, 2, 3, 2);
             li_p5_name.Name = "li_p5_name";
             li_p5_name.Size = new Size(172, 35);
             li_p5_name.TabIndex = 32;
-            li_p5_name.TextAlign = HorizontalAlignment.Center;
+            li_p5_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p5
             // 
@@ -240,13 +240,14 @@
             // 
             // li_p4_name
             // 
+            li_p4_name.BackColor = Color.White;
             li_p4_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p4_name.Location = new Point(62, 954);
             li_p4_name.Margin = new Padding(3, 2, 3, 2);
             li_p4_name.Name = "li_p4_name";
             li_p4_name.Size = new Size(172, 35);
             li_p4_name.TabIndex = 30;
-            li_p4_name.TextAlign = HorizontalAlignment.Center;
+            li_p4_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p4
             // 
@@ -263,13 +264,14 @@
             // 
             // li_p3_name
             // 
+            li_p3_name.BackColor = Color.White;
             li_p3_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p3_name.Location = new Point(62, 738);
             li_p3_name.Margin = new Padding(3, 2, 3, 2);
             li_p3_name.Name = "li_p3_name";
             li_p3_name.Size = new Size(172, 35);
             li_p3_name.TabIndex = 28;
-            li_p3_name.TextAlign = HorizontalAlignment.Center;
+            li_p3_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p3
             // 
@@ -286,13 +288,14 @@
             // 
             // li_p2_name
             // 
+            li_p2_name.BackColor = Color.White;
             li_p2_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             li_p2_name.Location = new Point(62, 522);
             li_p2_name.Margin = new Padding(3, 2, 3, 2);
             li_p2_name.Name = "li_p2_name";
             li_p2_name.Size = new Size(172, 35);
             li_p2_name.TabIndex = 26;
-            li_p2_name.TextAlign = HorizontalAlignment.Center;
+            li_p2_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p2
             // 
@@ -308,13 +311,14 @@
             // 
             // li_p1_name
             // 
+            li_p1_name.BackColor = Color.White;
             li_p1_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
             li_p1_name.Location = new Point(62, 306);
             li_p1_name.Margin = new Padding(3, 2, 3, 2);
             li_p1_name.Name = "li_p1_name";
             li_p1_name.Size = new Size(172, 35);
             li_p1_name.TabIndex = 24;
-            li_p1_name.TextAlign = HorizontalAlignment.Center;
+            li_p1_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // li_p1
             // 
@@ -332,26 +336,24 @@
             // category
             // 
             category.BackColor = Color.FromArgb(217, 217, 217);
-            category.BorderStyle = BorderStyle.None;
             category.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
             category.Location = new Point(221, 18);
             category.Margin = new Padding(3, 2, 3, 2);
             category.Name = "category";
             category.Size = new Size(128, 35);
             category.TabIndex = 46;
-            category.TextAlign = HorizontalAlignment.Center;
+            category.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // login_name
             // 
             login_name.BackColor = Color.FromArgb(217, 217, 217);
-            login_name.BorderStyle = BorderStyle.None;
             login_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             login_name.Location = new Point(732, 83);
             login_name.Margin = new Padding(3, 4, 3, 4);
             login_name.Name = "login_name";
             login_name.Size = new Size(243, 28);
             login_name.TabIndex = 47;
-            login_name.TextAlign = HorizontalAlignment.Center;
+            login_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Liar
             // 
@@ -368,7 +370,7 @@
             Controls.Add(word);
             Controls.Add(READY);
             Controls.Add(exit);
-            Controls.Add(time);
+            Controls.Add(timer);
             Controls.Add(LIAR_GAME);
             Controls.Add(li_p8_name);
             Controls.Add(li_p8);
@@ -398,33 +400,35 @@
 
         private TextBox chat;
         private TextBox players_chat;
-        private TextBox word;
+        private Label word;
         private Button READY;
         private Button exit;
-        private TextBox time;
-        private TextBox LIAR_GAME;
-        private TextBox li_p8_name;
+        private Label timer;
+        private Label LIAR_GAME;
+        private Label li_p8_name;
         private Button li_p8;
-        private TextBox li_p7_name;
+        private Label li_p7_name;
         private Button li_p7;
-        private TextBox li_p6_name;
+        private Label li_p6_name;
         private Button li_p6;
-        private TextBox li_p5_name;
+        private Label li_p5_name;
         private Button li_p5;
-        private TextBox li_p4_name;
+        private Label li_p4_name;
         private Button li_p4;
-        private TextBox li_p3_name;
+        private Label li_p3_name;
         private Button li_p3;
-        private TextBox li_p2_name;
+        private Label li_p2_name;
         private Button li_p2;
-        private TextBox li_p1_name;
+        private Label li_p1_name;
         private Button li_p1;
-        private TextBox category;
+        private Label category;
+        private Label login_name;
 
         private Button[] LiarButtons; // li_p1부터 li_p8까지 버튼 배열
-        private TextBox[] LiarNames; // li_p1_name부터 li_p18_name까지 텍스트 박스 배열
+        private Label[] LiarNames; // li_p1_name부터 li_p18_name까지 텍스트 박스 배열
         private Button[] LiarOtherButtons; // READY, exit 버튼 배열
-        private TextBox[] LiarOtherTextBox; // time, MAFIA_GAME, roll, players_chat, chat 텍스트 박스　배열
+        private Label[] LiarOtherLabel;　// timer, LIAR_GAME, word, category, login_name 
+        private TextBox[] LiarOtherTextBox; // players_chat, chat 텍스트 박스　배열
         private PictureBox[] Liar_player_images = new PictureBox[8]; // li_p1_image부터 li_p8_image까지 픽처박스 배열
 
         // 생성자나 초기화 메서드에서 호출하여 PictureBox 초기화
@@ -459,16 +463,19 @@
             LiarButtons = new Button[] { li_p1, li_p2, li_p3, li_p4, li_p5, li_p6, li_p7, li_p8 };
 
             // LiarNames 배열 초기화
-            LiarNames = new TextBox[] { li_p1_name, li_p2_name, li_p3_name, li_p4_name,
+            LiarNames = new Label[] { li_p1_name, li_p2_name, li_p3_name, li_p4_name,
                             li_p5_name, li_p6_name, li_p7_name, li_p8_name };
 
             // LiarOtherButtons 배열 초기화
             LiarOtherButtons = new Button[] { READY, exit };
 
+            // LiarOtherLabel 배열 초기화
+            LiarOtherLabel = new Label[] { timer, LIAR_GAME, word, category, login_name };
+
             // LiarOtherTextBox 배열 초기화
-            LiarOtherTextBox = new TextBox[] { time, LIAR_GAME, word, category, players_chat, chat };
+            LiarOtherTextBox = new TextBox[] { chat, players_chat };
+
         }
 
-        private TextBox login_name;
     }
 }

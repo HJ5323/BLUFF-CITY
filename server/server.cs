@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 using MySql.Data.MySqlClient;
-
+using System.Timers; // System.Timers.Timer를 사용하기 위해 추가
 
 namespace server
 {
@@ -10,7 +10,10 @@ namespace server
     {
         static Dictionary<string, List<TcpClient>> gameRooms = new Dictionary<string, List<TcpClient>>();
         static List<string> playerInfo = new List<string>();  // 로그인한 플레이어 정보 저장
+        static List<string> entryPlayer = new List<string>();  // gameRoom에 입장한 플레이어 정보 저장
         static List<string> readyPlayer = new List<string>(); // ready한 플레이어 정보 저장
+        private static Dictionary<string, string> liarVotes = new Dictionary<string, string>();// liar투표결과 저장
+
 
         static List<string> topics = new List<string> { "동물", "도시", "과일", "물건" }; // 주제 리스트
         static Dictionary<string, List<string>> keywords = new Dictionary<string, List<string>>()
@@ -20,8 +23,6 @@ namespace server
             { "과일", new List<string> { "사과", "복숭아", "골든키위", "체리", "자두", "바나나", "딸기", "자몽", "망고" } },
             { "물건", new List<string> { "세탁기", "에어컨", "노트북", "연필", "충전기", "스마트폰", "시계", "가방", "책" } }
         };
-
-        //static object lockObj = new object();
 
         static void Main(string[] args)
         {
@@ -126,6 +127,7 @@ namespace server
                 Console.WriteLine("gameRooms[gameRoom].Capacity: " + gameRooms[gameRoom].Capacity.ToString() + ": " + message);
                 Console.WriteLine("gameRooms[gameRoom].Count : " + gameRooms[gameRoom].Count + ": " + message);
                 Console.WriteLine("playerInfo : " + playerInfo.Count + ": " + message);
+                Console.WriteLine("entryPlayer : " + entryPlayer.Count + ": " + message);
                 Console.WriteLine("readyPlayer : " + readyPlayer.Count + ": " + message);
 
                 foreach (var client in gameRooms[gameRoom])
@@ -214,6 +216,12 @@ namespace server
                             case "ready":
                                 HandleReady(messageParts, gameRoom, client);
                                 break;
+                            case "vote":
+                                HandleVoteMessage(messageParts, gameRoom);
+                                break;
+                            case "GuessKeyword":
+                                HandleGuessKeyword(messageParts, gameRoom);
+                                break;
                             default:
                                 Console.WriteLine("잘못된 메시지 형식");
                                 break;
@@ -244,19 +252,22 @@ namespace server
                 if (!gameRooms.ContainsKey(gameRoom))
                 {
                     gameRooms[gameRoom] = new List<TcpClient>();
+                    Console.WriteLine($"gameRooms[gameRoom] : {gameRooms[gameRoom]}");
                 }
 
                 if (gameRooms[gameRoom].Count < 8)
                 {
                     gameRooms[gameRoom].Add(client);
+                    entryPlayer.Add($"{playerID}:{playerNick}:{gameRoom}");
+
                     if (gameRooms[gameRoom].Count == 1)
                     {
                         ClearDB();
                         Console.WriteLine($"ClearDB");
                     }
                     Console.WriteLine($"{playerNick}가 방에 입장했습니다: {gameRoom}");
-                    BroadcastMessage(gameRoom, $"{playerNick}님이 게임에 참가했습니다!", client);
-                    SendPlayerInfo(gameRoom);
+                    BroadcastMessage(gameRoom, $";{playerNick}님이 게임에 참가했습니다!", client);
+                    SendEntryPlayerInfo(gameRoom);
                 }
                 else
                 {
@@ -277,7 +288,7 @@ namespace server
             }
             string nickname = messageParts[1];
             string chatMessage = messageParts[2];
-            BroadcastMessage(gameRoom, $"chat:{nickname}:{chatMessage}", null);
+            BroadcastMessage(gameRoom, $";chat:{nickname}:{chatMessage}", null);
         }
 
         private static void HandleReady(string[] messageParts, string gameRoom, TcpClient client)
@@ -294,49 +305,345 @@ namespace server
 
             lock (readyPlayer)
             {
-                if (!readyPlayer.Contains($"{id}:{nickname}"))
+                if (readyPlayer.Contains($"{id}:{nickname}"))
                 {
-                    readyPlayer.Add($"{id}:{nickname}");
-                    BroadcastMessage(gameRoom, $"ready:{id}:{nickname}", null);
-                }
-
-                if (readyPlayer.Count == gameRooms[gameRoom].Count && gameRooms[gameRoom].Count >= 3)
-                {
-                    //BroadcastMessage(gameRoom, $"chat:server:모든 플레이어가 준비 완료, 게임 시작", null);
-                    StartGame(gameRoom);
+                    // 이미 준비된 상태이면, readyPlayer 목록에서 제거
+                    readyPlayer.Remove($"{id}:{nickname}");
+                    BroadcastMessage(gameRoom, $";cancel_ready:{id}:{nickname}", null);
+                    Console.WriteLine($"{nickname} 준비 취소");
                 }
                 else
                 {
-                    BroadcastMessage(gameRoom, "chat:server:모든 player가 ready하면 게임이 시작됩니다.",null);
+                    // 준비되지 않은 상태이면, readyPlayer 목록에 추가
+                    readyPlayer.Add($"{id}:{nickname}");
+                    BroadcastMessage(gameRoom, $";ready:{id}:{nickname}", null);
+                    Console.WriteLine($"{nickname} 준비 완료");
+
+                    if (readyPlayer.Count == gameRooms[gameRoom].Count && gameRooms[gameRoom].Count >= 3)
+                    {
+                        StartGame(gameRoom);
+                    }
+                    else
+                    {
+                        BroadcastMessage(gameRoom, ";chat:server:모든 player가 ready하면 게임이 시작됩니다.", null);
+                    }
                 }
             }
         }
 
+        // 게임 시작
         private static void StartGame(string gameRoom)
         {
             readyPlayer.Clear();
-            Console.WriteLine("모든 플레이어가 준비 완료, 게임 시작");
+            Console.WriteLine("모든 플레이어 준비 완료, 게임 시작");
             Random rand = new Random();
             string selectedTopic = topics[rand.Next(topics.Count)];
             List<string> topicKeywords = keywords[selectedTopic];
             string selectedKeyword = topicKeywords[rand.Next(topicKeywords.Count)];
-            int liarIndex = rand.Next(readyPlayer.Count);
+            int liarIndex = rand.Next(entryPlayer.Count);
 
-            //for (int i = 0; i < gameRooms[gameRoom].Count; i++)
-            //{
-                var client = gameRooms[gameRoom][liarIndex];
-                BroadcastMessage(gameRoom, $"topic_keyword:{selectedTopic}:{selectedKeyword}", client);
-                SendMessageToClient(gameRoom, $"topic_keyword:{selectedTopic}:Liar", client);
 
-                //if (i == liarIndex)
-                //{
-                //    SendMessageToClient(gameRoom, $"topic_keyword:{selectedTopic}:Liar", client);
-                //}
-                //else
-                //{
-                //    SendMessageToClient(gameRoom, $"topic_keyword:{selectedTopic}:{selectedKeyword}", client);
-                //}
-            //}
+            // liar 지목된 플레이어 설정
+            for (int i = 0; i < entryPlayer.Count; i++)
+            {
+                string entryInfo = entryPlayer[i];
+                if (i == liarIndex)
+                {
+                    entryPlayer[i] = $"{entryInfo}:liar";
+                }
+                else
+                {
+                    entryPlayer[i] = $"{entryInfo}:no";
+                }
+            }
+            Console.WriteLine($"entryPlayer[0] : {entryPlayer[0]}");
+            Console.WriteLine($"entryPlayer[1] : {entryPlayer[1]}");
+            Console.WriteLine($"entryPlayer[2] : {entryPlayer[2]}");
+
+
+            var liarClient = gameRooms[gameRoom][liarIndex];
+            BroadcastMessage(gameRoom, $";topic_keyword:{selectedTopic}:{selectedKeyword}", liarClient);
+            SendMessageToClient(gameRoom, $";topic_keyword:{selectedTopic}:Liar", liarClient);
+
+            BroadcastMessage(gameRoom, ";disable_chat:server", null);
+
+            // 첫 번째 플레이어의 발언 순서 시작
+            if (entryPlayer.Count > 0)
+            {
+                string firstPlayerID = entryPlayer[0].Split(':')[0];
+                string firstPlayerNick = entryPlayer[0].Split(':')[1];
+                HandlePlayerTurn(firstPlayerID, firstPlayerNick, gameRoom);
+            }
+        }
+        private static void HandlePlayerTurn(string playerID, string playerNick, string gameRoom)
+        {
+            // 발언 순서의 플레이어만 chat 활성화
+            TcpClient targetClient = GetTcpClientFromPlayerID(playerID, gameRoom);
+            SendMessageToClient(gameRoom, $";enable_chat:{playerNick}", targetClient);
+            BroadcastMessage(gameRoom, $"chat:server:{playerNick} 차례입니다.", null);
+
+            if (targetClient == null)
+            {
+                Console.WriteLine($"Player with ID {playerID} not found in game room {gameRoom}.");
+                return; // 대상 클라이언트를 찾지 못한 경우 처리
+            }
+
+            // 각 플레이어의 순서가 시작될 때마다 타이머 시작
+            int timeLeft = 7;
+            System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
+
+            timer.Elapsed += (sender, e) =>
+            {
+                if (timeLeft >= 0)
+                {
+                    BroadcastMessage(gameRoom, $";timer:{playerNick}:{timeLeft}", null);
+                    timeLeft--;
+                }
+                else
+                {
+                    timer.Stop();
+                    BroadcastMessage(gameRoom, $";chat:server:{playerNick} - time out!", null);
+                    SendMessageToClient(gameRoom, ";disable_chat:server", targetClient);
+
+                    //// 다음 플레이어로 넘어가기
+                    //int currentPlayerIndex = GetCurrentPlayerIndex(playerID);
+                    //int nextPlayerIndex = (currentPlayerIndex + 1) % entryPlayer.Count;
+
+                    //// 모든 플레이어가 발언을 마친 후
+                    //if (nextPlayerIndex == 0)
+                    //{
+                    //    HandleGroupSpeech(playerNick,gameRoom);
+                    //}
+                    //else
+                    //{
+                    //    string nextPlayerID = entryPlayer[nextPlayerIndex].Split(':')[0];
+                    //    string nextPlayerNick = entryPlayer[nextPlayerIndex].Split(':')[1];
+                    //    HandlePlayerTurn(nextPlayerID, nextPlayerNick, gameRoom);
+                    //}
+                    MoveToNextPlayer(playerID, playerNick, gameRoom);
+                }
+            };
+            timer.Start();
+
+            while (true)
+            {
+                NetworkStream stream = targetClient.GetStream();
+                byte[] buffer = new byte[256];
+
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                if (bytesRead == 0)
+                    break;
+
+                string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                string[] messageParts = message.Split(':');
+                string action = messageParts[0];
+
+                if (action == "chat")
+                {
+                    timer.Stop();
+                    MoveToNextPlayer(playerID, playerNick, gameRoom);
+                    break;
+                }
+            }
+        }
+
+        private static void MoveToNextPlayer(string currentPlayerID, string currentPlayerNick, string gameRoom)
+        {
+            int currentPlayerIndex = GetCurrentPlayerIndex(currentPlayerID);
+            int nextPlayerIndex = (currentPlayerIndex + 1) % entryPlayer.Count;
+
+            if (nextPlayerIndex == 0)
+            {
+                HandleGroupSpeech(currentPlayerNick, gameRoom);
+            }
+            else
+            {
+                string nextPlayerID = entryPlayer[nextPlayerIndex].Split(':')[0];
+                string nextPlayerNick = entryPlayer[nextPlayerIndex].Split(':')[1];
+                HandlePlayerTurn(nextPlayerID, nextPlayerNick, gameRoom);
+            }
+        }
+
+        // playerID를 사용하여 gameRooms에서 해당 TcpClient를 찾아 반환하는 함수
+        private static TcpClient GetTcpClientFromPlayerID(string playerID, string gameRoom)
+        {
+            // 현재 플레이어의 인덱스를 가져옴
+            int playerIndex = GetCurrentPlayerIndex(playerID);
+
+            if (playerIndex != -1)
+            {
+                return gameRooms[gameRoom][playerIndex];
+            }
+            return null;
+        }
+
+        // 현재 플레이어의 인덱스를 반환하는 함수
+        private static int GetCurrentPlayerIndex(string playerID)
+        {
+            for (int i = 0; i < entryPlayer.Count; i++)
+            {
+                if (entryPlayer[i].Split(':')[0] == playerID)
+                {
+                    return i;
+                }
+            }
+            return -1; // 찾지 못한 경우
+        }
+
+        private static void HandleGroupSpeech(string playerNick, string gameRoom)
+        {
+            //각 플레이어 발언 후 모든 플레이어 자유 발언(1분)
+            BroadcastMessage(gameRoom, ";chat:server:모든 플레이어는 자유롭게 발언해 주세요.", null);
+            BroadcastMessage(gameRoom, $";enable_chat:{playerNick}", null);
+
+            // 모든 플레이어가 자유발언
+            int timeLeft = 10;
+            System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
+
+            timer.Elapsed += (sender, e) =>
+            {
+                if (timeLeft >= 0)
+                {
+                    BroadcastMessage(gameRoom, $";timer:server:{timeLeft}", null);
+                    timeLeft--;
+                }
+                else
+                {
+                    timer.Stop();
+                    BroadcastMessage(gameRoom, $";chat:server:time out!", null);
+                    BroadcastMessage(gameRoom, ";disable_chat:server", null);
+
+                    // 의심되는 Liar 지목 요청
+                    BroadcastMessage(gameRoom, ";chat:server:의심되는 Liar를 지목해주세요", null);
+                    BroadcastMessage(gameRoom, ";start_voting:server", null); // 투표 시작 메시지
+                }
+            };
+            timer.Start(); // 타이머 시작
+        }
+
+        private static void HandleVoteMessage(string[] messageParts, string gameRoom)
+        {
+            string voter = messageParts[1];
+            string votee = messageParts[2];
+            int voteState = int.Parse(messageParts[3]);
+
+            if (voteState == 1)
+            {
+                HandleVote(voter, votee, gameRoom);
+            }
+            else if (voteState == 0)
+            {
+                // 투표 취소 처리
+                if (liarVotes.ContainsKey(voter) && liarVotes[voter] == votee)
+                {
+                    liarVotes.Remove(voter);
+                }
+            }
+        }
+
+        private static void HandleVote(string voter, string votee, string gameRoom)
+        {
+            lock (liarVotes)
+            {
+                lock (liarVotes)
+                {
+                    liarVotes[voter] = votee;
+                }
+
+                // 모든 플레이어 투표 완료
+                if (liarVotes.Count == entryPlayer.Count)
+                {
+                    BroadcastVotingResult(gameRoom); // 결과 방송
+                }
+            }
+        }
+
+        private static void BroadcastVotingResult(string gameRoom)
+        {
+            lock (liarVotes)
+            {
+                // votee 별 득표수 계산
+                var voteCounts = new Dictionary<string, int>();
+                foreach (var votee in liarVotes.Values)
+                {
+                    if (!voteCounts.ContainsKey(votee))
+                    {
+                        voteCounts[votee] = 0;
+                    }
+                    voteCounts[votee]++;
+                }
+
+                // 최다 득표 votee 찾기
+                string liar = "";
+                int maxVotes = 0;
+                foreach (var voteCount in voteCounts)
+                {
+                    if (voteCount.Value > maxVotes)
+                    {
+                        maxVotes = voteCount.Value;
+                        liar = voteCount.Key;
+                    }
+                }
+
+                // 투표 결과 방송
+                BroadcastMessage(gameRoom, $";chat:server:{liar}이 Liar로 지목되었습니다", null);
+
+                // entryPlayer에서 liar 여부 확인하여 추가 작업 수행
+                foreach (var player in entryPlayer)
+                {
+                    string[] playerParts = player.Split(':');
+                    string playerNick = playerParts[1];
+                    string isLiar = playerParts[3];
+
+                    if (isLiar == "liar" && playerNick == liar)
+                    {
+                        // liar가 최다 득표
+                        BroadcastMessage(gameRoom, $";liar:server:{liar}가 라이어 맞습니다.", null);
+                    }
+                    else if (isLiar == "no" && playerNick == liar)
+                    {
+                        // 시민 최다득표 ,liar 승리
+                        BroadcastMessage(gameRoom, $";chat:server:{liar}는 라이어가 아닙니다.", null);
+                        BroadcastMessage(gameRoom, $";noliar:server:라이어 {isLiar == "liar"}가 승리하였습니다.", null);
+                        // 라이어 승점 +1
+
+                        // 게임 종료
+                        CloseGame(gameRoom);
+                    }
+                }
+            }
+        }
+
+        private static void HandleGuessKeyword(string[] messageParts, string gameRoom)
+        {
+            string result = messageParts[1];
+
+            if (result == "wrong")
+            {
+                BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추었습니다.", null);
+                // 라이어 승점 +1
+
+                // 게임 종료
+                CloseGame(gameRoom);
+            }
+            else if (result == "right")
+            {
+                BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추지 못하였습니다.", null);
+                BroadcastMessage(gameRoom, $";chat:server:시민이 승리하였습니다.", null);
+                // 시민 승점 +1
+
+                // 게임 종료
+                CloseGame(gameRoom);
+            }
+        }
+
+        private static void CloseGame(string gameRoom)
+        {
+            liarVotes.Clear();
+
+            entryPlayer.Clear();
+
+            gameRooms[gameRoom].Clear();
         }
 
         private static void RemoveClient(TcpClient client, string gameRoom)
@@ -453,28 +760,26 @@ namespace server
         }
         
         // gameRoom의 모든 클라이언트에게 플레이어 정보 전송
-        private static void SendPlayerInfo(string gameRoom)
+        private static void SendEntryPlayerInfo(string gameRoom)
         {
-            string playerListMessage = "player_info:";
-            lock (playerInfo)
+            string entryPlayerListMessage = "entry_player_info:";
+            lock (entryPlayer)
             {
-                foreach (var p in playerInfo)
+                foreach (var p in entryPlayer)
                 {
-                    playerListMessage += $"{p},";
-                    Console.WriteLine($"{playerListMessage}");
+                    entryPlayerListMessage += $"{p},";
+                    Console.WriteLine($"{entryPlayerListMessage}");
                 }
             }
-            playerListMessage = playerListMessage.TrimEnd(',');
+            entryPlayerListMessage = entryPlayerListMessage.TrimEnd(',');
 
             lock (gameRooms)
             {
                 foreach (var client in gameRooms[gameRoom])
                 {
                     NetworkStream stream = client.GetStream();
-                    byte[] data = Encoding.UTF8.GetBytes(playerListMessage);
+                    byte[] data = Encoding.UTF8.GetBytes(entryPlayerListMessage);
                     stream.Write(data, 0, data.Length);
-                    //BroadcastMessage(gameRoom, $"{playerListMessage}", null);
-
                 }
             }
         }

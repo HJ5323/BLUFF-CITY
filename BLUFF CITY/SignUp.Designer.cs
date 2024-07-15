@@ -36,10 +36,10 @@ namespace BLUFF_CITY
             signup_id = new TextBox();
             signup_pw = new TextBox();
             signup_name = new TextBox();
-            ID = new TextBox();
-            PW = new TextBox();
-            NAME = new TextBox();
-            CHECK = new TextBox();
+            ID = new Label();
+            PW = new Label();
+            NAME = new Label();
+            CHECK = new Label();
             SuspendLayout();
             // 
             // Sign_Up
@@ -90,10 +90,10 @@ namespace BLUFF_CITY
             ID.Location = new Point(191, 85);
             ID.Margin = new Padding(3, 2, 3, 2);
             ID.Name = "ID";
-            ID.ReadOnly = true;
-            ID.Size = new Size(71, 31);
+            ID.Size = new Size(78, 35);
             ID.TabIndex = 4;
             ID.Text = "ID";
+            ID.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // PW
             // 
@@ -102,10 +102,10 @@ namespace BLUFF_CITY
             PW.Location = new Point(191, 138);
             PW.Margin = new Padding(3, 2, 3, 2);
             PW.Name = "PW";
-            PW.ReadOnly = true;
-            PW.Size = new Size(71, 31);
+            PW.Size = new Size(78, 35);
             PW.TabIndex = 5;
             PW.Text = "PW";
+            PW.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // NAME
             // 
@@ -114,10 +114,10 @@ namespace BLUFF_CITY
             NAME.Location = new Point(191, 196);
             NAME.Margin = new Padding(3, 2, 3, 2);
             NAME.Name = "NAME";
-            NAME.ReadOnly = true;
-            NAME.Size = new Size(71, 31);
+            NAME.Size = new Size(78, 35);
             NAME.TabIndex = 6;
             NAME.Text = "NAME";
+            NAME.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CHECK
             // 
@@ -128,6 +128,7 @@ namespace BLUFF_CITY
             CHECK.Name = "CHECK";
             CHECK.Size = new Size(233, 27);
             CHECK.TabIndex = 7;
+            CHECK.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // SignUp
             // 
@@ -156,13 +157,14 @@ namespace BLUFF_CITY
         private TextBox signup_id;
         private TextBox signup_pw;
         private TextBox signup_name;
-        private TextBox ID;
-        private TextBox PW;
-        private TextBox NAME;
-        private TextBox CHECK;
+        private Label ID;
+        private Label PW;
+        private Label NAME;
+        private Label CHECK;
 
         private Button[] SignUpButtons; 
         private TextBox[] SignUpTextBox;
+        private Label[] SignUpLabel;
 
         private void InitializeArrays()
         {
@@ -170,8 +172,10 @@ namespace BLUFF_CITY
             SignUpButtons = new Button[] { Sign_Up };
 
             // SignUpTextBox 배열 초기화
-            SignUpTextBox = new TextBox[] { signup_id, signup_pw, signup_name, 
-                ID, PW, NAME, CHECK};
+            SignUpTextBox = new TextBox[] { signup_id, signup_pw, signup_name};
+
+            // SignUpLabel 배열 초기화
+            SignUpLabel = new Label[] { ID, PW, NAME, CHECK};
         }
     }
 }

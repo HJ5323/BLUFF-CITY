@@ -114,6 +114,12 @@ namespace BLUFF_CITY
             {
                 textBox.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
             }
+
+            // SignUpLabel 배열에 대해 배경을 투명하게 설정
+            foreach (var Label in SignUpLabel)
+            {
+                Label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
+            }
         }
     }
 }

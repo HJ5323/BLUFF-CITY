@@ -31,9 +31,9 @@ namespace BLUFF_CITY
         /// </summary>
         private void InitializeComponent()
         {
-            CHECK = new TextBox();
-            PW = new TextBox();
-            ID = new TextBox();
+            CHECK = new Label();
+            PW = new Label();
+            ID = new Label();
             login_pw = new TextBox();
             login_id = new TextBox();
             Login_ok = new Button();
@@ -48,6 +48,7 @@ namespace BLUFF_CITY
             CHECK.Name = "CHECK";
             CHECK.Size = new Size(233, 27);
             CHECK.TabIndex = 15;
+            CHECK.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // PW
             // 
@@ -56,10 +57,10 @@ namespace BLUFF_CITY
             PW.Location = new Point(188, 164);
             PW.Margin = new Padding(3, 2, 3, 2);
             PW.Name = "PW";
-            PW.ReadOnly = true;
-            PW.Size = new Size(71, 31);
+            PW.Size = new Size(78, 35);
             PW.TabIndex = 13;
             PW.Text = "PW";
+            PW.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // ID
             // 
@@ -68,10 +69,10 @@ namespace BLUFF_CITY
             ID.Location = new Point(188, 110);
             ID.Margin = new Padding(3, 2, 3, 2);
             ID.Name = "ID";
-            ID.ReadOnly = true;
-            ID.Size = new Size(71, 31);
+            ID.Size = new Size(78, 35);
             ID.TabIndex = 12;
             ID.Text = "ID";
+            ID.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // login_pw
             // 
@@ -129,13 +130,14 @@ namespace BLUFF_CITY
 
         private TextBox login_id;
         private TextBox login_pw;
-        private TextBox CHECK;
-        private TextBox PW;
-        private TextBox ID;
+        private Label CHECK;
+        private Label PW;
+        private Label ID;
         private Button Login_ok;
 
         private Button[] LoginButtons;
         private TextBox[] LoginTextBox;
+        private Label[] LoginLabel;
 
         private const int MaxSize = 1024;
         //private static Socket clientSocket;
@@ -147,7 +149,10 @@ namespace BLUFF_CITY
             LoginButtons = new Button[] { Login_ok };
 
             // LoginTextBox 배열 초기화
-            LoginTextBox = new TextBox[] { login_id, login_pw, CHECK, ID, PW};
+            LoginTextBox = new TextBox[] { login_id, login_pw};
+
+            // LoginLabel 배열 초기화
+            LoginLabel = new Label[] { CHECK, ID, PW };
         }
     }
 }

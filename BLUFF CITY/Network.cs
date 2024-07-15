@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using MySqlX.XDevAPI.Common;
+using System.Net.Sockets;
 using System.Text;
 
 namespace BLUFF_CITY
@@ -169,6 +170,33 @@ namespace BLUFF_CITY
             try
             {
                 string message = $"ready:{playerID}:{playerNickname}";
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void SendVote(string playerID, string selectedPlayer, int voteState)
+        {
+            try
+            {
+                string message = $"vote:{playerID}:{selectedPlayer}:{voteState}";
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        public void SendGuessMessage(string result)
+        {
+            try
+            {
+                string message = $"GuessKeyword:{result}";
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
             }
