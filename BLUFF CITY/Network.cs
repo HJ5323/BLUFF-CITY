@@ -79,6 +79,24 @@ namespace BLUFF_CITY
         {
             MessageReceived?.Invoke(message);
         }
+        public void SendSignupInfo(string id, string pw, string nickname)
+        {
+            try
+            {
+                if (client == null || !client.Connected)
+                {
+                    ConnectToServer();
+                }
+
+                string message = $"signup:{id}:{pw}:{nickname}";
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+        }
 
         public void SendLoginInfo(string id, string pw)
         {
