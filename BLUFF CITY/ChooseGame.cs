@@ -4,6 +4,7 @@
     {
         private string playerID;
         private string playerNickname;
+        private Network network;
 
         Liar liarForm;
 
@@ -19,6 +20,10 @@
 
             playerID = id;
             playerNickname = nickname;
+            Console.WriteLine("Choose Game");
+            Console.WriteLine(playerID);
+
+            network = Network.Instance;
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -52,7 +57,11 @@
         {
             Start startForm = new Start();
             startForm.Show();
-
+            if (network != null)
+            {
+                network.cancelTokenSource.Cancel();
+                network.Dispose();
+            }
             this.Hide();
         }
         private void ChooseGame_FormClosed(object sender, FormClosedEventArgs e)

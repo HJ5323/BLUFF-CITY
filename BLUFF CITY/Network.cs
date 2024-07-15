@@ -8,10 +8,12 @@ namespace BLUFF_CITY
     {
         private static Network instance;
         private static readonly object lockObj = new object();
+        public static bool b_newInstance = false;
 
         private TcpClient client;
         private NetworkStream stream;
         private Thread receiveThread;
+        public CancellationTokenSource cancelTokenSource;
         public delegate void MessageReceivedHandler(string message);
         public event MessageReceivedHandler MessageReceived;
 
@@ -19,6 +21,8 @@ namespace BLUFF_CITY
         {
             ConnectToServer();
             StartReceiving();
+
+            cancelTokenSource = new CancellationTokenSource();
         }
 
         public static Network Instance
@@ -27,10 +31,12 @@ namespace BLUFF_CITY
             {
                 lock (lockObj)
                 {
-                    if (instance == null)
+                    if (instance == null || b_newInstance == true)
                     {
                         instance = new Network();
+                        Console.WriteLine("new Network");
                     }
+                    Console.WriteLine("not new");
                     return instance;
                 }
             }
@@ -211,18 +217,29 @@ namespace BLUFF_CITY
             if (stream != null)
             {
                 stream.Close();
+                Console.WriteLine("stream Close");
                 stream = null;
             }
 
             if (client != null)
             {
                 client.Close();
+                Console.WriteLine("client Close");
                 client = null;
             }
-
+            if (cancelTokenSource.Token.IsCancellationRequested)
+            {
+                Console.WriteLine("receiveThread Close11");
+                //return;
+            }
             if (receiveThread != null && receiveThread.IsAlive)
             {
-                receiveThread.Abort();
+                if(cancelTokenSource.Token.IsCancellationRequested)
+                {
+                    //return;
+                }
+                //receiveThread.Abort();
+                Console.WriteLine("receiveThread Close");
                 receiveThread = null;
             }
         }

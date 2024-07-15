@@ -31,7 +31,8 @@ namespace BLUFF_CITY
             playerNickname = nickname;
             login_name.Text = playerNickname;
             network = Network.Instance;
-
+            Console.WriteLine("Liar 생성 : ");
+            Console.WriteLine(playerID);
             network.Join(playerID, playerNickname);
 
             network.MessageReceived += DisplayMessage;

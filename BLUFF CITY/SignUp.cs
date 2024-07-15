@@ -8,7 +8,7 @@ namespace BLUFF_CITY
         private Network network;
         private bool signupSuccessful = false;
         private string receivedSignupMode;
-        private ChooseGame chooseGameForm = null;
+        private Start startForm = null;
         public SignUp()
         {
             InitializeComponent();
@@ -44,16 +44,17 @@ namespace BLUFF_CITY
             if (signupSuccessful)
             {
                 // ChooseGame 폼이 이미 열려 있는지 확인
-                if (chooseGameForm == null || chooseGameForm.IsDisposed)
+                if (startForm == null || startForm.IsDisposed)
                 {
-                    chooseGameForm = new ChooseGame(signup_id.Text, signup_name.Text);
-                    chooseGameForm.Show();
+                    MessageBox.Show("회원가입에 성공하였습니다.");
+                    //startForm = new Start();
+                    //startForm.Show();
                     this.Hide();
                 }
                 else
                 {
                     // 폼이 이미 열려 있는 경우 포커스를 맞춤
-                    chooseGameForm.Focus();
+                    //startForm.Focus();
                 }
             }
         }

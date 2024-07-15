@@ -108,9 +108,9 @@ namespace server
             Console.WriteLine("모드 보냄");
         }
 
-        private static void SendNicknametoClient(string nickname, TcpClient client)
+        private static void SendNicknametoClient(string ID, string nickname, TcpClient client)
         {
-            string response = string.IsNullOrEmpty(nickname) ? "login_failure" : $"login_success:{nickname}";
+            string response = string.IsNullOrEmpty(nickname) ? "login_failure" : $"login_success:{ID}:{nickname}";
             byte[] data = Encoding.UTF8.GetBytes(response);
             //Console.WriteLine("메세지 보냄");
             NetworkStream stream = client.GetStream();
@@ -173,22 +173,21 @@ namespace server
                         break;
 
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                    Console.WriteLine(message);
                     string[] messageParts = message.Split(':');
                     string action = messageParts[0];
                     string mode_signup = null;
-
                     if (action == "login" && messageParts.Length == 3)
                     {
                         playerID = messageParts[1];
                         string playerPW = messageParts[2];
                         playerNick = login(playerID, playerPW);
-
                         for (int i = 0; i < playerInfo.Count; i++)
                         {
-                            Console.WriteLine(playerInfo[i][2]);
+                            string[] infoParts = playerInfo[i].Split(':');
                             if (playerNick != null)
                             {
-                                if (playerInfo[i][2].ToString() == playerNick)
+                                if (infoParts[1] == playerNick)
                                 {
                                     Console.WriteLine("중복 로그인");
                                     playerNick = null;
@@ -196,7 +195,7 @@ namespace server
                             }
                         }
 
-                        SendNicknametoClient(playerNick, client);
+                        SendNicknametoClient(playerID, playerNick, client);
                         if (!string.IsNullOrEmpty(playerNick))
                         {
                             lock (playerInfo)
