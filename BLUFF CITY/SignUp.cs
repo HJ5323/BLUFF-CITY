@@ -7,7 +7,6 @@ namespace BLUFF_CITY
     {
         private Network network;
         private bool signupSuccessful = false;
-        private string receivedSignupMode;
         private Start startForm = null;
         public SignUp()
         {
@@ -53,12 +52,12 @@ namespace BLUFF_CITY
                     MessageBox.Show("회원가입에 성공하였습니다.");
                     //startForm = new Start();
                     //startForm.Show();
-                    this.Hide();
+                    this.Close();
                 }
                 else
                 {
                     // 폼이 이미 열려 있는 경우 포커스를 맞춤
-                    //startForm.Focus();
+                    startForm.Focus();
                 }
             }
         }

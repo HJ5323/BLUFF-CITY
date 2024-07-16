@@ -1,13 +1,7 @@
-using System.Net.Sockets;
-
 namespace BLUFF_CITY
 {
     public partial class Start : Form
     {
-        private Socket socket; //소켓
-        //private TcpClient client;
-        private Thread receiveThread;
-
         public Start()
         {
             InitializeComponent();
@@ -15,9 +9,6 @@ namespace BLUFF_CITY
             InitializeArrays();
 
             ApplyTransparentBackgroundAndHideBorder();
-
-            // 서버 연결
-            //liar.ConnectToServer();
         }
 
         private void LOGIN_Click(object sender, EventArgs e)
@@ -32,6 +23,8 @@ namespace BLUFF_CITY
         {
             SignUp SignUpForm = new SignUp();
             SignUpForm.Show();
+
+            this.Hide();
         }
 
         private void start_FormClosed(object sender, FormClosedEventArgs e)

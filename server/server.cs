@@ -2,7 +2,6 @@
 using System.Net.Sockets;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Timers; // System.Timers.Timer를 사용하기 위해 추가
 
 namespace server
 {
@@ -31,7 +30,7 @@ namespace server
             {
 
                 Int32 port = 13000;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1"); // 로컬 IP
+                IPAddress localAddr = IPAddress.Parse("192.168.1.220"); // 로컬 IP
 
                 server = new TcpListener(localAddr, port); // 서버 생성
                 server.Start();
@@ -395,7 +394,7 @@ namespace server
         private static void HandlePlayerTurn(string playerID, string playerNick, string gameRoom)
         {
             // 발언 순서의 플레이어만 chat 활성화
-            TcpClient targetClient = GetTcpClientFromPlayerID(playerID, gameRoom);
+            TcpClient targetClient = GetTcpClientFromPlayerID(playerNick, gameRoom);
             SendMessageToClient(gameRoom, $";enable_chat:{playerNick}", targetClient);
             BroadcastMessage(gameRoom, $";chat:server:{playerNick} 차례입니다.", null);
 
@@ -423,15 +422,16 @@ namespace server
                     SendMessageToClient(gameRoom, ";disable_chat:server", targetClient);
 
                     // 다음 플레이어로 넘어가기
-                    MoveToNextPlayer(playerID, playerNick, gameRoom);
+                    MoveToNextPlayer(playerNick, gameRoom);
+
                 }
             };
             timer.Start();
         }
 
-        private static void MoveToNextPlayer(string currentPlayerID, string currentPlayerNick, string gameRoom)
+        private static void MoveToNextPlayer(string currentPlayerNick, string gameRoom)
         {
-            int currentPlayerIndex = GetCurrentPlayerIndex(currentPlayerID);
+            int currentPlayerIndex = GetCurrentPlayerIndex(currentPlayerNick);
             int nextPlayerIndex = (currentPlayerIndex + 1) % entryPlayer.Count;
 
             if (nextPlayerIndex == 0)
@@ -447,10 +447,10 @@ namespace server
         }
 
         // playerID를 사용하여 gameRooms에서 해당 TcpClient를 찾아 반환하는 함수
-        private static TcpClient GetTcpClientFromPlayerID(string playerID, string gameRoom)
+        private static TcpClient GetTcpClientFromPlayerID(string playerNick, string gameRoom)
         {
             // 현재 플레이어의 인덱스를 가져옴
-            int playerIndex = GetCurrentPlayerIndex(playerID);
+            int playerIndex = GetCurrentPlayerIndex(playerNick);
 
             if (playerIndex != -1)
             {
@@ -460,11 +460,11 @@ namespace server
         }
 
         // 현재 플레이어의 인덱스를 반환하는 함수
-        private static int GetCurrentPlayerIndex(string playerID)
+        private static int GetCurrentPlayerIndex(string playerNick)
         {
             for (int i = 0; i < entryPlayer.Count; i++)
             {
-                if (entryPlayer[i].Split(':')[0] == playerID)
+                if (entryPlayer[i].Split(':')[1] == playerNick)
                 {
                     return i;
                 }
@@ -585,11 +585,16 @@ namespace server
                 {
                     string[] playerParts = player.Split(':');
                     string playerNick = playerParts[1];
+                    //string playerID = playerParts[0];
                     string isLiar = playerParts[3];
+                    Console.WriteLine("여기까지는 실행됨.1");
 
                     if (isLiar == "liar" && playerNick == liar)
                     {
-                        TcpClient liarClient = GetTcpClientFromPlayerID(liar, gameRoom);
+                        TcpClient liarClient = GetTcpClientFromPlayerID(playerNick, gameRoom);
+                        Console.WriteLine("여기까지는 실행됨.2");
+                        Console.WriteLine($"playerNick  {playerNick}");
+                        Console.WriteLine($"liar  {liar}");
 
                         // liar가 최다 득표
                         SendMessageToClient(gameRoom, $";liar:server:{keyword}", liarClient);
@@ -614,7 +619,7 @@ namespace server
         {
             string result = messageParts[1];
 
-            if (result == "wrong")
+            if (result == "right")
             {
                 BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추었습니다.", null);
                 // 라이어 승점 +1
@@ -622,7 +627,7 @@ namespace server
                 // 게임 종료
                 CloseGame(gameRoom);
             }
-            else if (result == "right")
+            else if (result == "wrong")
             {
                 BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추지 못하였습니다.", null);
                 BroadcastMessage(gameRoom, $";chat:server:시민이 승리하였습니다.", null);
@@ -647,6 +652,8 @@ namespace server
 
         private static void CloseGame(string gameRoom)
         {
+            BroadcastMessage(gameRoom, $";close:server:게임이 곧 종료됩니다.", null);
+
             liarVotes.Clear();
 
             entryPlayer.Clear();

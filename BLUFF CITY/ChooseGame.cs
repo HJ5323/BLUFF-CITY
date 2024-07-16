@@ -50,7 +50,7 @@
             liarForm = new Liar(playerID, playerNickname);
             liarForm.Show();
 
-            this.Hide();
+            this.Close();
         }
 
         private void LogOut_Click(object sender, EventArgs e)
@@ -63,7 +63,7 @@
                 network.cancelTokenSource.Cancel();
                 network.Dispose();
             }
-            this.Hide();
+            this.Close();
         }
 
         private void ChooseGame_FormClosed(object sender, FormClosedEventArgs e)

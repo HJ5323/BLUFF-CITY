@@ -64,7 +64,7 @@ namespace BLUFF_CITY
                 {
                     chooseGameForm = new ChooseGame(receivedID, receivedNickname);
                     chooseGameForm.Show();
-                    this.Hide();
+                    this.Close();
                 }
                 else
                 {

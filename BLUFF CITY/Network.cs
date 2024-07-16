@@ -46,7 +46,7 @@ namespace BLUFF_CITY
         {
             try
             {
-                client = new TcpClient("127.0.0.1", 13000);
+                client = new TcpClient("192.168.1.220", 13000);
                 stream = client.GetStream();
             }
             catch (Exception ex)

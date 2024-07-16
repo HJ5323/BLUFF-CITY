@@ -10,6 +10,8 @@
             Console.WriteLine($"Topic_city : {keyword}");
 
             InitializeComponent();
+            network = Network.Instance;
+
             this.keyword = keyword; // keyword를 폼 내부에 저장
         }
 
@@ -27,6 +29,7 @@
                 string result = "wrong";
                 network.SendGuessMessage(result);
             }
+            this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -157,7 +157,12 @@ namespace BLUFF_CITY
                                 // noliar 최다득표
                                 maxVotee_noliar(parts);
                                 break;
-                                
+
+                            case "close":
+                                // 게임 종료
+                                Formclose(parts);
+                                break;
+
                             default:
                                 Console.WriteLine($"Unknown message type: {messageType}");
                                 break;
@@ -406,14 +411,6 @@ namespace BLUFF_CITY
             }
         }
 
-        //private void VoteMode()
-        //{
-        //    for (int i = 0; i < entryPlayer.Count; i++)
-        //    {
-        //        LiarButtons[i].Visible = true; // 버튼을 활성화
-        //        Console.WriteLine("버튼 활성화 됨");
-        //    }
-        //}
         private void VoteMode()
         {
             if (InvokeRequired)
@@ -536,7 +533,26 @@ namespace BLUFF_CITY
             }
         }
 
-    }
+        private async void Formclose(string[] parts)
+        {
+            Console.WriteLine($"{playerNickname}chat 받음");
 
+            string server = parts[1]; // server
+            string closeMessage = parts[2]; // close message
+
+            // UI 스레드에서 players_chat에 메시지를 추가
+            players_chat.Invoke(new Action(() =>
+            {
+                players_chat.AppendText($"\n[{server}] {closeMessage}" + Environment.NewLine);
+            }));
+
+            await Task.Delay(3000); // 3초 대기
+
+            this.Close();
+
+            ChooseGame chooseGameForm = new ChooseGame(playerID, playerNickname);
+            chooseGameForm.Show();
+        }
+    }
 }
 
