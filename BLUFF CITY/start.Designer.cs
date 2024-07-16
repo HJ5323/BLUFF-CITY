@@ -115,7 +115,7 @@ namespace BLUFF_CITY
         private void InitializeArrays()
         {
             // StartButtons 배열 초기화
-            StartButtons = new Button[] { LOGIN, SIGN_UP };
+            StartButtons = new Button[] { LOGIN, SIGN_UP, exit };
 
             // StartTextBox 배열 초기화
             StartTextBox = new TextBox[] { title };

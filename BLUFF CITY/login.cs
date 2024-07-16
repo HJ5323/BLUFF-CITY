@@ -9,11 +9,17 @@ namespace BLUFF_CITY
         private Network network;
         private bool loginSuccessful = false;
         private string receivedID;
+        private string mode_login;
+
         private string receivedNickname;
         private ChooseGame chooseGameForm = null;
+        private Start startForm = null;
         public Login()
         {
             InitializeComponent();
+
+            // Form 크기 고정
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             InitializeArrays();
 
@@ -28,13 +34,20 @@ namespace BLUFF_CITY
 
         private void OnMessageReceived(string message)
         {
-            if (message.StartsWith("login_success"))
+            Console.WriteLine(message);
+            mode_login = message.Split(':')[0];
+            Console.WriteLine(mode_login);
+            if (mode_login == "0")
             {
                 receivedID = message.Split(':')[1];
                 receivedNickname = message.Split(':')[2];
                 loginSuccessful = true;
             }
-            else if (message.StartsWith("login_failure"))
+            else if (mode_login == "1")
+            {
+                CHECK.Text = "이미 로그인된 ID입니다.";
+            }
+            else
             {
                 CHECK.Text = "ID와 PW를 확인해 주세요.";
             }
@@ -114,6 +127,14 @@ namespace BLUFF_CITY
                 Label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
             }
 
+        }
+
+        private void exit_Click(object sender, EventArgs e)
+        {
+            startForm = new Start();
+            startForm.Show();
+
+            this.Close();
         }
     }
 }

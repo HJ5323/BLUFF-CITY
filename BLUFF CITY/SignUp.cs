@@ -12,6 +12,9 @@ namespace BLUFF_CITY
         {
             InitializeComponent();
 
+            // Form 크기 고정
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+
             // 버튼 배열 초기화
             InitializeArrays();
 

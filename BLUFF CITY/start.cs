@@ -6,6 +6,9 @@ namespace BLUFF_CITY
         {
             InitializeComponent();
 
+            // Form 크기 고정
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+
             InitializeArrays();
 
             ApplyTransparentBackgroundAndHideBorder();

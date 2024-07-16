@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 
 namespace server
 {
@@ -13,6 +14,7 @@ namespace server
         static List<string> readyPlayer = new List<string>(); // ready한 플레이어 정보 저장
         private static Dictionary<string, string> liarVotes = new Dictionary<string, string>();// liar투표결과 저장
         static string keyword;
+        static bool gamestart;
 
         static List<string> topics = new List<string> { "동물", "도시", "과일", "물건" }; // 주제 리스트
         static Dictionary<string, List<string>> keywords = new Dictionary<string, List<string>>()
@@ -107,13 +109,14 @@ namespace server
             Console.WriteLine("모드 보냄");
         }
 
-        private static void SendNicknametoClient(string ID, string nickname, TcpClient client)
+        private static void SendNicknametoClient(string mode_login, string ID, string nickname, TcpClient client)
         {
-            string response = string.IsNullOrEmpty(nickname) ? "login_failure" : $"login_success:{ID}:{nickname}";
+            string response = $"{mode_login}:{ID}:{nickname}";
             byte[] data = Encoding.UTF8.GetBytes(response);
             //Console.WriteLine("메세지 보냄");
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
+            Console.WriteLine(response);
         }
 
         // gameRoom의 모든 클라인언트에게 메시지 전송
@@ -139,6 +142,16 @@ namespace server
                     }
                 }
             }
+        }
+
+        // Game 시작 여부에 따라 게임 입장 제어
+        private static void CreateRoomMessage(string message, TcpClient client)
+        {
+
+            byte[] data = Encoding.UTF8.GetBytes($"{message}");
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
+            Console.WriteLine($"message: {message}");              
         }
 
         public static void SendMessageToClient(string gameRoom, string message, TcpClient targetClient)
@@ -172,10 +185,11 @@ namespace server
                         break;
 
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                    Console.WriteLine(message);
+                    Console.WriteLine($"1111--{message}");
                     string[] messageParts = message.Split(':');
                     string action = messageParts[0];
                     string mode_signup = null;
+                    string mode_login = null;
                     if (action == "login" && messageParts.Length == 3)
                     {
                         playerID = messageParts[1];
@@ -183,28 +197,39 @@ namespace server
                         playerNick = login(playerID, playerPW);
                         for (int i = 0; i < playerInfo.Count; i++)
                         {
+                            Console.WriteLine("for");
                             string[] infoParts = playerInfo[i].Split(':');
                             if (playerNick != null)
                             {
+                                Console.WriteLine("if");
                                 if (infoParts[1] == playerNick)
                                 {
                                     Console.WriteLine("중복 로그인");
+                                    mode_login = "1";
                                     playerNick = null;
                                 }
                             }
+                            else
+                            {
+                                //playerNick == null 인 상태 > database에 아이디 없음
+                                mode_login = "2";
+                            }
                         }
-
-                        SendNicknametoClient(playerID, playerNick, client);
+                        Console.WriteLine($"2222--{mode_login}");
                         if (!string.IsNullOrEmpty(playerNick))
                         {
                             lock (playerInfo)
                             {
                                 playerInfo.Add($"{playerID}:{playerNick}");
                                 Console.WriteLine($"플레이어 로그인 - ID: {playerID}, 닉네임: {playerNick}");
+                                mode_login = "0";
                                 isLoggedIn = true;
                             }
                         }
-                    }else if (action == "signup")
+                        SendNicknametoClient(mode_login, playerID, playerNick, client);
+
+                    }
+                    else if (action == "signup")
                     {
                         Console.WriteLine("회원가입 모드");
                         playerID=messageParts[1];
@@ -214,11 +239,21 @@ namespace server
                         mode_signup = Signup(playerID, playerPW, playerNick);
                         SendSignUpModetoClient(mode_signup, client);
                     }
-
                     if (isLoggedIn)
                     {
                         switch (action)
                         {
+                            case "CreatRoom":
+                                if (gamestart == true)
+                                {
+                                    CreateRoomMessage("createRoom:failure:이미 게임이 실행되었습니다. 게임이 끝날때까지 기다려주세요.", client);
+                                    break;
+                                }
+                                else
+                                {
+                                    CreateRoomMessage("createRoom:success:liarGame 생성", client);
+                                    break;
+                                }
                             case "join":
                                 JoinGame(messageParts, client, ref gameRoom);
                                 break;
@@ -236,6 +271,9 @@ namespace server
                                 break;
                             case "logout":
                                 HandleLogout(messageParts);
+                                break;
+                            case "exitGameroom":
+                                HandleExitGameroom(messageParts, gameRoom, client);
                                 break;
                             default:
                                 Console.WriteLine("잘못된 메시지 형식");
@@ -350,6 +388,7 @@ namespace server
         // 게임 시작
         private static void StartGame(string gameRoom)
         {
+            gamestart = true;
             readyPlayer.Clear();
             Console.WriteLine("모든 플레이어 준비 완료, 게임 시작");
             Random rand = new Random();
@@ -659,6 +698,8 @@ namespace server
             entryPlayer.Clear();
 
             gameRooms[gameRoom].Clear();
+
+            gamestart = false;
         }
 
         private static void RemoveClient(TcpClient client, string gameRoom)
@@ -678,6 +719,44 @@ namespace server
             //client.Close();
         }
 
+        private static void HandleExitGameroom(string[] messageParts, string gameRoom, TcpClient client)
+        {
+            string id = messageParts[1];
+            string nickname = messageParts[2];
+            string gameroom = messageParts[3];
+            Console.WriteLine($"{nickname} 준비 완료");
+
+            if (messageParts.Length != 4)
+            {
+                Console.WriteLine("HandleExitGameroom-잘못된 메시지 형식");
+                return;
+            }
+
+            lock (gameRooms)
+            {
+                if (readyPlayer.Contains($"{id}:{nickname}"))
+                {
+                    // 이미 준비된 상태이면, readyPlayer 목록에서 제거
+                    readyPlayer.Remove($"{id}:{nickname}");
+                    Console.WriteLine($"{nickname} - readyPlayer.Remove");
+                }
+                if (entryPlayer.Contains($"{id}:{nickname}:{gameRoom}"))
+                {
+                    // entryPlayer 목록에서 제거
+                    entryPlayer.Remove($"{id}:{nickname}:{gameRoom}");
+                    BroadcastMessage(gameRoom, $";chat:{nickname}:게임을 나갔습니다.", null);
+                    SendEntryPlayerInfo(gameRoom);
+                    Console.WriteLine($"{nickname} - entryPlayer.Remove");
+                }
+                if (gameRooms[gameroom].Contains(client))
+                {
+                    //  gameRooms[gameroom] 목록에서 제거
+                    gameRooms[gameroom].Remove(client);
+                    Console.WriteLine($"{nickname} - gameRooms[gameroom].Remove");
+                }
+
+            }
+        }
         public static string Signup(string ID, string PW, string Nickname)
         {
             string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";

@@ -1,16 +1,23 @@
-﻿namespace BLUFF_CITY
+﻿using MySqlX.XDevAPI;
+using System.Windows.Forms;
+
+namespace BLUFF_CITY
 {
     public partial class ChooseGame : Form
     {
         private string playerID;
         private string playerNickname;
         private Network network;
+        bool ShowLiargameForm;
 
         Liar liarForm;
 
         public ChooseGame(string id, string nickname)
         {
             InitializeComponent();
+
+            // Form 크기 고정
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             // 버튼 배열 초기화
             InitializeArrays();
@@ -24,6 +31,7 @@
             Console.WriteLine(playerID);
 
             network = Network.Instance;
+            network.MessageReceived += OnMessageReceived;
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -35,6 +43,12 @@
                 button.BackColor = Color.Transparent;
                 button.FlatAppearance.BorderSize = 0;
             }
+
+            // GameLabel 배열에 대해 배경을 투명하게 설정
+            foreach (var Label in GameLabel)
+            {
+                Label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
+            }
         }
 
         private void MAFIA_GAME_Click(object sender, EventArgs e)
@@ -45,12 +59,60 @@
             this.Hide();
         }
 
-        private void LIAR_GAME_Click(object sender, EventArgs e)
+        private void OnMessageReceived(string message)
         {
-            liarForm = new Liar(playerID, playerNickname);
-            liarForm.Show();
+            // 메시지를 콜론을 기준으로 파싱
+            string[] parts = message.Split(':');
+            string messageType = parts[0]; // 메시지 타입
 
-            this.Close();
+            if (messageType == "createRoom")
+            {
+                string SuccessFailure = parts[1]; // 게임 실행 여부
+                string actualMessage = parts[2]; // 메시지 타입
+
+                if (SuccessFailure == "success")
+                {
+                    CHECK.Text = actualMessage;
+                    ShowLiargameForm = true;
+                }
+                else if (SuccessFailure == "failure")
+                {
+                    CHECK.Text = actualMessage;
+                    ShowLiargameForm = false;
+                }
+            }
+        }
+
+        private async Task WaitForShowLiargameForm()
+        {
+            while (!ShowLiargameForm)
+            {
+
+                await Task.Delay(100);
+            }
+
+            if (ShowLiargameForm)
+            {
+                // ChooseGame 폼이 이미 열려 있는지 확인
+                if (liarForm == null || liarForm.IsDisposed)
+                {
+                    liarForm = new Liar(playerID, playerNickname);
+                    liarForm.Show();
+                    this.Close();
+                }
+                else
+                {
+                    // 폼이 이미 열려 있는 경우 포커스를 맞춤
+                    liarForm.Focus();
+                }
+            }
+        }
+
+        private async void LIAR_GAME_Click(object sender, EventArgs e)
+        {
+            ShowLiargameForm = false;
+            network.CreatRoom(playerID, playerNickname);
+            await WaitForShowLiargameForm();
         }
 
         private void LogOut_Click(object sender, EventArgs e)

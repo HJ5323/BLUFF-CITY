@@ -17,6 +17,9 @@ namespace BLUFF_CITY
         {
             InitializeComponent();
 
+            // Form 크기 고정
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+
             // 버튼과 텍스트 박스 배열 초기화
             InitializeArrays();
 
@@ -40,6 +43,7 @@ namespace BLUFF_CITY
 
         private void ApplyTransparentBackgroundAndHideBorder()
         {
+
             // LiarButtons 배열에 대해 배경을 투명하게 설정하고 윤곽선을 숨김
             foreach (var button in LiarButtons)
             {
@@ -77,6 +81,8 @@ namespace BLUFF_CITY
 
         private void exit_Click(object sender, EventArgs e)
         {
+            network.ExitGameroom(playerID, playerNickname);
+
             ChooseGame ChooseGameForm = new ChooseGame(playerID, playerNickname);
             ChooseGameForm.Show();
 
@@ -365,9 +371,15 @@ namespace BLUFF_CITY
                 Topic_itemForm.Show();
             }
         }
-      
+
         private void maxVotee_noliar(string[] parts)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string[]>(maxVotee_noliar), new object[] { parts });
+                return;
+            }
+
             Console.WriteLine($"{parts} - noliar 받음");
             string server = parts[1]; // server
             string message = parts[2]; // 실제 메시지 내용
@@ -535,16 +547,18 @@ namespace BLUFF_CITY
 
         private async void Formclose(string[] parts)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string[]>(Formclose), new object[] { parts });
+                return;
+            }
+
             Console.WriteLine($"{playerNickname}chat 받음");
 
             string server = parts[1]; // server
             string closeMessage = parts[2]; // close message
 
-            // UI 스레드에서 players_chat에 메시지를 추가
-            players_chat.Invoke(new Action(() =>
-            {
-                players_chat.AppendText($"\n[{server}] {closeMessage}" + Environment.NewLine);
-            }));
+            players_chat.AppendText($"\n[{server}] {closeMessage}" + Environment.NewLine);
 
             await Task.Delay(3000); // 3초 대기
 
@@ -555,4 +569,3 @@ namespace BLUFF_CITY
         }
     }
 }
-

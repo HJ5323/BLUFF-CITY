@@ -34,6 +34,7 @@
             login_pw = new TextBox();
             login_id = new TextBox();
             Login_ok = new Button();
+            exit = new Button();
             SuspendLayout();
             // 
             // CHECK
@@ -104,12 +105,28 @@
             Login_ok.UseVisualStyleBackColor = false;
             Login_ok.Click += Login_ok_Click;
             // 
+            // exit
+            // 
+            exit.BackColor = Color.FromArgb(217, 217, 217);
+            exit.BackgroundImage = Properties.Resources.icons8_출구_64;
+            exit.BackgroundImageLayout = ImageLayout.Zoom;
+            exit.FlatStyle = FlatStyle.Flat;
+            exit.ForeColor = Color.Black;
+            exit.Location = new Point(731, 11);
+            exit.Margin = new Padding(3, 2, 3, 2);
+            exit.Name = "exit";
+            exit.Size = new Size(57, 48);
+            exit.TabIndex = 42;
+            exit.UseVisualStyleBackColor = false;
+            exit.Click += exit_Click;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gainsboro;
             ClientSize = new Size(800, 450);
+            Controls.Add(exit);
             Controls.Add(CHECK);
             Controls.Add(PW);
             Controls.Add(ID);
@@ -143,7 +160,7 @@
         private void InitializeArrays()
         {
             // LoginButtons 배열 초기화
-            LoginButtons = new Button[] { Login_ok };
+            LoginButtons = new Button[] { Login_ok, exit };
 
             // LoginTextBox 배열 초기화
             LoginTextBox = new TextBox[] { login_id, login_pw};
@@ -151,5 +168,7 @@
             // LoginLabel 배열 초기화
             LoginLabel = new Label[] { CHECK, ID, PW };
         }
+
+        private Button exit;
     }
 }

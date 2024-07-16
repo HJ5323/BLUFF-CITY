@@ -35,6 +35,7 @@ namespace BLUFF_CITY
             LIAR_GAME = new Button();
             MAFIA_GAME = new Button();
             LogOut = new Button();
+            CHECK = new Label();
             SuspendLayout();
             // 
             // LIAR_GAME
@@ -73,6 +74,17 @@ namespace BLUFF_CITY
             LogOut.UseVisualStyleBackColor = false;
             LogOut.Click += LogOut_Click;
             // 
+            // CHECK
+            // 
+            CHECK.BackColor = Color.Gainsboro;
+            CHECK.Font = new Font("Pyunji R", 10F);
+            CHECK.Location = new Point(66, 470);
+            CHECK.Margin = new Padding(3, 2, 3, 2);
+            CHECK.Name = "CHECK";
+            CHECK.Size = new Size(671, 31);
+            CHECK.TabIndex = 16;
+            CHECK.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // ChooseGame
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -80,6 +92,7 @@ namespace BLUFF_CITY
             BackgroundImage = Properties.Resources.choose_game;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(939, 551);
+            Controls.Add(CHECK);
             Controls.Add(LogOut);
             Controls.Add(MAFIA_GAME);
             Controls.Add(LIAR_GAME);
@@ -96,12 +109,17 @@ namespace BLUFF_CITY
         private Button LogOut;
 
         private Button[] GameButtons; // LIAR_GAME,MAFIA_GAME 버튼 배열
+        private Label[] GameLabel; // CHECK 라벨 배열
 
         private void InitializeArrays()
         {
             // GameButtons 배열 초기화
             GameButtons = new Button[] { LIAR_GAME, MAFIA_GAME, LogOut };
+
+            // GameLabel 배열 초기화
+            GameLabel = new Label[] { CHECK };
         }
 
+        private Label CHECK;
     }
 }

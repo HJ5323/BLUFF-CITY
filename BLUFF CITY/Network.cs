@@ -1,5 +1,4 @@
-﻿using MySqlX.XDevAPI.Common;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
 
 namespace BLUFF_CITY
@@ -130,13 +129,24 @@ namespace BLUFF_CITY
             }
         }
 
-
-
         public void Join(string playerID, string playerNickname)
         {
             try
             {
                 byte[] data = Encoding.UTF8.GetBytes($"join:{playerID}:{playerNickname}:liar_game");
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void CreatRoom(string playerID, string playerNickname)
+        {
+            try
+            {
+                byte[] data = Encoding.UTF8.GetBytes($"CreatRoom:{playerID}:{playerNickname}:liar_game");
                 stream.Write(data, 0, data.Length);
             }
             catch (Exception ex)
@@ -162,6 +172,19 @@ namespace BLUFF_CITY
             }
 
             return null;
+        }
+
+        public void ExitGameroom(string playerID, string playerNickname)
+        {
+            try
+            {
+                byte[] data = Encoding.UTF8.GetBytes($"exitGameroom:{playerID}:{playerNickname}:liar_game");
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public void SendMessage(string playerNickname, string chat)

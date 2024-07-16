@@ -58,31 +58,31 @@
             // chat
             // 
             chat.BackColor = Color.FromArgb(217, 217, 217);
-            chat.Font = new Font("휴먼편지체", 10F, FontStyle.Bold);
-            chat.Location = new Point(225, 806);
+            chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
+            chat.Location = new Point(250, 1007);
             chat.Name = "chat";
-            chat.Size = new Size(450, 27);
+            chat.Size = new Size(500, 31);
             chat.TabIndex = 45;
             chat.KeyDown += chat_KeyDown;
             // 
             // players_chat
             // 
             players_chat.BackColor = Color.FromArgb(217, 217, 217);
-            players_chat.Font = new Font("휴먼편지체", 10F, FontStyle.Bold);
-            players_chat.Location = new Point(225, 102);
+            players_chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
+            players_chat.Location = new Point(250, 128);
             players_chat.Multiline = true;
             players_chat.Name = "players_chat";
             players_chat.ReadOnly = true;
             players_chat.ScrollBars = ScrollBars.Horizontal;
-            players_chat.Size = new Size(450, 685);
+            players_chat.Size = new Size(500, 855);
             players_chat.TabIndex = 44;
             players_chat.TextAlign = HorizontalAlignment.Center;
             // 
             // word
             // 
             word.BackColor = Color.FromArgb(217, 217, 217);
-            word.Font = new Font("휴먼편지체", 15F, FontStyle.Bold);
-            word.Location = new Point(360, 13);
+            word.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
+            word.Location = new Point(400, 16);
             word.Margin = new Padding(3, 2, 3, 2);
             word.Name = "word";
             word.Size = new Size(176, 28);
@@ -94,12 +94,12 @@
             READY.BackColor = Color.FromArgb(217, 217, 217);
             READY.BackgroundImageLayout = ImageLayout.None;
             READY.FlatStyle = FlatStyle.Flat;
-            READY.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
+            READY.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
             READY.ForeColor = Color.Black;
-            READY.Location = new Point(699, 802);
+            READY.Location = new Point(777, 1002);
             READY.Margin = new Padding(3, 2, 3, 2);
             READY.Name = "READY";
-            READY.Size = new Size(144, 41);
+            READY.Size = new Size(160, 51);
             READY.TabIndex = 42;
             READY.Text = "READY";
             READY.UseVisualStyleBackColor = false;
@@ -112,10 +112,10 @@
             exit.BackgroundImageLayout = ImageLayout.Zoom;
             exit.FlatStyle = FlatStyle.Flat;
             exit.ForeColor = Color.Black;
-            exit.Location = new Point(819, 10);
+            exit.Location = new Point(910, 12);
             exit.Margin = new Padding(3, 2, 3, 2);
             exit.Name = "exit";
-            exit.Size = new Size(51, 38);
+            exit.Size = new Size(57, 48);
             exit.TabIndex = 41;
             exit.UseVisualStyleBackColor = false;
             exit.Click += exit_Click;
@@ -123,33 +123,33 @@
             // timer
             // 
             timer.BackColor = Color.FromArgb(217, 217, 217);
-            timer.Font = new Font("휴먼편지체", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
-            timer.Location = new Point(703, 14);
+            timer.Font = new Font("Pyunji R", 14F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            timer.Location = new Point(781, 17);
             timer.Margin = new Padding(3, 2, 3, 2);
             timer.Name = "timer";
-            timer.Size = new Size(60, 26);
+            timer.Size = new Size(67, 33);
             timer.TabIndex = 40;
             // 
             // LIAR_GAME
             // 
             LIAR_GAME.BackColor = Color.FromArgb(217, 217, 217);
-            LIAR_GAME.Font = new Font("휴먼편지체", 18F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            LIAR_GAME.Font = new Font("Pyunji R", 18F, FontStyle.Bold, GraphicsUnit.Point, 129);
             LIAR_GAME.ForeColor = SystemColors.WindowText;
-            LIAR_GAME.Location = new Point(11, 11);
+            LIAR_GAME.Location = new Point(12, 14);
             LIAR_GAME.Margin = new Padding(3, 2, 3, 2);
             LIAR_GAME.Name = "LIAR_GAME";
-            LIAR_GAME.Size = new Size(183, 34);
+            LIAR_GAME.Size = new Size(203, 42);
             LIAR_GAME.TabIndex = 39;
             LIAR_GAME.Text = "LIAR GAME";
             // 
             // li_p8_name
             // 
             li_p8_name.BackColor = Color.White;
-            li_p8_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p8_name.Location = new Point(689, 763);
+            li_p8_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p8_name.Location = new Point(766, 954);
             li_p8_name.Margin = new Padding(3, 2, 3, 2);
             li_p8_name.Name = "li_p8_name";
-            li_p8_name.Size = new Size(155, 28);
+            li_p8_name.Size = new Size(172, 35);
             li_p8_name.TabIndex = 38;
             li_p8_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -158,10 +158,10 @@
             li_p8.BackColor = Color.Transparent;
             li_p8.FlatStyle = FlatStyle.Flat;
             li_p8.ForeColor = Color.Black;
-            li_p8.Location = new Point(688, 621);
+            li_p8.Location = new Point(765, 776);
             li_p8.Margin = new Padding(3, 2, 3, 2);
             li_p8.Name = "li_p8";
-            li_p8.Size = new Size(157, 139);
+            li_p8.Size = new Size(174, 174);
             li_p8.TabIndex = 37;
             li_p8.UseVisualStyleBackColor = false;
             li_p8.Click += li_p8_Click;
@@ -169,11 +169,11 @@
             // li_p7_name
             // 
             li_p7_name.BackColor = Color.White;
-            li_p7_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p7_name.Location = new Point(689, 590);
+            li_p7_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p7_name.Location = new Point(766, 738);
             li_p7_name.Margin = new Padding(3, 2, 3, 2);
             li_p7_name.Name = "li_p7_name";
-            li_p7_name.Size = new Size(155, 28);
+            li_p7_name.Size = new Size(172, 35);
             li_p7_name.TabIndex = 36;
             li_p7_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -182,10 +182,10 @@
             li_p7.BackColor = Color.Transparent;
             li_p7.FlatStyle = FlatStyle.Flat;
             li_p7.ForeColor = Color.Black;
-            li_p7.Location = new Point(688, 448);
+            li_p7.Location = new Point(765, 560);
             li_p7.Margin = new Padding(3, 2, 3, 2);
             li_p7.Name = "li_p7";
-            li_p7.Size = new Size(157, 139);
+            li_p7.Size = new Size(174, 174);
             li_p7.TabIndex = 35;
             li_p7.UseVisualStyleBackColor = false;
             li_p7.Click += li_p7_Click;
@@ -193,11 +193,11 @@
             // li_p6_name
             // 
             li_p6_name.BackColor = Color.White;
-            li_p6_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p6_name.Location = new Point(689, 418);
+            li_p6_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p6_name.Location = new Point(766, 522);
             li_p6_name.Margin = new Padding(3, 2, 3, 2);
             li_p6_name.Name = "li_p6_name";
-            li_p6_name.Size = new Size(155, 28);
+            li_p6_name.Size = new Size(172, 35);
             li_p6_name.TabIndex = 34;
             li_p6_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -206,10 +206,10 @@
             li_p6.BackColor = Color.Transparent;
             li_p6.FlatStyle = FlatStyle.Flat;
             li_p6.ForeColor = Color.Black;
-            li_p6.Location = new Point(688, 275);
+            li_p6.Location = new Point(765, 344);
             li_p6.Margin = new Padding(3, 2, 3, 2);
             li_p6.Name = "li_p6";
-            li_p6.Size = new Size(157, 139);
+            li_p6.Size = new Size(174, 174);
             li_p6.TabIndex = 33;
             li_p6.UseVisualStyleBackColor = false;
             li_p6.Click += li_p6_Click;
@@ -217,11 +217,11 @@
             // li_p5_name
             // 
             li_p5_name.BackColor = Color.White;
-            li_p5_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p5_name.Location = new Point(689, 245);
+            li_p5_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p5_name.Location = new Point(766, 306);
             li_p5_name.Margin = new Padding(3, 2, 3, 2);
             li_p5_name.Name = "li_p5_name";
-            li_p5_name.Size = new Size(155, 28);
+            li_p5_name.Size = new Size(172, 35);
             li_p5_name.TabIndex = 32;
             li_p5_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -229,10 +229,10 @@
             // 
             li_p5.BackColor = Color.Transparent;
             li_p5.FlatStyle = FlatStyle.Flat;
-            li_p5.Location = new Point(688, 102);
+            li_p5.Location = new Point(765, 128);
             li_p5.Margin = new Padding(3, 2, 3, 2);
             li_p5.Name = "li_p5";
-            li_p5.Size = new Size(157, 139);
+            li_p5.Size = new Size(174, 174);
             li_p5.TabIndex = 31;
             li_p5.UseVisualStyleBackColor = false;
             li_p5.Click += li_p5_Click;
@@ -240,11 +240,11 @@
             // li_p4_name
             // 
             li_p4_name.BackColor = Color.White;
-            li_p4_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p4_name.Location = new Point(56, 763);
+            li_p4_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p4_name.Location = new Point(62, 954);
             li_p4_name.Margin = new Padding(3, 2, 3, 2);
             li_p4_name.Name = "li_p4_name";
-            li_p4_name.Size = new Size(155, 28);
+            li_p4_name.Size = new Size(172, 35);
             li_p4_name.TabIndex = 30;
             li_p4_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -253,10 +253,10 @@
             li_p4.BackColor = Color.Transparent;
             li_p4.FlatStyle = FlatStyle.Flat;
             li_p4.ForeColor = Color.Black;
-            li_p4.Location = new Point(55, 621);
+            li_p4.Location = new Point(61, 776);
             li_p4.Margin = new Padding(3, 2, 3, 2);
             li_p4.Name = "li_p4";
-            li_p4.Size = new Size(157, 139);
+            li_p4.Size = new Size(174, 174);
             li_p4.TabIndex = 29;
             li_p4.UseVisualStyleBackColor = false;
             li_p4.Click += li_p4_Click;
@@ -264,11 +264,11 @@
             // li_p3_name
             // 
             li_p3_name.BackColor = Color.White;
-            li_p3_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p3_name.Location = new Point(56, 590);
+            li_p3_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p3_name.Location = new Point(62, 738);
             li_p3_name.Margin = new Padding(3, 2, 3, 2);
             li_p3_name.Name = "li_p3_name";
-            li_p3_name.Size = new Size(155, 28);
+            li_p3_name.Size = new Size(172, 35);
             li_p3_name.TabIndex = 28;
             li_p3_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -277,10 +277,10 @@
             li_p3.BackColor = Color.Transparent;
             li_p3.FlatStyle = FlatStyle.Flat;
             li_p3.ForeColor = Color.Black;
-            li_p3.Location = new Point(55, 448);
+            li_p3.Location = new Point(61, 560);
             li_p3.Margin = new Padding(3, 2, 3, 2);
             li_p3.Name = "li_p3";
-            li_p3.Size = new Size(157, 139);
+            li_p3.Size = new Size(174, 174);
             li_p3.TabIndex = 27;
             li_p3.UseVisualStyleBackColor = false;
             li_p3.Click += li_p3_Click;
@@ -288,11 +288,11 @@
             // li_p2_name
             // 
             li_p2_name.BackColor = Color.White;
-            li_p2_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            li_p2_name.Location = new Point(56, 418);
+            li_p2_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            li_p2_name.Location = new Point(62, 522);
             li_p2_name.Margin = new Padding(3, 2, 3, 2);
             li_p2_name.Name = "li_p2_name";
-            li_p2_name.Size = new Size(155, 28);
+            li_p2_name.Size = new Size(172, 35);
             li_p2_name.TabIndex = 26;
             li_p2_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -301,10 +301,10 @@
             li_p2.BackColor = Color.Transparent;
             li_p2.FlatStyle = FlatStyle.Flat;
             li_p2.ForeColor = Color.Black;
-            li_p2.Location = new Point(55, 275);
+            li_p2.Location = new Point(61, 344);
             li_p2.Margin = new Padding(3, 2, 3, 2);
             li_p2.Name = "li_p2";
-            li_p2.Size = new Size(157, 139);
+            li_p2.Size = new Size(174, 174);
             li_p2.TabIndex = 25;
             li_p2.UseVisualStyleBackColor = false;
             li_p2.Click += li_p2_Click;
@@ -312,11 +312,11 @@
             // li_p1_name
             // 
             li_p1_name.BackColor = Color.White;
-            li_p1_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
-            li_p1_name.Location = new Point(56, 245);
+            li_p1_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold, GraphicsUnit.Point, 129);
+            li_p1_name.Location = new Point(62, 306);
             li_p1_name.Margin = new Padding(3, 2, 3, 2);
             li_p1_name.Name = "li_p1_name";
-            li_p1_name.Size = new Size(155, 28);
+            li_p1_name.Size = new Size(172, 35);
             li_p1_name.TabIndex = 24;
             li_p1_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -325,10 +325,10 @@
             li_p1.BackColor = Color.Transparent;
             li_p1.FlatStyle = FlatStyle.Flat;
             li_p1.ForeColor = Color.Black;
-            li_p1.Location = new Point(55, 102);
+            li_p1.Location = new Point(61, 128);
             li_p1.Margin = new Padding(3, 2, 3, 2);
             li_p1.Name = "li_p1";
-            li_p1.Size = new Size(157, 139);
+            li_p1.Size = new Size(174, 174);
             li_p1.TabIndex = 23;
             li_p1.UseVisualStyleBackColor = false;
             li_p1.Click += li_p1_Click;
@@ -336,33 +336,33 @@
             // category
             // 
             category.BackColor = Color.FromArgb(217, 217, 217);
-            category.Font = new Font("휴먼편지체", 15F, FontStyle.Bold);
-            category.Location = new Point(199, 14);
+            category.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
+            category.Location = new Point(221, 18);
             category.Margin = new Padding(3, 2, 3, 2);
             category.Name = "category";
-            category.Size = new Size(115, 28);
+            category.Size = new Size(128, 35);
             category.TabIndex = 46;
             category.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // login_name
             // 
             login_name.BackColor = Color.FromArgb(217, 217, 217);
-            login_name.Font = new Font("휴먼편지체", 12F, FontStyle.Bold);
-            login_name.Location = new Point(659, 66);
-            login_name.Margin = new Padding(3, 3, 3, 3);
+            login_name.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            login_name.Location = new Point(732, 83);
+            login_name.Margin = new Padding(3, 4, 3, 4);
             login_name.Name = "login_name";
-            login_name.Size = new Size(219, 22);
+            login_name.Size = new Size(243, 28);
             login_name.TabIndex = 47;
             login_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Liar
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(217, 217, 217);
             BackgroundImage = Properties.Resources.game_background;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(896, 844);
+            ClientSize = new Size(996, 1119);
             Controls.Add(login_name);
             Controls.Add(category);
             Controls.Add(chat);
