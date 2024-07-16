@@ -55,6 +55,7 @@
 
         private void LogOut_Click(object sender, EventArgs e)
         {
+            network.Sendlogout(playerID, playerNickname);
             Start startForm = new Start();
             startForm.Show();
             if (network != null)
@@ -64,6 +65,7 @@
             }
             this.Hide();
         }
+
         private void ChooseGame_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();

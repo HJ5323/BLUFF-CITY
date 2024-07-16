@@ -325,31 +325,38 @@ namespace BLUFF_CITY
 
         private void maxVotee_liar(string[] parts)
         {
-            Console.WriteLine($"{parts} - liar");
-            string server = parts[1]; // server
-            string message = parts[2]; // 실제 메시지 내용
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string[]>(maxVotee_liar), new object[] { parts });
+                return;
+            }
 
-            players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
+            //Console.WriteLine($"{parts} - liar");
+            Console.WriteLine($"{string.Join(", ", parts)} - liar");
+            string server = parts[1]; // server
+            string keyword = parts[2]; // keyword
+
+            //players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
             //players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
 
             if (category.Text == "동물")
             {
-                Topic_animal Topic_animalForm = new Topic_animal(word.Text);
+                Topic_animal Topic_animalForm = new Topic_animal(keyword);
                 Topic_animalForm.Show();
             }
             else if (category.Text == "도시")
             {
-                Topic_city Topic_cityForm = new Topic_city(word.Text);
+                Topic_city Topic_cityForm = new Topic_city(keyword);
                 Topic_cityForm.Show();
             }
             else if (category.Text == "과일")
             {
-                Topic_fruit Topic_fruitForm = new Topic_fruit(word.Text);
+                Topic_fruit Topic_fruitForm = new Topic_fruit(keyword);
                 Topic_fruitForm.Show();
             }
             else
             {
-                Topic_item Topic_itemForm = new Topic_item(word.Text);
+                Topic_item Topic_itemForm = new Topic_item(keyword);
                 Topic_itemForm.Show();
             }
         }
@@ -366,6 +373,12 @@ namespace BLUFF_CITY
 
         private void LoadPlayerBtnImage()
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(LoadPlayerBtnImage));
+                return;
+            }
+
             string[] animals = { "otter", "bear", "dog", "elephant", "ferret", "killer_whale", "raccoon", "tiger" };
             ImageList[] imageLists = new ImageList[animals.Length];
 
@@ -393,11 +406,25 @@ namespace BLUFF_CITY
             }
         }
 
+        //private void VoteMode()
+        //{
+        //    for (int i = 0; i < entryPlayer.Count; i++)
+        //    {
+        //        LiarButtons[i].Visible = true; // 버튼을 활성화
+        //        Console.WriteLine("버튼 활성화 됨");
+        //    }
+        //}
         private void VoteMode()
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(VoteMode));
+                return;
+            }
+
             for (int i = 0; i < entryPlayer.Count; i++)
             {
-                LiarButtons[i].Visible = true; // 버튼을 활성화
+                LiarButtons[i].Visible = true;
                 Console.WriteLine("버튼 활성화 됨");
             }
         }

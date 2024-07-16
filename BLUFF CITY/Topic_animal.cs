@@ -7,6 +7,8 @@
 
         public Topic_animal(string keyword)
         {
+            Console.WriteLine($"Topic_animal : {keyword}");
+
             InitializeComponent();
             this.keyword = keyword; // keyword를 폼 내부에 저장
         }

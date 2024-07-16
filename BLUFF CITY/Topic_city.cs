@@ -7,6 +7,8 @@
 
         public Topic_city(string keyword)
         {
+            Console.WriteLine($"Topic_city : {keyword}");
+
             InitializeComponent();
             this.keyword = keyword; // keyword를 폼 내부에 저장
         }

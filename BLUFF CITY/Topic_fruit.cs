@@ -7,6 +7,8 @@
 
         public Topic_fruit(string keyword)
         {
+            Console.WriteLine($"Topic_fruit : {keyword}");
+
             InitializeComponent();
             this.keyword = keyword; // keyword를 폼 내부에 저장
         }

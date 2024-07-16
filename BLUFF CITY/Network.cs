@@ -88,41 +88,49 @@ namespace BLUFF_CITY
         }
         public void SendSignupInfo(string id, string pw, string nickname)
         {
-            try
+            lock (lockObj)
             {
-                if (client == null || !client.Connected)
+                try
                 {
-                    ConnectToServer();
-                }
+                    if (client == null || !client.Connected)
+                    {
+                        ConnectToServer();
+                    }
 
-                string message = $"signup:{id}:{pw}:{nickname}";
-                byte[] data = Encoding.UTF8.GetBytes(message);
-                stream.Write(data, 0, data.Length);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex.Message}");
+                    string message = $"signup:{id}:{pw}:{nickname}";
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    stream.Write(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception: {ex.Message}");
+                }
             }
         }
 
         public void SendLoginInfo(string id, string pw)
         {
-            try
+            lock (lockObj)
             {
-                if (client == null || !client.Connected)
+                try
                 {
-                    ConnectToServer();
-                }
+                    if (client == null || !client.Connected)
+                    {
+                        ConnectToServer();
+                    }
 
-                string message = $"login:{id}:{pw}";
-                byte[] data = Encoding.UTF8.GetBytes(message);
-                stream.Write(data, 0, data.Length);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex.Message}");
+                    string message = $"login:{id}:{pw}";
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    stream.Write(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception: {ex.Message}");
+                }
             }
         }
+
+
 
         public void Join(string playerID, string playerNickname)
         {
@@ -192,6 +200,8 @@ namespace BLUFF_CITY
                 string message = $"vote:{playerID}:{selectedPlayer}:{voteState}";
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
+                Console.WriteLine($"network sendvote message: {message}");
+
             }
             catch (Exception ex)
             {
@@ -203,6 +213,20 @@ namespace BLUFF_CITY
             try
             {
                 string message = $"GuessKeyword:{result}";
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void Sendlogout(string ID, string nickname)
+        {
+            try
+            {
+                string message = $"logout:{ID}:{nickname}";
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
             }

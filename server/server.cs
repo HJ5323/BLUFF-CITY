@@ -13,7 +13,7 @@ namespace server
         static List<string> entryPlayer = new List<string>();  // gameRoom에 입장한 플레이어 정보 저장
         static List<string> readyPlayer = new List<string>(); // ready한 플레이어 정보 저장
         private static Dictionary<string, string> liarVotes = new Dictionary<string, string>();// liar투표결과 저장
-
+        static string keyword;
 
         static List<string> topics = new List<string> { "동물", "도시", "과일", "물건" }; // 주제 리스트
         static Dictionary<string, List<string>> keywords = new Dictionary<string, List<string>>()
@@ -23,7 +23,7 @@ namespace server
             { "과일", new List<string> { "사과", "복숭아", "골든키위", "체리", "자두", "바나나", "딸기", "자몽", "망고" } },
             { "물건", new List<string> { "세탁기", "에어컨", "노트북", "연필", "충전기", "스마트폰", "시계", "가방", "책" } }
         };
-
+        
         static void Main(string[] args)
         {
             TcpListener server = null;
@@ -235,6 +235,9 @@ namespace server
                             case "GuessKeyword":
                                 HandleGuessKeyword(messageParts, gameRoom);
                                 break;
+                            case "logout":
+                                HandleLogout(messageParts);
+                                break;
                             default:
                                 Console.WriteLine("잘못된 메시지 형식");
                                 break;
@@ -265,6 +268,7 @@ namespace server
                 if (!gameRooms.ContainsKey(gameRoom))
                 {
                     gameRooms[gameRoom] = new List<TcpClient>();
+                    gameRooms[gameRoom].Capacity = 8;
                     Console.WriteLine($"gameRooms[gameRoom] : {gameRooms[gameRoom]}");
                 }
 
@@ -354,7 +358,7 @@ namespace server
             List<string> topicKeywords = keywords[selectedTopic];
             string selectedKeyword = topicKeywords[rand.Next(topicKeywords.Count)];
             int liarIndex = rand.Next(entryPlayer.Count);
-
+            keyword = selectedKeyword;
 
             // liar 지목된 플레이어 설정
             for (int i = 0; i < entryPlayer.Count; i++)
@@ -393,7 +397,7 @@ namespace server
             // 발언 순서의 플레이어만 chat 활성화
             TcpClient targetClient = GetTcpClientFromPlayerID(playerID, gameRoom);
             SendMessageToClient(gameRoom, $";enable_chat:{playerNick}", targetClient);
-            BroadcastMessage(gameRoom, $"chat:server:{playerNick} 차례입니다.", null);
+            BroadcastMessage(gameRoom, $";chat:server:{playerNick} 차례입니다.", null);
 
             if (targetClient == null)
             {
@@ -402,7 +406,7 @@ namespace server
             }
 
             // 각 플레이어의 순서가 시작될 때마다 타이머 시작
-            int timeLeft = 7;
+            int timeLeft = 3;
             System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
 
             timer.Elapsed += (sender, e) =>
@@ -418,46 +422,11 @@ namespace server
                     BroadcastMessage(gameRoom, $";chat:server:{playerNick} - time out!", null);
                     SendMessageToClient(gameRoom, ";disable_chat:server", targetClient);
 
-                    //// 다음 플레이어로 넘어가기
-                    //int currentPlayerIndex = GetCurrentPlayerIndex(playerID);
-                    //int nextPlayerIndex = (currentPlayerIndex + 1) % entryPlayer.Count;
-
-                    //// 모든 플레이어가 발언을 마친 후
-                    //if (nextPlayerIndex == 0)
-                    //{
-                    //    HandleGroupSpeech(playerNick,gameRoom);
-                    //}
-                    //else
-                    //{
-                    //    string nextPlayerID = entryPlayer[nextPlayerIndex].Split(':')[0];
-                    //    string nextPlayerNick = entryPlayer[nextPlayerIndex].Split(':')[1];
-                    //    HandlePlayerTurn(nextPlayerID, nextPlayerNick, gameRoom);
-                    //}
+                    // 다음 플레이어로 넘어가기
                     MoveToNextPlayer(playerID, playerNick, gameRoom);
                 }
             };
             timer.Start();
-
-            while (true)
-            {
-                NetworkStream stream = targetClient.GetStream();
-                byte[] buffer = new byte[256];
-
-                int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                if (bytesRead == 0)
-                    break;
-
-                string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                string[] messageParts = message.Split(':');
-                string action = messageParts[0];
-
-                if (action == "chat")
-                {
-                    timer.Stop();
-                    MoveToNextPlayer(playerID, playerNick, gameRoom);
-                    break;
-                }
-            }
         }
 
         private static void MoveToNextPlayer(string currentPlayerID, string currentPlayerNick, string gameRoom)
@@ -510,7 +479,7 @@ namespace server
             BroadcastMessage(gameRoom, $";enable_chat:{playerNick}", null);
 
             // 모든 플레이어가 자유발언
-            int timeLeft = 10;
+            int timeLeft = 5;
             System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
 
             timer.Elapsed += (sender, e) =>
@@ -550,6 +519,11 @@ namespace server
                 if (liarVotes.ContainsKey(voter) && liarVotes[voter] == votee)
                 {
                     liarVotes.Remove(voter);
+                    Console.WriteLine("Remove:liarVotes.count : " + liarVotes.Count);
+                    foreach (var kvp in liarVotes)
+                    {
+                        Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+                    }
                 }
             }
         }
@@ -561,6 +535,11 @@ namespace server
                 lock (liarVotes)
                 {
                     liarVotes[voter] = votee;
+                    Console.WriteLine("liarVotes.count : " + liarVotes.Count);
+                    foreach (var kvp in liarVotes)
+                    {
+                        Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+                    }
                 }
 
                 // 모든 플레이어 투표 완료
@@ -610,14 +589,18 @@ namespace server
 
                     if (isLiar == "liar" && playerNick == liar)
                     {
+                        TcpClient liarClient = GetTcpClientFromPlayerID(liar, gameRoom);
+
                         // liar가 최다 득표
-                        BroadcastMessage(gameRoom, $";liar:server:{liar}가 라이어 맞습니다.", null);
+                        SendMessageToClient(gameRoom, $";liar:server:{keyword}", liarClient);
+                        BroadcastMessage(gameRoom, $";chat:server:{liar}가 라이어 맞습니다.", null);
+                        BroadcastMessage(gameRoom, $";chat:server:키워드 고르는 중...", null);
                     }
                     else if (isLiar == "no" && playerNick == liar)
                     {
                         // 시민 최다득표 ,liar 승리
                         BroadcastMessage(gameRoom, $";chat:server:{liar}는 라이어가 아닙니다.", null);
-                        BroadcastMessage(gameRoom, $";noliar:server:라이어 {isLiar == "liar"}가 승리하였습니다.", null);
+                        BroadcastMessage(gameRoom, $";noliar:server:라이어 {liar}가 승리하였습니다.", null);
                         // 라이어 승점 +1
 
                         // 게임 종료
@@ -650,6 +633,18 @@ namespace server
             }
         }
 
+        private static void HandleLogout(string[] messageParts)
+        {
+            Console.WriteLine("---------------LOGOUT----------");
+            string id = messageParts[1];
+            string nickname = messageParts[2];
+            if (playerInfo.Contains($"{id}:{nickname}"))
+            {
+                playerInfo.Remove($"{id}:{nickname}");
+                Console.WriteLine($"{nickname} 로그아웃");
+            }
+        }
+
         private static void CloseGame(string gameRoom)
         {
             liarVotes.Clear();
@@ -673,7 +668,7 @@ namespace server
                 }
             }
             Console.WriteLine("540,CLOSE");
-            client.Close();
+            //client.Close();
         }
 
         public static string Signup(string ID, string PW, string Nickname)

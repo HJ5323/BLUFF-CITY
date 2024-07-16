@@ -7,12 +7,16 @@
 
         public Topic_item(string keyword)
         {
+            Console.WriteLine($"Topic_item : { keyword}");
+
             InitializeComponent();
             this.keyword = keyword; // keyword를 폼 내부에 저장
         }
 
         private void CheckLiarGuess(string buttonText)
         {
+            Console.WriteLine("CheckLiarGuess");
+
             if (buttonText == keyword)
             {
                 // 라이어가 맞춤
@@ -29,6 +33,8 @@
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("button1_Click");
+
             CheckLiarGuess(button1.Text);
         }
 

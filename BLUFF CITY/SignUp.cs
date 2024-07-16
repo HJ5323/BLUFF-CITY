@@ -18,7 +18,11 @@ namespace BLUFF_CITY
 
             // 배경을 투명하게 설정하고 윤곽선을 숨기는 메서드 호출
             ApplyTransparentBackgroundAndHideBorder();
-            network = Network.Instance;
+
+            Network.b_newInstance = true;
+            network = Network.Instance;//.Instance;
+            Network.b_newInstance = false;
+
             network.MessageReceived += OnMessageReceived;
         }
 
