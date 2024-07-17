@@ -43,7 +43,7 @@
             // 
             Sign_Up.BackColor = Color.Transparent;
             Sign_Up.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
-            Sign_Up.Location = new Point(549, 345);
+            Sign_Up.Location = new Point(594, 346);
             Sign_Up.Margin = new Padding(3, 2, 3, 2);
             Sign_Up.Name = "Sign_Up";
             Sign_Up.Size = new Size(147, 42);
@@ -59,8 +59,8 @@
             signup_id.Location = new Point(324, 106);
             signup_id.Margin = new Padding(3, 2, 3, 2);
             signup_id.Name = "signup_id";
-            signup_id.PlaceholderText = "한글 입력 불가";
-            signup_id.Size = new Size(201, 31);
+            signup_id.PlaceholderText = "한글 불가 (4글자 이상 입력)";
+            signup_id.Size = new Size(235, 31);
             signup_id.TabIndex = 1;
             // 
             // signup_pw
@@ -70,8 +70,8 @@
             signup_pw.Location = new Point(324, 173);
             signup_pw.Margin = new Padding(3, 2, 3, 2);
             signup_pw.Name = "signup_pw";
-            signup_pw.PlaceholderText = "한글 입력 불가";
-            signup_pw.Size = new Size(201, 31);
+            signup_pw.PlaceholderText = "한글 불가 (4글자 이상 입력)";
+            signup_pw.Size = new Size(235, 31);
             signup_pw.TabIndex = 2;
             // 
             // signup_name
@@ -80,7 +80,8 @@
             signup_name.Location = new Point(324, 245);
             signup_name.Margin = new Padding(3, 2, 3, 2);
             signup_name.Name = "signup_name";
-            signup_name.Size = new Size(201, 31);
+            signup_name.PlaceholderText = "4글자 이상 입력";
+            signup_name.Size = new Size(235, 31);
             signup_name.TabIndex = 3;
             signup_name.KeyDown += signupName_KeyDown;
             // 
@@ -124,10 +125,10 @@
             // 
             CHECK.BackColor = Color.Gainsboro;
             CHECK.Font = new Font("Pyunji R", 10F);
-            CHECK.Location = new Point(267, 353);
+            CHECK.Location = new Point(145, 353);
             CHECK.Margin = new Padding(3, 2, 3, 2);
             CHECK.Name = "CHECK";
-            CHECK.Size = new Size(258, 31);
+            CHECK.Size = new Size(443, 31);
             CHECK.TabIndex = 7;
             CHECK.TextAlign = ContentAlignment.MiddleCenter;
             // 

@@ -15,6 +15,7 @@ namespace server
         private static Dictionary<string, string> liarVotes = new Dictionary<string, string>();// liar투표결과 저장
         static string keyword;
         static bool gamestart;
+        static string liarPlayerNick = null;
 
         static List<string> topics = new List<string> { "동물", "도시", "과일", "물건" }; // 주제 리스트
         static Dictionary<string, List<string>> keywords = new Dictionary<string, List<string>>()
@@ -32,7 +33,7 @@ namespace server
             {
 
                 Int32 port = 13000;
-                IPAddress localAddr = IPAddress.Parse("172.30.1.64"); // 로컬 IP
+                IPAddress localAddr = IPAddress.Parse("127.0.0.1"); // 로컬 IP
 
                 server = new TcpListener(localAddr, port); // 서버 생성
                 server.Start();
@@ -269,7 +270,7 @@ namespace server
                 {
                     gameRooms[gameRoom] = new List<TcpClient>();
                     gameRooms[gameRoom].Capacity = 8;
-                    Console.WriteLine($"gameRooms[gameRoom] : {gameRooms[gameRoom]}");
+                    Console.WriteLine($"JoinGame :gameRooms[gameRoom] : {gameRooms[gameRoom]}");
                 }
 
                 if (gameRooms[gameRoom].Count < 8)
@@ -402,7 +403,7 @@ namespace server
             }
 
             // 각 플레이어의 순서가 시작될 때마다 타이머 시작
-            int timeLeft = 2;
+            int timeLeft = 3;
             System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
 
             timer.Elapsed += (sender, e) =>
@@ -476,7 +477,7 @@ namespace server
             BroadcastMessage(gameRoom, $";enable_chat:{playerNick}", null);
 
             // 모든 플레이어가 자유발언
-            int timeLeft = 2;
+            int timeLeft = 5;
             System.Timers.Timer timer = new System.Timers.Timer(1000); // 1초마다 실행
 
             timer.Elapsed += (sender, e) =>
@@ -577,7 +578,6 @@ namespace server
                 // 투표 결과 방송
                 BroadcastMessage(gameRoom, $";maxVotes:server:{liar}:{liar}이 Liar로 지목되었습니다", null);
 
-                string liarPlayerNick = null;
 
                 // entryPlayer에서 liar 여부 확인하여 추가 작업 수행
                 foreach (var player in entryPlayer)
@@ -624,13 +624,14 @@ namespace server
 
             if (result == "right")
             {
-                BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추었습니다.", null);
+                BroadcastMessage(gameRoom, $";chat:server:라이어 {liarPlayerNick}가 키워드를 맞추었습니다.", null);
+                BroadcastMessage(gameRoom, $";chat:server:라이어 {liarPlayerNick}가 승리하였습니다.", null);
                 // 라이어 승점 +1
                 HandlePoints("liar", 1, gameRoom);
             }
             else if (result == "wrong")
             {
-                BroadcastMessage(gameRoom, $";chat:server:라이어가 키워드를 맞추지 못하였습니다.", null);
+                BroadcastMessage(gameRoom, $";chat:server:라이어 {liarPlayerNick}가 키워드를 맞추지 못하였습니다.", null);
                 BroadcastMessage(gameRoom, $";chat:server:시민이 승리하였습니다.", null);
                 // 시민 승점 +1
                 HandlePoints("no", 1, gameRoom);
@@ -674,6 +675,8 @@ namespace server
 
             gameRooms[gameRoom].Clear();
 
+            //gameRooms.Remove(gameRoom);
+
             gamestart = false;
         }
 
@@ -684,13 +687,16 @@ namespace server
                 if (gameRoom != null && gameRooms.ContainsKey(gameRoom))
                 {
                     Console.WriteLine("686,Remove");
-                    Console.WriteLine("gameRooms[gameRoom].Count " + gameRooms[gameRoom].Count);
+                    Console.WriteLine("RemoveClient : gameRooms[gameRoom].Count " + gameRooms[gameRoom].Count);
+                    Console.WriteLine("RemoveClient : playerInfo : " + playerInfo.Count );
+                    Console.WriteLine("RemoveClient : entryPlayer : " + entryPlayer.Count);
+                    Console.WriteLine("RemoveClient : readyPlayer : " + readyPlayer.Count );
+                    Console.WriteLine("RemoveClient : gameRoom  : " + gameRoom);
 
                     gameRooms[gameRoom].Remove(client);
                     if (gameRooms[gameRoom].Count == 0)
                     {
-
-                        gameRooms.Remove(gameRoom);
+                        //gameRooms.Remove(gameRoom);
                     }
                 }
             }
