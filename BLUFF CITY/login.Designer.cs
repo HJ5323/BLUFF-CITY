@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             CHECK = new Label();
             PW = new Label();
             ID = new Label();
@@ -75,10 +76,12 @@
             // login_pw
             // 
             login_pw.Font = new Font("Pyunji R", 10F);
+            login_pw.ImeMode = ImeMode.NoControl;
             login_pw.Location = new Point(321, 205);
             login_pw.Margin = new Padding(3, 2, 3, 2);
             login_pw.Name = "login_pw";
             login_pw.PasswordChar = '*';
+            login_pw.PlaceholderText = "한글 입력 불가";
             login_pw.Size = new Size(150, 31);
             login_pw.TabIndex = 10;
             login_pw.KeyDown += loginPW_KeyDown;
@@ -86,9 +89,11 @@
             // login_id
             // 
             login_id.Font = new Font("Pyunji R", 10F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            login_id.ImeMode = ImeMode.Disable;
             login_id.Location = new Point(321, 138);
             login_id.Margin = new Padding(3, 2, 3, 2);
             login_id.Name = "login_id";
+            login_id.PlaceholderText = "한글 입력 불가";
             login_id.Size = new Size(150, 31);
             login_id.TabIndex = 9;
             // 
@@ -126,6 +131,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gainsboro;
             ClientSize = new Size(800, 450);
+            ControlBox = false;
             Controls.Add(exit);
             Controls.Add(CHECK);
             Controls.Add(PW);
@@ -133,6 +139,8 @@
             Controls.Add(login_pw);
             Controls.Add(login_id);
             Controls.Add(Login_ok);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             Name = "Login";
             Text = "LOGIN";

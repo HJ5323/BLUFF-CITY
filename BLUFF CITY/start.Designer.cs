@@ -30,10 +30,10 @@ namespace BLUFF_CITY
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Start));
             LOGIN = new Button();
             SIGN_UP = new Button();
             title = new TextBox();
-            exit = new Button();
             SuspendLayout();
             // 
             // LOGIN
@@ -73,17 +73,7 @@ namespace BLUFF_CITY
             title.TabIndex = 1;
             title.Text = "BLUFF CITY";
             // 
-            // exit
-            // 
-            exit.Location = new Point(866, 21);
-            exit.Name = "exit";
-            exit.Size = new Size(48, 55);
-            exit.TabIndex = 2;
-            exit.Text = "button1";
-            exit.UseVisualStyleBackColor = true;
-            exit.Click += exit_Click;
-            // 
-            // start
+            // Start
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -91,14 +81,17 @@ namespace BLUFF_CITY
             BackgroundImage = Properties.Resources.start;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(940, 551);
-            Controls.Add(exit);
             Controls.Add(title);
             Controls.Add(SIGN_UP);
             Controls.Add(LOGIN);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
-            Name = "start";
-            Text = "Form1";
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "Start";
+            Text = "BLUFF CITY";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -110,19 +103,11 @@ namespace BLUFF_CITY
         private TextBox title;
 
         private Button[] StartButtons;
-        private TextBox[] StartTextBox;
 
         private void InitializeArrays()
         {
             // StartButtons 배열 초기화
-            StartButtons = new Button[] { LOGIN, SIGN_UP, exit };
-
-            // StartTextBox 배열 초기화
-            StartTextBox = new TextBox[] { title };
-
-
+            StartButtons = new Button[] { LOGIN, SIGN_UP };
         }
-
-        private Button exit;
     }
 }

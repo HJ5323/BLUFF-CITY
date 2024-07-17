@@ -243,6 +243,16 @@ namespace BLUFF_CITY.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NEXT {
+            get {
+                object obj = ResourceManager.GetObject("NEXT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap otter {
             get {
                 object obj = ResourceManager.GetObject("otter", resourceCulture);
@@ -266,6 +276,16 @@ namespace BLUFF_CITY.Properties {
         internal static System.Drawing.Bitmap otter_jail {
             get {
                 object obj = ResourceManager.GetObject("otter_jail", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Previous {
+            get {
+                object obj = ResourceManager.GetObject("Previous", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -336,6 +356,16 @@ namespace BLUFF_CITY.Properties {
         internal static System.Drawing.Bitmap tiger_jail {
             get {
                 object obj = ResourceManager.GetObject("tiger_jail", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tutorial_1 {
+            get {
+                object obj = ResourceManager.GetObject("tutorial_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -1,7 +1,4 @@
-﻿using MySqlX.XDevAPI;
-using System.Windows.Forms;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
     public partial class ChooseGame : Form
     {
@@ -15,9 +12,6 @@ namespace BLUFF_CITY
         public ChooseGame(string id, string nickname)
         {
             InitializeComponent();
-
-            // Form 크기 고정
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             // 버튼 배열 초기화
             InitializeArrays();
@@ -44,19 +38,7 @@ namespace BLUFF_CITY
                 button.FlatAppearance.BorderSize = 0;
             }
 
-            // GameLabel 배열에 대해 배경을 투명하게 설정
-            foreach (var Label in GameLabel)
-            {
-                Label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
-            }
-        }
-
-        private void MAFIA_GAME_Click(object sender, EventArgs e)
-        {
-            //mafia mafiaForm = new mafia(playerID, playerNickname);
-            //mafiaForm.Show();
-
-            this.Hide();
+            CHECK.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
         }
 
         private void OnMessageReceived(string message)
@@ -99,6 +81,7 @@ namespace BLUFF_CITY
                     liarForm = new Liar(playerID, playerNickname);
                     liarForm.Show();
                     this.Close();
+                    ShowLiargameForm = false;
                 }
                 else
                 {
@@ -130,6 +113,7 @@ namespace BLUFF_CITY
 
         private void ChooseGame_FormClosed(object sender, FormClosedEventArgs e)
         {
+            network.MessageReceived -= OnMessageReceived;
             Application.Exit();
         }
 

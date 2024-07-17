@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SignUp));
             Sign_Up = new Button();
             signup_id = new TextBox();
             signup_pw = new TextBox();
@@ -54,19 +55,23 @@
             // signup_id
             // 
             signup_id.Font = new Font("Pyunji R", 10F, FontStyle.Regular, GraphicsUnit.Point, 129);
+            signup_id.ImeMode = ImeMode.Disable;
             signup_id.Location = new Point(324, 106);
             signup_id.Margin = new Padding(3, 2, 3, 2);
             signup_id.Name = "signup_id";
-            signup_id.Size = new Size(150, 31);
+            signup_id.PlaceholderText = "한글 입력 불가";
+            signup_id.Size = new Size(201, 31);
             signup_id.TabIndex = 1;
             // 
             // signup_pw
             // 
             signup_pw.Font = new Font("Pyunji R", 10F);
+            signup_pw.ImeMode = ImeMode.Disable;
             signup_pw.Location = new Point(324, 173);
             signup_pw.Margin = new Padding(3, 2, 3, 2);
             signup_pw.Name = "signup_pw";
-            signup_pw.Size = new Size(150, 31);
+            signup_pw.PlaceholderText = "한글 입력 불가";
+            signup_pw.Size = new Size(201, 31);
             signup_pw.TabIndex = 2;
             // 
             // signup_name
@@ -75,7 +80,7 @@
             signup_name.Location = new Point(324, 245);
             signup_name.Margin = new Padding(3, 2, 3, 2);
             signup_name.Name = "signup_name";
-            signup_name.Size = new Size(150, 31);
+            signup_name.Size = new Size(201, 31);
             signup_name.TabIndex = 3;
             signup_name.KeyDown += signupName_KeyDown;
             // 
@@ -132,6 +137,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Gainsboro;
             ClientSize = new Size(800, 450);
+            ControlBox = false;
             Controls.Add(CHECK);
             Controls.Add(NAME);
             Controls.Add(PW);
@@ -140,9 +146,10 @@
             Controls.Add(signup_pw);
             Controls.Add(signup_id);
             Controls.Add(Sign_Up);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             Name = "SignUp";
-            Text = "Form1";
+            Text = "Sign Up";
             ResumeLayout(false);
             PerformLayout();
         }

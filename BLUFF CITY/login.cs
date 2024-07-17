@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace BLUFF_CITY
 {
@@ -17,9 +18,6 @@ namespace BLUFF_CITY
         public Login()
         {
             InitializeComponent();
-
-            // Form 크기 고정
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             InitializeArrays();
 
@@ -98,7 +96,7 @@ namespace BLUFF_CITY
             }
 
         }
-
+       
         private void login_FormClosed(object sender, FormClosedEventArgs e)
         {
             network.MessageReceived -= OnMessageReceived;
@@ -126,7 +124,6 @@ namespace BLUFF_CITY
             {
                 Label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
             }
-
         }
 
         private void exit_Click(object sender, EventArgs e)

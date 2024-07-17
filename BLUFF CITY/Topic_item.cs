@@ -11,9 +11,6 @@
 
             InitializeComponent();
 
-            // Form 크기 고정
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-
             network = Network.Instance;
 
             this.keyword = keyword; // keyword를 폼 내부에 저장
