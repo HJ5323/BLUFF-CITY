@@ -28,7 +28,7 @@ namespace BLUFF_CITY
             entryPlayer = new List<string>(); // 플레이어 정보 리스트 초기화
             playerID = id;
             playerNickname = nickname;
-            login_name.Text = playerNickname;
+            login_name.Text = $"{playerNickname}";
             network = Network.Instance;
             Console.WriteLine("Liar 생성 : ");
             Console.WriteLine(playerID);
@@ -232,6 +232,7 @@ namespace BLUFF_CITY
             }));
 
             READY.Visible = false;
+            exit.Visible = false;
         }
 
         // 채팅 메시지 처리 메서드
@@ -404,6 +405,16 @@ namespace BLUFF_CITY
             {
                 Console.WriteLine($"playerIndex 들어옴");
 
+                // 모든 버튼의 ImageIndex를 0으로 설정
+                for (int i = 0; i < LiarButtons.Length; i++)
+                {
+                    if (i != playerIndex)
+                    {
+                        LiarButtons[i].ImageIndex = 0;
+                    }
+                }
+
+                // 해당 인덱스의 버튼만 ImageIndex를 2로 설정
                 LiarButtons[playerIndex].ImageIndex = 2; // 선택 이미지 설정
             }
 
@@ -523,8 +534,23 @@ namespace BLUFF_CITY
 
         private void ClickeButton(int btnNum)
         {
+            // 현재 선택된 버튼이 있는지 확인
+            bool isAnyButtonSelected = LiarButtons.Any(btn => btn.ImageIndex == 1);
+
+            // 선택된 버튼이 있고, 현재 클릭한 버튼이 선택되지 않은 상태이면 리턴
+            if (isAnyButtonSelected && LiarButtons[btnNum].ImageIndex == 0)
+            {
+                return;
+            }
+
             if (LiarButtons[btnNum].ImageIndex == 0)
             {
+                // 다른 버튼을 모두 선택 해제 상태로 변경
+                foreach (var btn in LiarButtons)
+                {
+                    btn.ImageIndex = 0;
+                    btn.Tag = 0;
+                }
                 LiarButtons[btnNum].ImageIndex = 1; // 선택 이미지
             }
             else if (LiarButtons[btnNum].ImageIndex == 1)
@@ -636,36 +662,32 @@ namespace BLUFF_CITY
             ChooseGameForm.Show();
 
             // 현재 폼 숨김
-            this.Close();
+            this.Hide();
         }
 
         private async void Formclose(string[] parts)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<string[]>(Formclose), new object[] { parts });
-                return;
-            }
-
             Console.WriteLine($"{playerNickname}chat 받음");
 
             string server = parts[1]; // server
             string closeMessage = parts[2]; // close message
 
-            players_chat.SelectionColor = Color.DarkBlue; // textBox1의 텍스트 색상을 짙은 파란색으로 설정
-
             string message = $"\n[{server}] {closeMessage}";
 
-            // 수동으로 가운데 정렬을 위한 패딩 추가
-            string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
-            players_chat.AppendText(paddedMessage + Environment.NewLine);
+            // UI 스레드에서 players_chat에 메시지를 추가
+            players_chat.Invoke(new Action(() =>
+            {
+                players_chat.SelectionColor = Color.DarkBlue; // 텍스트 색상 설정
+                string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+                players_chat.AppendText(paddedMessage + Environment.NewLine);
+            }));
 
             await Task.Delay(3000); // 3초 대기
 
-            this.Close();
-
             ChooseGame chooseGameForm = new ChooseGame(playerID, playerNickname);
             chooseGameForm.Show();
+
+            this.Close();
         }
 
         private void tutorial_Click(object sender, EventArgs e)

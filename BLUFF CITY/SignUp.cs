@@ -26,6 +26,13 @@
         {
             signupSuccessful = false;
 
+            // 입력된 ID, PW, 이름의 길이가 4글자 이상인지 확인
+            if (signup_id.Text.Length < 4 || signup_pw.Text.Length < 4 || signup_name.Text.Length < 4)
+            {
+                CHECK.Text ="각 항목은 최소 4글자 이상이어야 합니다.";
+                return;
+            }
+
             network.SendSignupInfo(signup_id.Text, signup_pw.Text, signup_name.Text);
             signup_id.Text = "";
             signup_pw.Text = "";
