@@ -118,50 +118,83 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\start.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="choose_game" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\choose_game.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tiger_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\tiger_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="game_background" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\game_background.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icons8-출구-64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\icons8-출구-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bear_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bear_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bear_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bear_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dog" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\dog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dog_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\dog_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dog_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\dog_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="elephant" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\elephant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="elephant_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\elephant_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="elephant_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\elephant_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="elephant_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\elephant_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="dog_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\dog_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="otter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\otter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tiger_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\tiger_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bear_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bear_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dog_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\dog_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="elephant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\elephant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Previous" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Previous.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8-출구-64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\icons8-출구-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bear_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bear_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\dog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tiger" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\tiger.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\start.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="raccoon_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\raccoon_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="otter_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\otter_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="raccoon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\raccoon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NEXT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\NEXT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ferret_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ferret_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="otter_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\otter_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="killer_whale_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\killer_whale_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ferret" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ferret.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ferret_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ferret_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="raccoon_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\raccoon_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="choose_game" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\choose_game.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ferret_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ferret_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,34 +205,10 @@
   <data name="killer_whale_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\killer_whale_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="killer_whale_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\killer_whale_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="bear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="otter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\otter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="otter_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\otter_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="otter_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\otter_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="raccoon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\raccoon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="raccoon_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\raccoon_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="raccoon_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\raccoon_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tiger" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\tiger.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tiger_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\tiger_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tiger_jail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\tiger_jail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tutorial_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\tutorial_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

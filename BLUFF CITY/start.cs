@@ -2,6 +2,8 @@ namespace BLUFF_CITY
 {
     public partial class Start : Form
     {
+        private Network network;
+
         public Start()
         {
             InitializeComponent();
@@ -32,7 +34,7 @@ namespace BLUFF_CITY
 
         private void start_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //Application.Exit();
+            Application.Exit();
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -45,16 +47,7 @@ namespace BLUFF_CITY
                 button.FlatAppearance.BorderSize = 0;
             }
 
-            // StartTextBox 배열에 대해 배경을 투명하게 설정
-            foreach (var textBox in StartTextBox)
-            {
-                textBox.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
-            }
-        }
-
-        private void exit_Click(object sender, EventArgs e)
-        {
-  
+            title.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
         }
     }
 }

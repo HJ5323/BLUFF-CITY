@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace BLUFF_CITY
 {
@@ -16,9 +15,6 @@ namespace BLUFF_CITY
         public Liar(string id, string nickname)
         {
             InitializeComponent();
-
-            // Form 크기 고정
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             // 버튼과 텍스트 박스 배열 초기화
             InitializeArrays();
@@ -39,6 +35,9 @@ namespace BLUFF_CITY
             network.Join(playerID, playerNickname);
 
             network.MessageReceived += DisplayMessage;
+
+            // TextChanged 이벤트 핸들러 추가
+            players_chat.TextChanged += players_chat_TextChanged;
         }
 
         private void ApplyTransparentBackgroundAndHideBorder()
@@ -72,22 +71,43 @@ namespace BLUFF_CITY
                 label.BorderStyle = BorderStyle.None; // Label 테두리 숨기기
             }
 
-            // LiarOtherTextBox 대해 배경을 투명하게 설정
-            foreach (var textBox in LiarOtherTextBox)
-            {
-                textBox.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
-            }
+
+            chat.BorderStyle = BorderStyle.None; // 텍스트 박스 테두리 숨기기
+
+            players_chat.BorderStyle = BorderStyle.None; // RichTextBox 테두리 숨기기
+
+        }
+        private void players_chat_MouseDown(object sender, MouseEventArgs e)
+        {
+            players_chat.SelectionLength = 0; // 선택 길이를 0으로 설정하여 선택을 취소합니다.
+        }
+        private void players_chat_TextChanged(object sender, EventArgs e)
+        {
+            // 커서 위치를 텍스트 끝으로 이동
+            players_chat.SelectionStart = players_chat.Text.Length;
+
+            // 커서 위치로 스크롤
+            players_chat.ScrollToCaret();
         }
 
-        private void exit_Click(object sender, EventArgs e)
+        private string PadMessageToCenter(string message, int richTextBoxWidth, Font font)
         {
-            network.ExitGameroom(playerID, playerNickname);
+            // 메시지의 크기를 측정
+            using (Graphics g = CreateGraphics())
+            {
+                SizeF messageSize = g.MeasureString(message, font);
 
-            ChooseGame ChooseGameForm = new ChooseGame(playerID, playerNickname);
-            ChooseGameForm.Show();
-
-            // 현재 폼 숨김
-            this.Hide();
+                // 양쪽에 추가할 공백의 개수를 계산
+                int totalPadding = (int)((richTextBoxWidth - messageSize.Width) / (2 * font.Size));
+                if (totalPadding > 0)
+                {
+                    return new string(' ', totalPadding) + message;
+                }
+                else
+                {
+                    return message;
+                }
+            }
         }
 
         public void DisplayMessage(string receivedMessage)
@@ -151,6 +171,11 @@ namespace BLUFF_CITY
                             case "start_voting":
                                 // 투표 메시지 처리
                                 VoteMode();
+                                break;
+
+                            case "maxVotes":
+                                // 투표 메시지 처리
+                                ResultVote(parts);
                                 break;
 
                             case "liar":
@@ -220,9 +245,19 @@ namespace BLUFF_CITY
             // UI 스레드에서 players_chat에 메시지를 추가
             players_chat.Invoke(new Action(() =>
             {
-                players_chat.AppendText($"\n[{nickname}] {actualMessage}" + Environment.NewLine);
-                //players_chat.Text += $"\n[{nickname}] {actualMessage}" + Environment.NewLine;
+                if (nickname == "server")
+                {
+                    players_chat.SelectionColor = Color.DarkBlue; // 텍스트 색상을 짙은 파란색으로 설정
+                }
+                else
+                {
+                    players_chat.SelectionColor = Color.Black;
+                }
+                string message = $"[{nickname}] {actualMessage}";
 
+                // 수동으로 가운데 정렬을 위한 패딩 추가
+                string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+                players_chat.AppendText(paddedMessage + Environment.NewLine);
             }));
         }
 
@@ -230,26 +265,30 @@ namespace BLUFF_CITY
         private void ReadyMessage(string[] parts)
         {
             Console.WriteLine($"{playerNickname}ready 받음");
-            string id = parts[1]; // 닉네임
-            string nickname = parts[2]; // 실제 메시지 내용
+            string id = parts[1]; // id
+            string nickname = parts[2]; //nickname 
 
+            string message;
             if (parts[0] == "ready")
             {
-                // UI 스레드에서 players_chat에 메시지를 추가
-                players_chat.Invoke(new Action(() =>
-                {
-                    players_chat.AppendText($"\n{nickname} : Ready" + Environment.NewLine);
-                    //players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
-                }));
+                message = $"{nickname} : Ready";
             }
             else if (parts[0] == "cancel_ready")
-            {                // UI 스레드에서 players_chat에 메시지를 추가
-                players_chat.Invoke(new Action(() =>
-                {
-                    players_chat.AppendText($"\n{nickname} : cancel_ready" + Environment.NewLine);
-                    //players_chat.Text += $"\n{nickname} : Ready" + Environment.NewLine;
-                }));
+            {
+                message = $"{nickname} : cancel_ready";
             }
+            else
+            {
+                return; // 예상되지 않은 메시지 타입이면 처리 종료
+            }
+
+            // UI 스레드에서 players_chat에 메시지를 추가
+            players_chat.Invoke(new Action(() =>
+            {
+                players_chat.SelectionColor = Color.DarkBlue; // 텍스트 색상 설정
+                string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+                players_chat.AppendText(paddedMessage + Environment.NewLine);
+            }));
         }
 
         // 채팅 비활성화 처리 메서드
@@ -334,6 +373,49 @@ namespace BLUFF_CITY
             LoadPlayerBtnImage();
         }
 
+        private void ResultVote(string[] parts)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string[]>(ResultVote), new object[] { parts });
+                return;
+            }
+
+            Console.WriteLine($"{playerNickname}ResultVote 받음");
+
+            string server = parts[1]; // 서버
+            string maxvote = parts[2]; // 최다득표자
+            string actualMessage = parts[3]; // 실제 메시지 내용
+
+            // 일치하는 player의 인덱스를 가져옴
+            int playerIndex = -1;
+            for (int i = 0; i < entryPlayer.Count; i++)
+            {
+                if (entryPlayer[i].Split(':')[1].Equals(maxvote))
+                {
+                    playerIndex = i;
+                    break;
+                }
+            }
+
+            Console.WriteLine($"{playerIndex}playerIndex 받음");
+
+            if (playerIndex != -1)
+            {
+                Console.WriteLine($"playerIndex 들어옴");
+
+                LiarButtons[playerIndex].ImageIndex = 2; // 선택 이미지 설정
+            }
+
+            players_chat.SelectionColor = Color.DarkBlue; // 텍스트 색상을 짙은 파란색으로 설정
+
+            string message = $"[{server}] {actualMessage}";
+
+            // 수동으로 가운데 정렬을 위한 패딩 추가
+            string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+            players_chat.AppendText(paddedMessage + Environment.NewLine);
+        }
+
         private void maxVotee_liar(string[] parts)
         {
             if (InvokeRequired)
@@ -342,13 +424,9 @@ namespace BLUFF_CITY
                 return;
             }
 
-            //Console.WriteLine($"{parts} - liar");
             Console.WriteLine($"{string.Join(", ", parts)} - liar");
             string server = parts[1]; // server
             string keyword = parts[2]; // keyword
-
-            //players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
-            //players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
 
             if (category.Text == "동물")
             {
@@ -382,10 +460,15 @@ namespace BLUFF_CITY
 
             Console.WriteLine($"{parts} - noliar 받음");
             string server = parts[1]; // server
-            string message = parts[2]; // 실제 메시지 내용
+            string actualMessage = parts[2]; // 실제 메시지 내용
 
-            players_chat.AppendText($"\n[{server}] {message}" + Environment.NewLine);
-            //players_chat.Text += $"\n[{server}] {message}" + Environment.NewLine;
+            players_chat.SelectionColor = Color.DarkBlue; // textBox1의 텍스트 색상을 짙은 파란색으로 설정
+
+            string message = $"\n[{server}] {actualMessage}";
+
+            // 수동으로 가운데 정렬을 위한 패딩 추가
+            string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+            players_chat.AppendText(paddedMessage + Environment.NewLine);
         }
 
         private void LoadPlayerBtnImage()
@@ -545,6 +628,17 @@ namespace BLUFF_CITY
             }
         }
 
+        private void exit_Click(object sender, EventArgs e)
+        {
+            network.ExitGameroom(playerID, playerNickname);
+
+            ChooseGame ChooseGameForm = new ChooseGame(playerID, playerNickname);
+            ChooseGameForm.Show();
+
+            // 현재 폼 숨김
+            this.Close();
+        }
+
         private async void Formclose(string[] parts)
         {
             if (InvokeRequired)
@@ -558,7 +652,13 @@ namespace BLUFF_CITY
             string server = parts[1]; // server
             string closeMessage = parts[2]; // close message
 
-            players_chat.AppendText($"\n[{server}] {closeMessage}" + Environment.NewLine);
+            players_chat.SelectionColor = Color.DarkBlue; // textBox1의 텍스트 색상을 짙은 파란색으로 설정
+
+            string message = $"\n[{server}] {closeMessage}";
+
+            // 수동으로 가운데 정렬을 위한 패딩 추가
+            string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
+            players_chat.AppendText(paddedMessage + Environment.NewLine);
 
             await Task.Delay(3000); // 3초 대기
 
@@ -566,6 +666,12 @@ namespace BLUFF_CITY
 
             ChooseGame chooseGameForm = new ChooseGame(playerID, playerNickname);
             chooseGameForm.Show();
+        }
+
+        private void tutorial_Click(object sender, EventArgs e)
+        {
+            tutorial tutorialForm = new tutorial();
+            tutorialForm.Show();
         }
     }
 }

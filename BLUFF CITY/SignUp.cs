@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualBasic.Devices;
-using MySql.Data.MySqlClient;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
     public partial class SignUp : Form
     {
@@ -11,9 +8,6 @@ namespace BLUFF_CITY
         public SignUp()
         {
             InitializeComponent();
-
-            // Form 크기 고정
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
 
             // 버튼 배열 초기화
             InitializeArrays();
@@ -52,9 +46,8 @@ namespace BLUFF_CITY
                 // ChooseGame 폼이 이미 열려 있는지 확인
                 if (startForm == null || startForm.IsDisposed)
                 {
-                    MessageBox.Show("회원가입에 성공하였습니다.");
-                    //startForm = new Start();
-                    //startForm.Show();
+                    startForm = new Start();
+                    startForm.Show();
                     this.Close();
                 }
                 else

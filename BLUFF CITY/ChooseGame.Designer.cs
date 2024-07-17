@@ -1,8 +1,4 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using System;
-
-namespace BLUFF_CITY
+﻿namespace BLUFF_CITY
 {
     partial class ChooseGame
     {
@@ -32,8 +28,8 @@ namespace BLUFF_CITY
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChooseGame));
             LIAR_GAME = new Button();
-            MAFIA_GAME = new Button();
             LogOut = new Button();
             CHECK = new Label();
             SuspendLayout();
@@ -42,7 +38,8 @@ namespace BLUFF_CITY
             // 
             LIAR_GAME.BackColor = Color.Gainsboro;
             LIAR_GAME.Font = new Font("Pyunji R", 28F, FontStyle.Bold);
-            LIAR_GAME.Location = new Point(272, 339);
+            LIAR_GAME.Location = new Point(290, 155);
+            LIAR_GAME.Margin = new Padding(3, 4, 3, 4);
             LIAR_GAME.Name = "LIAR_GAME";
             LIAR_GAME.Size = new Size(308, 75);
             LIAR_GAME.TabIndex = 0;
@@ -50,23 +47,12 @@ namespace BLUFF_CITY
             LIAR_GAME.UseVisualStyleBackColor = false;
             LIAR_GAME.Click += LIAR_GAME_Click;
             // 
-            // MAFIA_GAME
-            // 
-            MAFIA_GAME.BackColor = Color.Gainsboro;
-            MAFIA_GAME.Font = new Font("Pyunji R", 28F, FontStyle.Bold);
-            MAFIA_GAME.Location = new Point(272, 139);
-            MAFIA_GAME.Name = "MAFIA_GAME";
-            MAFIA_GAME.Size = new Size(359, 75);
-            MAFIA_GAME.TabIndex = 1;
-            MAFIA_GAME.Text = "MAFIA_GAME";
-            MAFIA_GAME.UseVisualStyleBackColor = false;
-            MAFIA_GAME.Click += MAFIA_GAME_Click;
-            // 
             // LogOut
             // 
             LogOut.BackColor = Color.Gainsboro;
             LogOut.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
-            LogOut.Location = new Point(764, 486);
+            LogOut.Location = new Point(667, 423);
+            LogOut.Margin = new Padding(3, 4, 3, 4);
             LogOut.Name = "LogOut";
             LogOut.Size = new Size(150, 46);
             LogOut.TabIndex = 2;
@@ -78,10 +64,10 @@ namespace BLUFF_CITY
             // 
             CHECK.BackColor = Color.Gainsboro;
             CHECK.Font = new Font("Pyunji R", 10F);
-            CHECK.Location = new Point(66, 470);
+            CHECK.Location = new Point(142, 343);
             CHECK.Margin = new Padding(3, 2, 3, 2);
             CHECK.Name = "CHECK";
-            CHECK.Size = new Size(671, 31);
+            CHECK.Size = new Size(584, 31);
             CHECK.TabIndex = 16;
             CHECK.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -91,12 +77,15 @@ namespace BLUFF_CITY
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = Properties.Resources.choose_game;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(939, 551);
+            ClientSize = new Size(884, 551);
+            ControlBox = false;
             Controls.Add(CHECK);
             Controls.Add(LogOut);
-            Controls.Add(MAFIA_GAME);
             Controls.Add(LIAR_GAME);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 4, 3, 4);
             Name = "ChooseGame";
             Text = "ChooseGame";
             ResumeLayout(false);
@@ -105,21 +94,17 @@ namespace BLUFF_CITY
         #endregion
 
         private Button LIAR_GAME;
-        private Button MAFIA_GAME;
         private Button LogOut;
 
         private Button[] GameButtons; // LIAR_GAME,MAFIA_GAME 버튼 배열
-        private Label[] GameLabel; // CHECK 라벨 배열
 
         private void InitializeArrays()
         {
             // GameButtons 배열 초기화
-            GameButtons = new Button[] { LIAR_GAME, MAFIA_GAME, LogOut };
-
-            // GameLabel 배열 초기화
-            GameLabel = new Label[] { CHECK };
+            GameButtons = new Button[] { LIAR_GAME, LogOut };
         }
 
         private Label CHECK;
+
     }
 }

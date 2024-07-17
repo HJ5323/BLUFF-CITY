@@ -45,7 +45,7 @@ namespace BLUFF_CITY
         {
             try
             {
-                client = new TcpClient("192.168.1.220", 13000);
+                client = new TcpClient("172.30.1.64", 13000);
                 stream = client.GetStream();
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace BLUFF_CITY
         {
             MessageReceived?.Invoke(message);
         }
-        public void SendSignupInfo(string id, string pw, string nickname)
+        public void SendSignupInfo(string id, string pw, string playerNickname)
         {
             lock (lockObj)
             {
@@ -96,7 +96,7 @@ namespace BLUFF_CITY
                         ConnectToServer();
                     }
 
-                    string message = $"signup:{id}:{pw}:{nickname}";
+                    string message = $"signup:{id}:{pw}:{playerNickname}";
                     byte[] data = Encoding.UTF8.GetBytes(message);
                     stream.Write(data, 0, data.Length);
                 }
@@ -245,11 +245,11 @@ namespace BLUFF_CITY
             }
         }
 
-        public void Sendlogout(string ID, string nickname)
+        public void Sendlogout(string ID, string playerNickname)
         {
             try
             {
-                string message = $"logout:{ID}:{nickname}";
+                string message = $"logout:{ID}:{playerNickname}";
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 stream.Write(data, 0, data.Length);
             }

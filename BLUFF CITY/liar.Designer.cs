@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Liar));
             chat = new TextBox();
-            players_chat = new TextBox();
+            players_chat = new RichTextBox();
             word = new Label();
             READY = new Button();
             exit = new Button();
@@ -53,6 +54,7 @@
             li_p1 = new Button();
             category = new Label();
             login_name = new Label();
+            tutorial = new Button();
             SuspendLayout();
             // 
             // chat
@@ -67,16 +69,18 @@
             // 
             // players_chat
             // 
+            players_chat.AccessibleRole = AccessibleRole.None;
             players_chat.BackColor = Color.FromArgb(217, 217, 217);
+            players_chat.BorderStyle = BorderStyle.None;
             players_chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
             players_chat.Location = new Point(250, 128);
-            players_chat.Multiline = true;
             players_chat.Name = "players_chat";
             players_chat.ReadOnly = true;
-            players_chat.ScrollBars = ScrollBars.Horizontal;
+            players_chat.ScrollBars = RichTextBoxScrollBars.None;
             players_chat.Size = new Size(500, 855);
             players_chat.TabIndex = 44;
-            players_chat.TextAlign = HorizontalAlignment.Center;
+            players_chat.Text = "";
+            players_chat.MouseDown += players_chat_MouseDown;
             // 
             // word
             // 
@@ -355,6 +359,21 @@
             login_name.TabIndex = 47;
             login_name.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // tutorial
+            // 
+            tutorial.BackColor = Color.Transparent;
+            tutorial.FlatStyle = FlatStyle.Flat;
+            tutorial.Font = new Font("Pyunji R", 12F, FontStyle.Bold);
+            tutorial.Location = new Point(59, 998);
+            tutorial.Margin = new Padding(3, 2, 3, 2);
+            tutorial.Name = "tutorial";
+            tutorial.Size = new Size(174, 49);
+            tutorial.TabIndex = 48;
+            tutorial.Text = "Tutorial";
+            tutorial.TextAlign = ContentAlignment.MiddleRight;
+            tutorial.UseVisualStyleBackColor = false;
+            tutorial.Click += tutorial_Click;
+            // 
             // Liar
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -363,6 +382,8 @@
             BackgroundImage = Properties.Resources.game_background;
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(996, 1119);
+            ControlBox = false;
+            Controls.Add(tutorial);
             Controls.Add(login_name);
             Controls.Add(category);
             Controls.Add(chat);
@@ -389,6 +410,8 @@
             Controls.Add(li_p1_name);
             Controls.Add(li_p1);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             Name = "Liar";
             Text = "liar";
@@ -399,7 +422,7 @@
         #endregion
 
         private TextBox chat;
-        private TextBox players_chat;
+        private RichTextBox players_chat;
         private Label word;
         private Button READY;
         private Button exit;
@@ -428,7 +451,6 @@
         private Label[] LiarNames; // li_p1_name부터 li_p18_name까지 텍스트 박스 배열
         private Button[] LiarOtherButtons; // READY, exit 버튼 배열
         private Label[] LiarOtherLabel;　// timer, LIAR_GAME, word, category, login_name 
-        private TextBox[] LiarOtherTextBox; // players_chat, chat 텍스트 박스　배열
         private PictureBox[] Liar_player_images = new PictureBox[8]; // li_p1_image부터 li_p8_image까지 픽처박스 배열
 
         // 생성자나 초기화 메서드에서 호출하여 PictureBox 초기화
@@ -467,15 +489,12 @@
                             li_p5_name, li_p6_name, li_p7_name, li_p8_name };
 
             // LiarOtherButtons 배열 초기화
-            LiarOtherButtons = new Button[] { READY, exit };
+            LiarOtherButtons = new Button[] { READY, exit, tutorial };
 
             // LiarOtherLabel 배열 초기화
             LiarOtherLabel = new Label[] { timer, LIAR_GAME, word, category, login_name };
-
-            // LiarOtherTextBox 배열 초기화
-            LiarOtherTextBox = new TextBox[] { chat, players_chat };
-
         }
 
+        private Button tutorial;
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Topic_city));
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
@@ -154,6 +155,7 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(723, 421);
+            ControlBox = false;
             Controls.Add(label1);
             Controls.Add(button7);
             Controls.Add(button8);
@@ -164,6 +166,8 @@
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Topic_city";
             Text = "Topic_city";
             ResumeLayout(false);
