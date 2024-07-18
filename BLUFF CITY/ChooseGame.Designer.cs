@@ -87,6 +87,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
             Name = "ChooseGame";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "ChooseGame";
             ResumeLayout(false);
         }

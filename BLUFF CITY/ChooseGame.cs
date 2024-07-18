@@ -25,6 +25,8 @@
             Console.WriteLine(playerID);
 
             network = Network.Instance;
+            // 이벤트 핸들러 중복 등록 방지
+            network.MessageReceived -= OnMessageReceived;
             network.MessageReceived += OnMessageReceived;
         }
 
@@ -75,6 +77,7 @@
 
             if (ShowLiargameForm)
             {
+
                 // ChooseGame 폼이 이미 열려 있는지 확인
                 if (liarForm == null || liarForm.IsDisposed)
                 {
@@ -88,6 +91,8 @@
                     // 폼이 이미 열려 있는 경우 포커스를 맞춤
                     liarForm.Focus();
                 }
+                network.MessageReceived -= OnMessageReceived;
+                Console.WriteLine("9595CHOOSE 핸들러 제거");
             }
         }
 
@@ -113,6 +118,7 @@
 
         private void ChooseGame_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Console.WriteLine("CHOOSE 핸들러 제거");
             network.MessageReceived -= OnMessageReceived;
             Application.Exit();
         }

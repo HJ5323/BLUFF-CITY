@@ -61,6 +61,7 @@
             // 
             chat.BackColor = Color.FromArgb(217, 217, 217);
             chat.Font = new Font("Pyunji R", 10F, FontStyle.Bold);
+            chat.ImeMode = ImeMode.NoControl;
             chat.Location = new Point(250, 1007);
             chat.Name = "chat";
             chat.Size = new Size(500, 31);
@@ -86,10 +87,10 @@
             // 
             word.BackColor = Color.FromArgb(217, 217, 217);
             word.Font = new Font("Pyunji R", 15F, FontStyle.Bold);
-            word.Location = new Point(400, 16);
+            word.Location = new Point(401, 14);
             word.Margin = new Padding(3, 2, 3, 2);
             word.Name = "word";
-            word.Size = new Size(176, 28);
+            word.Size = new Size(194, 39);
             word.TabIndex = 43;
             word.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -414,6 +415,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             Name = "Liar";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "liar";
             ResumeLayout(false);
             PerformLayout();

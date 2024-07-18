@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using Microsoft.VisualBasic.Devices;
+using System.Windows.Forms;
 
 namespace BLUFF_CITY
 {
@@ -34,6 +35,8 @@ namespace BLUFF_CITY
             Console.WriteLine(playerID);
             network.Join(playerID, playerNickname);
 
+            //이벤트 핸들러 중복 방지
+            network.MessageReceived -= DisplayMessage;
             network.MessageReceived += DisplayMessage;
 
             // TextChanged 이벤트 핸들러 추가
@@ -524,6 +527,7 @@ namespace BLUFF_CITY
                 Invoke(new Action(VoteMode));
                 return;
             }
+            LoadPlayerBtnImage();
 
             for (int i = 0; i < entryPlayer.Count; i++)
             {
@@ -657,6 +661,7 @@ namespace BLUFF_CITY
         private void exit_Click(object sender, EventArgs e)
         {
             network.ExitGameroom(playerID, playerNickname);
+            network.MessageReceived -= DisplayMessage;
 
             ChooseGame ChooseGameForm = new ChooseGame(playerID, playerNickname);
             ChooseGameForm.Show();
@@ -667,7 +672,7 @@ namespace BLUFF_CITY
 
         private async void Formclose(string[] parts)
         {
-            Console.WriteLine($"{playerNickname}chat 받음");
+            //Console.WriteLine($"{playerNickname}chat 받음");
 
             string server = parts[1]; // server
             string closeMessage = parts[2]; // close message
@@ -677,17 +682,35 @@ namespace BLUFF_CITY
             // UI 스레드에서 players_chat에 메시지를 추가
             players_chat.Invoke(new Action(() =>
             {
-                players_chat.SelectionColor = Color.DarkBlue; // 텍스트 색상 설정
+                players_chat.SelectionColor = Color.DarkRed; // 텍스트 색상 설정
                 string paddedMessage = PadMessageToCenter(message, players_chat.Width, players_chat.Font);
                 players_chat.AppendText(paddedMessage + Environment.NewLine);
             }));
 
             await Task.Delay(3000); // 3초 대기
 
-            ChooseGame chooseGameForm = new ChooseGame(playerID, playerNickname);
-            chooseGameForm.Show();
+            players_chat.Clear();
 
-            this.Close();
+            LoadPlayerBtnImage();
+
+            READY.Visible = true;
+
+            exit.Visible = true;
+
+            EnableChat(parts);
+
+            isReady = false;
+            READY.Text = "Ready"; // 버튼 텍스트 변경
+            timer.Text = "";
+            category.Invoke(new Action(() =>
+            {
+                category.Text = "";
+            }));
+            word.Invoke(new Action(() =>
+            {
+                word.Text = "";
+            }));
+
         }
 
         private void tutorial_Click(object sender, EventArgs e)
