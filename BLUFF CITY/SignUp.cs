@@ -19,6 +19,8 @@
             network = Network.Instance;//.Instance;
             Network.b_newInstance = false;
 
+            // 이벤트 핸들러 중복 등록 방지
+            network.MessageReceived -= OnMessageReceived;
             network.MessageReceived += OnMessageReceived;
         }
 
@@ -62,6 +64,7 @@
                     // 폼이 이미 열려 있는 경우 포커스를 맞춤
                     startForm.Focus();
                 }
+                network.MessageReceived -= OnMessageReceived;
             }
         }
 

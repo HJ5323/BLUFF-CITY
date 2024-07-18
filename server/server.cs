@@ -1,8 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Diagnostics.Metrics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
 
 namespace server
 {
@@ -15,6 +16,7 @@ namespace server
         private static Dictionary<string, string> liarVotes = new Dictionary<string, string>();// liar투표결과 저장
         static string keyword;
         static bool gamestart;
+        static bool isLoggedIn;
         static string liarPlayerNick = null;
 
         static List<string> topics = new List<string> { "동물", "도시", "과일", "물건" }; // 주제 리스트
@@ -25,7 +27,7 @@ namespace server
             { "과일", new List<string> { "사과", "복숭아", "골든키위", "체리", "자두", "바나나", "딸기", "자몽", "망고" } },
             { "물건", new List<string> { "세탁기", "에어컨", "노트북", "연필", "충전기", "스마트폰", "시계", "가방", "책" } }
         };
-        
+
         static void Main(string[] args)
         {
             TcpListener server = null;
@@ -84,17 +86,17 @@ namespace server
         }
 
         // gameRoom의 모든 클라인언트에게 메시지 전송
-        private static void BroadcastMessage( string gameRoom, string message, TcpClient excludeClient)
+        private static void BroadcastMessage(string gameRoom, string message, TcpClient excludeClient)
         {
             if (gameRooms.ContainsKey(gameRoom))
             {
                 byte[] data = Encoding.UTF8.GetBytes($"{message}");
 
-                Console.WriteLine("gameRooms[gameRoom].Capacity: " + gameRooms[gameRoom].Capacity.ToString() + ": " + message);
-                Console.WriteLine("gameRooms[gameRoom].Count : " + gameRooms[gameRoom].Count + ": " + message);
-                Console.WriteLine("playerInfo : " + playerInfo.Count + ": " + message);
-                Console.WriteLine("entryPlayer : " + entryPlayer.Count + ": " + message);
-                Console.WriteLine("readyPlayer : " + readyPlayer.Count + ": " + message);
+                //Console.WriteLine("gameRooms[gameRoom].Capacity: " + gameRooms[gameRoom].Capacity.ToString() + ": " + message);
+                //Console.WriteLine("gameRooms[gameRoom].Count : " + gameRooms[gameRoom].Count + ": " + message);
+                //Console.WriteLine("playerInfo : " + playerInfo.Count + ": " + message);
+                //Console.WriteLine("entryPlayer : " + entryPlayer.Count + ": " + message);
+                //Console.WriteLine("readyPlayer : " + readyPlayer.Count + ": " + message);
 
                 foreach (var client in gameRooms[gameRoom])
                 {
@@ -115,7 +117,7 @@ namespace server
             byte[] data = Encoding.UTF8.GetBytes($"{message}");
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
-            Console.WriteLine($"message: {message}");              
+            Console.WriteLine($"message: {message}");
         }
 
         public static void SendMessageToClient(string gameRoom, string message, TcpClient targetClient)
@@ -134,7 +136,7 @@ namespace server
             NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[256];
             string gameRoom = null;
-            bool isLoggedIn = false;
+            isLoggedIn = false;
 
             try
             {
@@ -194,7 +196,7 @@ namespace server
                     else if (action == "signup")
                     {
                         Console.WriteLine("회원가입 모드");
-                        playerID=messageParts[1];
+                        playerID = messageParts[1];
                         string playerPW = messageParts[2];
                         playerNick = messageParts[3];
                         Console.WriteLine(playerID + " " + playerPW + " " + playerNick);
@@ -276,7 +278,7 @@ namespace server
                 if (gameRooms[gameRoom].Count < 8)
                 {
                     gameRooms[gameRoom].Add(client);
-                    entryPlayer.Add($"{playerID}:{playerNick}:{gameRoom}");
+                    entryPlayer.Add($"{playerID}:{playerNick}:{gameRoom}:{null}");
 
                     Console.WriteLine($"{playerNick}가 방에 입장했습니다: {gameRoom}");
                     BroadcastMessage(gameRoom, $";{playerNick}님이 게임에 참가했습니다!", client);
@@ -358,17 +360,30 @@ namespace server
             keyword = selectedKeyword;
 
             // liar 지목된 플레이어 설정
+            //for (int i = 0; i < entryPlayer.Count; i++)
+            //{
+            //    string entryInfo = entryPlayer[i];
+            //    if (i == liarIndex)
+            //    {
+            //        entryPlayer[i] = $"{entryInfo}:liar";
+            //    }
+            //    else
+            //    {
+            //        entryPlayer[i] = $"{entryInfo}:no";
+            //    }
+            //}
             for (int i = 0; i < entryPlayer.Count; i++)
             {
-                string entryInfo = entryPlayer[i];
-                if (i == liarIndex)
+                string[] playerInfo = entryPlayer[i].Split(':');
+                if (i == liarIndex && playerInfo.Length > 3)
                 {
-                    entryPlayer[i] = $"{entryInfo}:liar";
+                    playerInfo[3] = "liar";
                 }
-                else
+                else if (playerInfo.Length > 3)
                 {
-                    entryPlayer[i] = $"{entryInfo}:no";
+                    playerInfo[3] = "no";
                 }
+                entryPlayer[i] = string.Join(":", playerInfo);
             }
             Console.WriteLine($"entryPlayer[0] : {entryPlayer[0]}");
             Console.WriteLine($"entryPlayer[1] : {entryPlayer[1]}");
@@ -566,53 +581,66 @@ namespace server
                 // 최다 득표 votee 찾기
                 string liar = "";
                 int maxVotes = 0;
+                bool isTie = false;
                 foreach (var voteCount in voteCounts)
                 {
                     if (voteCount.Value > maxVotes)
                     {
                         maxVotes = voteCount.Value;
                         liar = voteCount.Key;
+                        isTie = false;
                     }
-                }
-
-                // 투표 결과 방송
-                BroadcastMessage(gameRoom, $";maxVotes:server:{liar}:{liar}이 Liar로 지목되었습니다", null);
-
-
-                // entryPlayer에서 liar 여부 확인하여 추가 작업 수행
-                foreach (var player in entryPlayer)
-                {
-                    string[] playerParts = player.Split(':');
-                    string playerNick = playerParts[1];
-                    //string playerID = playerParts[0];
-                    string isLiar = playerParts[3];
-                    Console.WriteLine("여기까지는 실행됨.1");
-
-                    if (isLiar == "liar")
+                    else if (voteCount.Value == maxVotes)
                     {
-                        liarPlayerNick = playerNick; // liar인 사람의 playerNick을 변수에 할당
-                        break; // liar를 찾았으면 더 이상 반복할 필요 없음
+                        isTie = true;
                     }
-            }
-                if (liarPlayerNick == liar)
-                {
-                    TcpClient liarClient = GetTcpClientFromPlayerID(liarPlayerNick, gameRoom);
-                    Console.WriteLine("여기까지는 실행됨.2");
-                    Console.WriteLine($"playerNick  {liarPlayerNick}");
-                    Console.WriteLine($"liar  {liar}");
-
-                    // liar가 최다 득표
-                    SendMessageToClient(gameRoom, $";liar:server:{keyword}", liarClient);
-                    BroadcastMessage(gameRoom, $";chat:server:{liarPlayerNick}가 라이어 맞습니다.", null);
-                    BroadcastMessage(gameRoom, $";chat:server:키워드 고르는 중...", null);
                 }
-                else if (liarPlayerNick != liar)
+
+                // 동점인 경우
+                if (isTie)
                 {
-                    // 시민 최다득표 ,liar 승리
-                    BroadcastMessage(gameRoom, $";chat:server:{liar}는 라이어가 아닙니다.", null);
-                    BroadcastMessage(gameRoom, $";noliar:server:라이어 {liarPlayerNick}가 승리하였습니다.", null);
-                    // 라이어 승점 +1
-                    HandlePoints("liar", 1, gameRoom);
+                    // 동점이 발생했음을 방송
+                    BroadcastMessage(gameRoom, ";start_voting:server", null); // 투표 시작 메시지
+                    BroadcastMessage(gameRoom, $";chat:server:투표 결과 동점입니다. 다시 투표해주세요.", null);
+                    liarVotes.Clear();
+                    return;
+                }
+                else
+                {
+                    // 투표 결과 방송
+                    BroadcastMessage(gameRoom, $";maxVotes:server:{liar}:{liar}이 Liar로 지목되었습니다", null);
+
+                    // entryPlayer에서 liar 여부 확인하여 추가 작업 수행
+                    foreach (var player in entryPlayer)
+                    {
+                        string[] playerParts = player.Split(':');
+                        string playerNick = playerParts[1];
+                        string isLiar = playerParts[3];
+
+                        if (isLiar == "liar")
+                        {
+                            liarPlayerNick = playerNick; // liar인 사람의 playerNick을 변수에 할당
+                            break; // liar를 찾았으면 더 이상 반복할 필요 없음
+                        }
+                    }
+
+                    if (liarPlayerNick == liar)
+                    {
+                        TcpClient liarClient = GetTcpClientFromPlayerID(liarPlayerNick, gameRoom);
+
+                        // liar가 최다 득표
+                        SendMessageToClient(gameRoom, $";liar:server:{keyword}", liarClient);
+                        BroadcastMessage(gameRoom, $";chat:server:{liarPlayerNick}가 라이어 맞습니다.", null);
+                        BroadcastMessage(gameRoom, $";chat:server:키워드 고르는 중...", null);
+                    }
+                    else
+                    {
+                        // 시민 최다득표, liar 승리
+                        BroadcastMessage(gameRoom, $";chat:server:{liar}는 라이어가 아닙니다.", null);
+                        BroadcastMessage(gameRoom, $";noliar:server:라이어 {liarPlayerNick}가 승리하였습니다.", null);
+                        // 라이어 승점 +1
+                        HandlePoints("liar", 1, gameRoom);
+                    }
                 }
             }
         }
@@ -638,7 +666,7 @@ namespace server
             }
         }
 
-        private static void HandlePoints(string targetRole,  int point, string gameRoom)
+        private static void HandlePoints(string targetRole, int point, string gameRoom)
         {
             foreach (var player in entryPlayer)
             {
@@ -662,103 +690,133 @@ namespace server
             {
                 playerInfo.Remove($"{id}:{nickname}");
                 Console.WriteLine($"{nickname} 로그아웃");
+                isLoggedIn = false;
             }
         }
 
-        private static void CloseGame(string gameRoom)
+        private static void EndGame(string playerNick, string gameRoom)
         {
-            BroadcastMessage(gameRoom, $";close:server:게임이 곧 종료됩니다.", null);
+            BroadcastMessage(gameRoom, $";close:server:게임이 곧 재설정됩니다.", null);
 
-            liarVotes.Clear();
+            lock (liarVotes)
+            {
+                liarVotes.Clear();
+            }
 
-            entryPlayer.Clear();
+            //Console.WriteLine("EndGame : gameRooms[gameRoom].Count " + gameRooms[gameRoom].Count);
+            //Console.WriteLine("EndGame : playerInfo : " + playerInfo.Count);
+            //Console.WriteLine("EndGame : entryPlayer : " + entryPlayer.Count);
+            //Console.WriteLine("EndGame : readyPlayer : " + readyPlayer.Count);
+            //Console.WriteLine("EndGame : gameRoom  : " + gameRoom);
+            //Console.WriteLine("EndGame : liarVotes  : " + liarVotes);
 
-            gameRooms[gameRoom].Clear();
-
-            //gameRooms.Remove(gameRoom);
-
+            // 게임 상태 초기화
             gamestart = false;
         }
 
+       
         private static void RemoveClient(TcpClient client, string gameRoom)
         {
+            // gameRooms 컬렉션 동기화
             lock (gameRooms)
             {
                 if (gameRoom != null && gameRooms.ContainsKey(gameRoom))
                 {
-                    Console.WriteLine("686,Remove");
-                    Console.WriteLine("RemoveClient : gameRooms[gameRoom].Count " + gameRooms[gameRoom].Count);
-                    Console.WriteLine("RemoveClient : playerInfo : " + playerInfo.Count );
-                    Console.WriteLine("RemoveClient : entryPlayer : " + entryPlayer.Count);
-                    Console.WriteLine("RemoveClient : readyPlayer : " + readyPlayer.Count );
-                    Console.WriteLine("RemoveClient : gameRoom  : " + gameRoom);
+                    // 게임 방에서 클라이언트 제거
+                    if (gameRooms[gameRoom].Contains(client))
+                    {
+                        gameRooms[gameRoom].Remove(client);
+                    }
 
-                    gameRooms[gameRoom].Remove(client);
+                    // 게임 방에 남아 있는 클라이언트 수 확인
                     if (gameRooms[gameRoom].Count == 0)
                     {
                         //gameRooms.Remove(gameRoom);
                     }
                 }
             }
-
-            Console.WriteLine("540,CLOSE");
-            //client.Close();
         }
-
+    
         private static void HandleExitGameroom(string[] messageParts, string gameRoom, TcpClient client)
         {
-            string id = messageParts[1];
-            string nickname = messageParts[2];
-            string gameroom = messageParts[3];
-            Console.WriteLine($"{nickname} HandleExitGameroom");
-
+            // 메시지 파트 검증
             if (messageParts.Length != 4)
             {
                 Console.WriteLine("HandleExitGameroom-잘못된 메시지 형식");
                 return;
             }
 
+            string id = messageParts[1];
+            string nickname = messageParts[2];
+            string gameroom = messageParts[3];
+            Console.WriteLine($"{nickname} HandleExitGameroom");
+
             lock (gameRooms)
             {
-                if (readyPlayer.Contains($"{id}:{nickname}"))
+                //readyPlayer에서 제거
+                lock (readyPlayer)
                 {
-                    // 이미 준비된 상태이면, readyPlayer 목록에서 제거
-                    readyPlayer.Remove($"{id}:{nickname}");
-                    Console.WriteLine($"{nickname} - readyPlayer.Remove");
-                }
-                // entryPlayer에서 부분 일치하는 항목을 찾아 제거
-                for (int i = entryPlayer.Count - 1; i >= 0; i--)
-                {
-                    string[] parts = entryPlayer[i].Split(':');
-                    string entryId = parts[0];
-                    string entryNickname = parts[1];
-
-                    // 부분 일치를 확인하고 제거
-                    if (entryId == id && entryNickname == nickname)
+                    if (readyPlayer.Contains($"{id}:{nickname}"))
                     {
-                        Console.WriteLine($"{entryPlayer[i]}- entryPlayer.Remove");
-                        entryPlayer.RemoveAt(i);
-                        BroadcastMessage(gameRoom, $";chat:{nickname}:게임을 나갔습니다.", null);
+                        readyPlayer.Remove($"{id}:{nickname}");
+                        Console.WriteLine($"{nickname} - readyPlayer.Remove");
                     }
                 }
-                if (gameRooms[gameroom].Contains(client))
+
+                // entryPlayer에서 부분 일치 항목 제거
+                lock (entryPlayer)
                 {
-                    // gameRooms[gameroom] 목록에서 제거
-                    gameRooms[gameroom].Remove(client);
-                    Console.WriteLine($"{nickname} - gameRooms[gameroom].Remove");
+                    for (int i = entryPlayer.Count - 1; i >= 0; i--)
+                    {
+                        string[] parts = entryPlayer[i].Split(':');
+                        string entryId = parts[0];
+                        string entryNickname = parts[1];
+
+                        // ID와 nickname이 일치하는 경우 제거
+                        if (entryId == id && entryNickname == nickname)
+                        {
+                            Console.WriteLine($"{entryPlayer[i]} - entryPlayer.Remove");
+                            entryPlayer.RemoveAt(i);
+                            BroadcastMessage(gameRoom, $";chat:server:{nickname}이 게임을 나갔습니다.", null);
+                        }
+                    }
                 }
 
-                RemoveClient(client, gameRoom);
-
-                // 게임 시작 상태에 따라 entryPlayer 정보 업데이트
-                if (!gamestart)
+                // gameRooms에서 클라이언트 제거
+                if (gameRooms.ContainsKey(gameroom))
                 {
-                    SendEntryPlayerInfo(gameroom);
-                    Console.WriteLine("entryPlayer update");
+                    lock (gameRooms[gameroom])
+                    {
+                        if (gameRooms[gameroom].Contains(client))
+                        {
+                            gameRooms[gameroom].Remove(client);
+                            Console.WriteLine($"{nickname} - gameRooms[{gameroom}].Remove");
+                        }
+
+                        // gameRooms[gameroom]이 더 이상 클라이언트를 포함하지 않으면 제거
+                        if (gameRooms[gameroom].Count == 0)
+                        {
+                            //gameRooms.Remove(gameroom);
+                            Console.WriteLine($"Removed game room: {gameroom}");
+                        }
+                    }
                 }
+
+                //Console.WriteLine("HandleExitGameroom : gameRooms[gameRoom].Capacity: " + gameRooms[gameRoom].Capacity.ToString());
+                //Console.WriteLine("HandleExitGameroom : gameRooms[gameRoom].Count : " + gameRooms[gameRoom].Count);
+                //Console.WriteLine("HandleExitGameroom : playerInfo : " + playerInfo.Count);
+                //Console.WriteLine("HandleExitGameroom : entryPlayer : " + entryPlayer.Count);
+                //Console.WriteLine("HandleExitGameroom : readyPlayer : " + readyPlayer.Count);
+            }
+
+            // 게임 시작 상태에 따라 entryPlayer 정보 업데이트
+            if (!gamestart && gameRooms[gameroom].Count != 0)
+            {
+                SendEntryPlayerInfo(gameroom);
+                Console.WriteLine("entryPlayer update");
             }
         }
-        
+
         public static string Signup(string ID, string PW, string Nickname)
         {
             string connectionString = "Server=localhost; Database=bluff_city; Uid=bluff_city; Pwd=bluff_city;";
@@ -893,7 +951,7 @@ namespace server
                 }
             }
             // 게임 종료
-            CloseGame(gameRoom);
+            EndGame(playerNick, gameRoom);
         }
 
         // gameRoom의 모든 클라이언트에게 플레이어 정보 전송
@@ -920,6 +978,6 @@ namespace server
                 }
             }
         }
-        
+
     }
 }

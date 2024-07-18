@@ -169,6 +169,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Topic_city";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Topic_city";
             ResumeLayout(false);
             PerformLayout();

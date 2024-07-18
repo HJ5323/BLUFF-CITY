@@ -150,6 +150,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             Name = "SignUp";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Sign Up";
             ResumeLayout(false);
             PerformLayout();

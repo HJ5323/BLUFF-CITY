@@ -91,6 +91,7 @@ namespace BLUFF_CITY
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Start";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "BLUFF CITY";
             ResumeLayout(false);
             PerformLayout();

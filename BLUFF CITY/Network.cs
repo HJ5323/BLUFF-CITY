@@ -281,7 +281,7 @@ namespace BLUFF_CITY
             }
             if (receiveThread != null && receiveThread.IsAlive)
             {
-                if(cancelTokenSource.Token.IsCancellationRequested)
+                if (cancelTokenSource.Token.IsCancellationRequested)
                 {
                     //return;
                 }

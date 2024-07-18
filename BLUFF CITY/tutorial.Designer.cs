@@ -72,6 +72,7 @@ namespace BLUFF_CITY
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "tutorial";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "tutorial";
             ResumeLayout(false);
         }
